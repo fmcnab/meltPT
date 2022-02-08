@@ -80,31 +80,8 @@ plt.legend()
 plt.gca().invert_yaxis()
 plt.show()
 
-
-
-
-
-
-sys.exit()
-
-
-
-
-
-
-
-
-
-
-def pandas_to_csv(df, outfile):
-    # remove unwanted columns
-    df = df.drop(['SiO2_primary_wt_dry','Al2O3_primary_wt_dry','FeO_primary_wt_dry','Fe2O3_primary_wt_dry','MgO_primary_wt_dry','CaO_primary_wt_dry','Na2O_primary_wt_dry','K2O_primary_wt_dry','TiO2_primary_wt_dry','MnO_primary_wt_dry','Cr2O3_primary_wt_dry','SiO2_primary_mol','Al2O3_primary_mol','FeO_primary_mol','Fe2O3_primary_mol','MgO_primary_mol','CaO_primary_mol','Na2O_primary_mol','K2O_primary_mol','TiO2_primary_mol','MnO_primary_mol','Cr2O3_primary_mol','H2O_primary_mol','Si4O8','Al16/3O8','Fe4Si2O8','Fe16/3O8','Mg4Si2O8','Ca4Si2O8','Na2Al2Si2O8','K2Al2Si2O8','Ti4O8','Mn4Si2O8','Cr16/3O8'], axis=1)
-    # replace zeros with blanks
-    df = df.replace(0, np.nan)
-    # save to same csv as the input
-    df.to_csv(outfile, index=False)
-    return print("Script Finished")
-
+# ---- Write CSV
+s.write_to_csv("North_Sea_output.csv")
 
 
 

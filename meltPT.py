@@ -468,6 +468,10 @@ class Suite:
         self.data = parse_csv(input_csv, src_FeIII_totFe=src_FeIII_totFe, min_SiO2=min_SiO2, min_MgO=min_MgO)
         self.primary = None
         self.PT = None
+        self.PT_to_fit = None
+        self.individual_melt_fractions = None
+        self.individual_potential_temperatures = None
+        self.suite_melt_fractions = None
 
     def backtrack_compositions(self, target_Fo=0.9, Kd=False, dm=0.0005, verbose=False):
         """
@@ -563,3 +567,29 @@ class Suite:
         self.upper_potential_temperature, self.upper_path = find_bound(upper_points, self.potential_temperature, mantle)
         self.lower_potential_temperature, self.lower_path = find_bound(lower_points, self.potential_temperature, mantle, lower=True)
 
+    def write_to_csv(self, outfile, write_primary=True, write_PT=True):
+        """
+        Write results to csv.
+        """
+        output_df = self.data.copy()
+        if write_primary and self.primary is not None:
+            output_df = pd.concat([output_df, self.primary], axis=1)
+            output_df = output_df.drop([
+                'SiO2_primary_wt_dry','Al2O3_primary_wt_dry',
+                'FeO_primary_wt_dry','Fe2O3_primary_wt_dry',
+                'MgO_primary_wt_dry','CaO_primary_wt_dry',
+                'Na2O_primary_wt_dry','K2O_primary_wt_dry',
+                'TiO2_primary_wt_dry','MnO_primary_wt_dry',
+                'Cr2O3_primary_wt_dry','SiO2_primary_mol',
+                'Al2O3_primary_mol','FeO_primary_mol',
+                'Fe2O3_primary_mol','MgO_primary_mol',
+                'CaO_primary_mol','Na2O_primary_mol',
+                'K2O_primary_mol','TiO2_primary_mol',
+                'MnO_primary_mol','Cr2O3_primary_mol',
+                'H2O_primary_mol',
+                'Si4O8','Al16/3O8', 'Fe4Si2O8','Fe16/3O8','Mg4Si2O8',
+                'Ca4Si2O8','Na2Al2Si2O8','K2Al2Si2O8','Ti4O8','Mn4Si2O8',
+                'Cr16/3O8'], axis=1)
+        if write_PT and self.PT is not None:
+            output_df = pd.concat([output_df, self.PT], axis=1)
+        output_df.to_csv(outfile, index=False)
