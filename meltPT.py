@@ -401,7 +401,7 @@ def find_sample_melt_fraction(df, path, full_output=True):
 def compute_sample_potential_temperature_misfit(Tp, df, mantle):
     path = mantle.AdiabaticMelt_1D(Tp, Pstart=max(mantle.solidus_intersection(Tp))+0.01, steps=101)
     fit = find_sample_melt_fraction(df, path, full_output=False)
-    return fit
+    return fit['misfit']
 
 def find_sample_potential_temperature(df, mantle):
     if np.isnan(df['P']) or np.isnan(df['T']):
