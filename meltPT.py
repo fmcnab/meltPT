@@ -3,6 +3,10 @@ import matplotlib.pyplot as plt
 import pandas as pd
 from copy import deepcopy
 import sys
+import pyMelt as m
+from scipy.optimize import minimize, minimize_scalar
+from shapely.geometry import Point
+from shapely.geometry.polygon import Polygon
 
 def parse_csv(infile, Ce_to_H2O=200., src_FeIII_totFe=0.2, min_SiO2=0., min_MgO=0.):
 
@@ -347,11 +351,116 @@ def compute_sample_pressure_temperature(df):
 
 def compute_pressure_temperature(df):
     """
-    Compute equilibration pressures and temperaturesfor entire dataframe
+    Compute equilibration pressures and temperatures for entire dataframe
     and append results.
     """
     PT = df.apply(compute_sample_pressure_temperature, axis=1, result_type="expand")
     return pd.concat([df, PT], axis=1)
+
+# ---- Melt Path Fitting
+
+def melt_fraction_to_pressure_temperature(F, path):
+    """
+    Find pressure and temperature of given melt fraction along given melting
+    path.
+    """
+    P = np.interp(F, path.F_total, path.P)
+    T = np.interp(F, path.F_total, path.T)
+    return P, T
+    
+def compute_sample_melt_fraction_misfit(F, df, path, full_output=True):
+    """
+    Compute misfit between sample and point along given melting path.
+    Point on melt path is specified by melt fraction.
+    """
+    model_P, model_T = melt_fraction_to_pressure_temperature(F, path)
+    misfit = np.sqrt( (abs(df['P']-model_P)/0.24)**2. + (abs(df['T']-model_T)/39.)**2. )
+    return misfit
+    
+def find_sample_melt_fraction(df, path, full_output=True):
+    """
+    Find best-fitting melt fraction between sample and given melting path.
+    
+    If "full_output" is True, returns dictionary with best-fitting melt
+    fraction, corresponding pressure and temperature, and misfit at minimum.
+    If False, only returns misfit (for use in fitting melting paths to entire
+    suite.)
+    """
+    if np.isnan(df['P']) or np.isnan(df['T']):
+        return {'F_path_ind': np.nan, 'P_path_ind': np.nan, 'T_path_ind': np.nan, 'misfit': np.nan}
+    else:
+        fit = minimize_scalar(
+            compute_sample_melt_fraction_misfit, 
+            bounds=(0.,max(path.F_total)), 
+            bracket=(0.,max(path.F_total)), 
+            args=(df, path,False), 
+            method="bounded")
+        P, T = melt_fraction_to_pressure_temperature(fit.x, path)
+        return {'F_path_ind': fit.x, 'P_path_ind': P, 'T_path_ind': T, 'misfit': fit.fun}    
+
+def compute_sample_potential_temperature_misfit(Tp, df, mantle):
+    path = mantle.AdiabaticMelt_1D(Tp, Pstart=max(mantle.solidus_intersection(Tp))+0.01, steps=101)
+    fit = find_sample_melt_fraction(df, path, full_output=False)
+    return fit
+
+def find_sample_potential_temperature(df, mantle):
+    if np.isnan(df['P']) or np.isnan(df['T']):
+        return {'F_path_ind': np.nan, 'P_path_ind': np.nan, 'T_path_ind': np.nan, 'misfit': np.nan, 'Tp_ind': np.nan, 'path_ind': np.nan}
+    else:    
+        Tp_fit = minimize_scalar(
+            compute_sample_potential_temperature_misfit, 
+            bracket=(min([lith.TSolidus(0.) for lith in mantle.lithologies]),1600.), 
+            bounds=(min([lith.TSolidus(0.) for lith in mantle.lithologies]),1600.), 
+            args=(df,mantle), 
+            method="bounded")
+        path = mantle.AdiabaticMelt_1D(Tp_fit.x, Pstart=max(mantle.solidus_intersection(Tp_fit.x))+0.01, steps=101)
+        out_dict = find_sample_melt_fraction(df, path)
+        out_dict['Tp'] = Tp_fit.x 
+        out_dict['path'] = path
+        return out_dict
+        
+def compute_suite_potential_temperature_misfit(Tp, df, mantle):
+    path = mantle.AdiabaticMelt_1D(Tp, Pstart=max(mantle.solidus_intersection(Tp))+0.01, steps=101)
+    melt_fraction_fits = df.apply(find_sample_melt_fraction, axis=1, result_type="expand", args=(path,))
+    return np.nanmean(melt_fraction_fits['misfit'])
+
+def find_bound(points, starting_temperature, mantle, lower=False):
+    
+    if not lower:
+        bounding_temperature = np.ceil(starting_temperature)
+        adjustment = 1.
+    else:
+        bounding_temperature = np.floor(starting_temperature)
+        adjustment = -1.
+    
+    inside = np.zeros(len(points))
+    
+    max_P = max([p.coords.xy[1][0] for p in points])
+    main_path = mantle.AdiabaticMelt_1D(starting_temperature, Pstart=max(max(mantle.solidus_intersection(starting_temperature))+0.01, max_P), steps=101)
+
+    while True:
+        bounding_path = mantle.AdiabaticMelt_1D(bounding_temperature, Pstart=max(max(mantle.solidus_intersection(bounding_temperature))+0.01, max_P), steps=101)
+        bounds = np.vstack(( 
+            np.column_stack(( main_path.T, main_path.P )),
+            np.column_stack(( bounding_path.T[::-1], bounding_path.P[::-1] ))
+            ))
+        poly = Polygon(bounds)
+        for i,p in enumerate(points):
+            if poly.contains(p):
+                inside[i] = 1.
+        if sum(inside) / len(points) > 2./3.:
+            break
+        else:
+            bounding_temperature += adjustment
+            
+    return bounding_temperature, bounding_path
+
+
+def combine(df):
+    return {'fit': df.to_numpy().all()}
+
+
+# ---- Suite class
 
 class Suite:
 
@@ -377,7 +486,80 @@ class Suite:
         and append results.
         """
         self.PT = self.primary.apply(compute_sample_pressure_temperature, axis=1, result_type="expand")
+        
+    def check_samples_for_fitting(self, mantle, filters=(None,), args=((None,))):
+        """
+        Determine whether sample should be fit to or not.
+        
+        Checks if within error of the solidus for given mantle composition.
 
-    @property
-    def result(self):
-        return pd.concat([self.data, self.primary, self.PT], axis=1)
+        Also applies any other filters provided. Filters should be in form of
+        function that returns True or False.
+        """
+                
+        def above_solidus(df, mantle):
+            return {'fit': max([l.TSolidus(df['P']) for l in mantle.lithologies]) - df['T'] < 39.}
+
+        to_fit = self.PT.apply(above_solidus, axis=1, result_type="expand", args=(mantle,))
+        if filters[0]:
+            for f,a in zip(filters,args):
+                to_fit = pd.concat([to_fit, self.PT.apply(f, axis=1, args=a)], axis=1)
+            to_fit = to_fit.apply(combine, axis=1, result_type="expand")
+
+        self.PT_to_fit = self.PT.copy()
+        for i,fit in enumerate(to_fit.to_numpy()):
+            if not fit:
+                self.PT_to_fit.iloc[i]['P'] = np.nan
+                self.PT_to_fit.iloc[i]['T'] = np.nan
+    
+    def find_individual_melt_fractions(self, mantle, path, filters=(None,), filter_args=(None,)):
+        """
+        Find best-fitting melt fractions for each sample relative to given melt
+        path. 
+        """
+        self.check_samples_for_fitting(mantle, filters, filter_args)
+        self.individual_melt_fractions = self.PT_to_fit.apply(
+            find_sample_melt_fraction, 
+            axis=1, 
+            result_type="expand", 
+            args=(path,))
+
+    def find_individual_potential_temperatures(self, mantle, filters=(None,), filter_args=(None,)):
+        """
+        Find best-fitting potential temperatures and corresponding melt
+        fractions for each sample.
+        """
+        self.check_samples_for_fitting(mantle, filters, filter_args)
+        self.individual_potential_temperatures = self.PT_to_fit.apply(
+            find_sample_potential_temperature, 
+            axis=1, 
+            result_type="expand", 
+            args=(mantle,))
+
+    def find_suite_potential_temperature(self, mantle, find_bounds=False, filters=(None,), filter_args=(None,)):
+        """
+        Find best-fitting potential temperature for entire suite.
+        """
+        self.check_samples_for_fitting(mantle, filters, filter_args)
+        Tp_fit = minimize_scalar(
+            compute_suite_potential_temperature_misfit, 
+            bracket=(min([lith.TSolidus(0.) for lith in mantle.lithologies]),1600.), 
+            bounds=(min([lith.TSolidus(0.) for lith in mantle.lithologies]),1600.),
+            args=(self.PT_to_fit, mantle),
+            method="bounded")
+        self.path = mantle.AdiabaticMelt_1D(Tp_fit.x, Pstart=max(mantle.solidus_intersection(Tp_fit.x))+0.01, steps=101)
+        self.suite_melt_fractions = self.PT_to_fit.apply(find_sample_melt_fraction, axis=1, result_type="expand", args=(self.path,True))
+        self.potential_temperature = Tp_fit.x
+        
+        if find_bounds:
+            upper_points = []
+            lower_points = []
+            for i in range(len(self.PT_to_fit)):
+                if self.PT_to_fit['T'].iloc[i] - self.suite_melt_fractions['T_path_ind'].iloc[i] > 0:
+                    upper_points.append(Point(self.PT_to_fit['T'].iloc[i], self.PT_to_fit['P'].iloc[i]))
+                elif self.PT_to_fit['T'].iloc[i] - self.suite_melt_fractions['T_path_ind'].iloc[i] < 0.:
+                    lower_points.append(Point(self.PT_to_fit['T'].iloc[i], self.PT_to_fit['P'].iloc[i]))
+
+        self.upper_potential_temperature, self.upper_path = find_bound(upper_points, self.potential_temperature, mantle)
+        self.lower_potential_temperature, self.lower_path = find_bound(lower_points, self.potential_temperature, mantle, lower=True)
+
