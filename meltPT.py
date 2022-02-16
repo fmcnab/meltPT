@@ -92,6 +92,8 @@ def oxide_wt_to_cation_mole(in_comp):
     """
 
     weights = {
+        # Combined atomic weights, e.g., SiO2 = Si + O + O = 60.08 (g/mol).
+        # Atomic weights given per cation, e.g., Al2O3 is divided by 2.
         'SiO2': 60.08,
         'Al2O3': 101.96 / 2.,
         'FeO': 71.84,
@@ -131,6 +133,7 @@ def oxide_wt_to_oxide_mole(in_comp):
     """
 
     weights = {
+        # Combined atomic weights. E.g., Si, O and O = 60.08 (g/mol).
         'SiO2': 60.08,
         'Al2O3': 101.96,
         'FeO': 71.84,
