@@ -222,7 +222,7 @@ def fill_dict_with_nans(in_dict):
         out_dict[key] = np.nan
     return out_dict
 
-def backtrack_sample_composition(df, target_Fo=0.9, Kd=None, dm=0.0005, verbose=False):
+def backtrack_sample_composition(df, target_Fo=0.9, Kd=None, dm=0.0005, verbose=False, max_olivine_addition=0.3):
     """
     Backtrack composition to desired mantle forsterite number. Iteratively adds
     olivine in equilibrium with melt until desired composition is reached.
@@ -237,6 +237,7 @@ def backtrack_sample_composition(df, target_Fo=0.9, Kd=None, dm=0.0005, verbose=
     Fo = forsterite_number(oxide_wt_hydrous)
     if target_Fo-Fo < 0.005:
         oxide_wt_hydrous = fill_dict_with_nans(oxide_wt_hydrous)
+        dm_tot = np.nan
         print(df.Sample + ": backtracking failed! Starting Fo above mantle Fo.")
     # Otherwise add olvine until primary Fo is reached
     else:
@@ -244,7 +245,6 @@ def backtrack_sample_composition(df, target_Fo=0.9, Kd=None, dm=0.0005, verbose=
         if verbose:
             print("Backtracking sample %s to primary composition:" % df.Sample)
 
-        i = 0
         dm_tot = 0.
         # while abs(target_Fo - Fo) > 1.e-15:
         while abs(target_Fo - Fo) > dm:
@@ -256,13 +256,13 @@ def backtrack_sample_composition(df, target_Fo=0.9, Kd=None, dm=0.0005, verbose=
                     "    - iteration %d: %.2f%% olivine added, melt Fo = %.4f." %
                     (i, dm_tot/(1.+dm_tot)*100., Fo)
                     )
-            i += 1
-            if i>10000:
+            if dm_tot/(1. + dm_tot) > max_olivine_addition:
                 oxide_wt_hydrous = fill_dict_with_nans(oxide_wt_hydrous)
-                print(df.Sample + ": backtracking failed! Iterations: %d" % i)
+                print(
+                    df.Sample + ": backtracking failed! Olivine addition exceeding %d%%" 
+                    % (max_olivine_addition*100.))
                 break
-            # if target_Fo - Fo < 2.*dm:
-            #     dm /= 1.5
+
 
     # Anhydrous concentrations: remove water and renormalise
     oxide_wt_anhydrous = {phase:oxide_wt_hydrous[phase] for phase in oxide_wt_hydrous.keys() if phase != "H2O"}
@@ -282,6 +282,9 @@ def backtrack_sample_composition(df, target_Fo=0.9, Kd=None, dm=0.0005, verbose=
         primary_oxide[phase + "_primary_mol"] = oxide_mole_hydrous[phase]
     for phase in mole_species:
         primary_oxide[phase] = mole_species[phase]
+
+    # Add amount olivine added
+    primary_oxide['ol_added'] = dm_tot / (1. + dm_tot)
 
     return primary_oxide
 
