@@ -77,8 +77,17 @@ MAJOR_OXIDES = ['SiO2','Al2O3','FeO','Fe2O3','MgO','CaO','Na2O','K2O','TiO2','Mn
 def normalise(in_comp):
     """
     Normalise dictionary so that values sum to 100%.
+    
+    Parameters
+    ---------
+    in_comp : dict
+        The values to be normalised.
+        
+    Returns
+    -------
+    out_comp : dict
+        The normalised values.
     """
-
     out_comp = {}
     total = sum(in_comp.values())
     for phase in in_comp:
@@ -87,8 +96,17 @@ def normalise(in_comp):
 
 def oxide_wt_to_cation_mole(in_comp):
     """
-    Convert dictionary with oxide concentrations in weight percent to
-    cation concentrations.
+    Convert oxide concentrations in weight percent to cation concentrations.
+    
+    Parameters
+    ----------
+    in_comp : dict
+        The oxide concentrations to be converted.
+        
+    Returns
+    -------
+    out_comp : dict
+        The cation concentrations.
     """
 
     weights = {
@@ -128,8 +146,18 @@ def oxide_wt_to_cation_mole(in_comp):
 
 def oxide_wt_to_oxide_mole(in_comp):
     """
-    Convert dictionary with oxide concentrations in weight percent to
-    oxide concentrations in mole percent.
+    Convert oxide concentrations in weight percent to oxide concentrations
+    in mole percent.
+    
+    Parameters
+    ----------
+    in_comp : dict
+        The oxide concentrations in weight percent to be converted.
+        
+    Returns
+    -------
+    out_comp : dict
+        The oxide concentrations in mole percent.
     """
 
     weights = {
@@ -154,8 +182,17 @@ def oxide_wt_to_oxide_mole(in_comp):
 
 def oxide_mole_to_mole_species(in_comp):
     """
-    Convert dictionary with oxide concentrations in mole percent to
-    mole species concentrations.
+    Convert oxide concentrations in mole percent to mole species concentrations.
+    
+    Parameters
+    ----------
+    in_comp : dict
+        The oxide concentrations to be converted.
+        
+    Returns
+    -------
+    out_comp : dict
+        The mole species concentrations.
     """
 
     out_comp = {
@@ -179,24 +216,58 @@ def oxide_mole_to_mole_species(in_comp):
     return normalise(out_comp)
 
 def compute_partition_coefficient(in_comp):
-    return 0.25324 + 0.003363*(in_comp['Mg'] + 0.33*in_comp['FeII'])
-
-def forsterite_number(in_comp, Kd=None):
     """
-    Compute forsterite number for given sample dictionary.
+    Compute the partition coefficient.
+    """
+    Kd = 0.25324 + 0.003363*(in_comp['Mg'] + 0.33*in_comp['FeII'])
+    return Kd
+
+def compute_forsterite_number(in_comp, Kd=None):
+    """
+    Compute forsterite number from oxide weight compositions.
+    
+    Parameters
+    ----------
+    in_comp : dict
+        The oxide weight compositions.
+    Kd : float or NoneType, optional
+        Partition coefficient to be used.
+        If None, calculated from the sample composition provided.
+        
+    Returns
+    -------
+    Fo : float
+        The calculated forsterite number.
     """
     cation = oxide_wt_to_cation_mole(in_comp)
     if not Kd:
         Kd = compute_partition_coefficient(cation)
-    return 1. / (1. + (Kd * (cation['FeII'] / cation['Mg'])))
+    Fo = 1. / (1. + (Kd * (cation['FeII'] / cation['Mg'])))
+    return Fo
 
 def add_olivine(in_comp, Kd=None, dm=0.0005):
     """
     Add olivine in equilibrium with given melt composition.
+    
+    Parameters
+    ----------
+    in_comp : dict
+        The initial composition.
+        Should be hydrous oxide weight concentrations.
+    Kd : float or NoneType, optional
+        Partition coefficient to be used.
+        If None, calculated from the sample composition provided.
+    dm : float, optional
+        The fraction of olivine to be added.
+        
+    Returns
+    -------
+    out_comp : dict
+        The updated concentrations.
     """
 
     # Compute melt forsterite number
-    Fo = forsterite_number(in_comp, Kd=Kd)
+    Fo = compute_forsterite_number(in_comp, Kd=Kd)
 
     # Compute olivine composition in equilibrium with melt
     oxide_wt_olivine = {
@@ -217,15 +288,56 @@ def add_olivine(in_comp, Kd=None, dm=0.0005):
     return normalise(out_comp)
 
 def fill_dict_with_nans(in_dict):
+    """
+    Fill a dictionary with numpy.nan values.
+    
+    Parameters
+    ----------
+    in_dict : dict
+        The dictionary to be filled with nans.
+        
+    Returns
+    out_dict : dict
+        The dictionary with all values replaces with nan.
+    """
     out_dict = {}
     for key in in_dict:
         out_dict[key] = np.nan
     return out_dict
 
-def backtrack_sample_composition(df, target_Fo=0.9, Kd=None, dm=0.0005, verbose=False, max_olivine_addition=0.3):
+def backtrack_sample_composition(
+    df, target_Fo=0.9, Kd=None, dm=0.0005, verbose=False, 
+    max_olivine_addition=0.3):
     """
-    Backtrack composition to desired mantle forsterite number. Iteratively adds
-    olivine in equilibrium with melt until desired composition is reached.
+    Backtrack composition to desired mantle forsterite number.
+    
+    Iteratively adds olivine in equilibrium with melt until desired composition
+    is reached.
+    
+    Parameters
+    ----------
+    df : pandas dataframe
+        Dataframe containing the initial composition to be backtracked.
+        Should contain only one row. To use with a multi-row dataframe use
+        df.apply().
+    target_Fo : float, optional
+        The forsterite number of the mantle source.
+        We add iteratively add olivine to the sample composition until this
+        value is reached.
+    Kd : float or NoneType, optional
+        Partition coefficient to be used.
+        If None, calculated from the sample composition provided.
+    dm : float, optional
+        The fraction of olivine to be added at each iteration.
+    verbose : bool, optional
+        If True, will print messages with information at each iteration.
+    max_olivine_addition : float, optional
+        Maximum fraction of olivine to add before backtracking is abandoned.
+    
+    Returns
+    -------
+    primary_oxide : df
+        The backtracked compositions.
     """
 
     # Get major oxides from data frame
@@ -234,7 +346,7 @@ def backtrack_sample_composition(df, target_Fo=0.9, Kd=None, dm=0.0005, verbose=
         oxide_wt_hydrous[ox] = df[ox]
 
     # Check Fo is below mantle Fo
-    Fo = forsterite_number(oxide_wt_hydrous)
+    Fo = compute_forsterite_number(oxide_wt_hydrous)
     if target_Fo-Fo < 0.005:
         oxide_wt_hydrous = fill_dict_with_nans(oxide_wt_hydrous)
         dm_tot = np.nan
@@ -250,7 +362,7 @@ def backtrack_sample_composition(df, target_Fo=0.9, Kd=None, dm=0.0005, verbose=
         while abs(target_Fo - Fo) > dm:
             oxide_wt_hydrous = add_olivine(oxide_wt_hydrous, Kd=Kd, dm=dm)
             dm_tot += dm
-            Fo = forsterite_number(oxide_wt_hydrous, Kd=Kd)
+            Fo = compute_forsterite_number(oxide_wt_hydrous, Kd=Kd)
             if verbose:
                 print(
                     "    - iteration %d: %.2f%% olivine added, melt Fo = %.4f." %
@@ -288,24 +400,25 @@ def backtrack_sample_composition(df, target_Fo=0.9, Kd=None, dm=0.0005, verbose=
 
     return primary_oxide
 
-def backtrack_compositions(df, target_Fo=0.9, Kd=False, dm=0.0005, verbose=False):
-    """
-    Backtrack compositions for entire dataframe and append results.
-    """
-    primary = df.apply(backtrack_sample_composition, axis=1, result_type="expand", args=(target_Fo,Kd,dm,verbose))
-    return pd.concat([df, primary], axis=1)
-
 def compute_water_correction(df):
     """
     Calculate temperature correction from water content.
 
     Equation (1), Plank and Forsyth (2016, G-cubed).
+    
+    Parameters
+    ----------
+    df : pandas dataframe
+        The sample compositions.
+        
+    Returns
+    -------
+    correction : pandas dataframe
+        The temperature corrections.
     """
-    return (
-        40.4*df.H2O_primary_wt -
-        2.97*df.H2O_primary_wt**2. +
-        0.0761*df.H2O_primary_wt**3.
-        )
+    
+    correction = 40.4*df['H2O_primary_wt'] - 2.97*df['H2O_primary_wt']**2. + 0.0761*df['H2O_primary_wt']**3.
+    return correction
 
 def compute_CO2_correction(df):
     """
@@ -313,39 +426,86 @@ def compute_CO2_correction(df):
     above 2 GPa (assumed to be influenced by presence of CO2).
 
     Equation (3), Plank and Forsyth (2016, G-cubed).
+    
+    Parameters
+    ----------
+    df : pandas dataframe
+        The sample compositions.
+        
+    Returns
+    -------
+    correction : pandas dataframe
+        The temperature corrections.
     """
-    return (df['SiO2_primary_wt_dry'] - 50.3) / -0.12804
+    correction = (df['SiO2_primary_wt_dry'] - 50.3) / -0.12804
+    return correction
 
 def compute_temperature(df):
     """
     Calculate equlibration temperature.
 
     Equation (1), Plank and Forsyth (2016, G-cubed).
+    
+    Parameters
+    ----------
+    df : pandas dataframe
+        The sample compositions.
+        
+    Returns
+    -------
+    temperature : pandas dataframe
+        The calculated temperature(s).
     """
-    return (
+    temperature = (
         1264.5 +
         7.85*df['Mg4Si2O8'] +
         8545./df['Si4O8'] -
         5.96*df['Al16/3O8']
         )
+    return temperature
 
 def compute_pressure(df, T):
     """
     Calculate equlibration pressure.
 
     Equation (2), Plank and Forsyth (2016, G-cubed).
+
+    Parameters
+    ----------
+    df : pandas dataframe
+        The sample compositions.
+        
+    Returns
+    -------
+    pressure : pandas dataframe
+        The calculated pressure(s).
     """
-    return (
+    pressure = (
         np.log(df['Si4O8']) -
         4.045 +
         0.0114*df['Fe4Si2O8'] +
         0.00052*df['Ca4Si2O8']**2. +
         0.0024*df['Mg4Si2O8']) / (-336.3/T - 0.0007*np.sqrt(T)
         )
+    return pressure
 
 def compute_sample_pressure_temperature(df):
     """
     Compute equilibration pressure and temperature for a given sample.
+
+    Parameters
+    ----------
+    df : pandas dataframe
+        Dataframe containing the sample primary composition.
+        Should contain only one row. To use with a multi-row dataframe use
+        df.apply().
+        
+    Returns
+    -------
+    out : dict
+        The equilibration pressure and temperature result.
+        Temperature is in degrees celcius.
+        Pressure is in GPa.
     """
     water_correction = compute_water_correction(df)
     T = compute_temperature(df) - water_correction
@@ -353,22 +513,31 @@ def compute_sample_pressure_temperature(df):
     if P > 2.:
         T -= compute_CO2_correction(df)
         P = compute_pressure(df, T)
-    return {'P': P, 'T': T - 273.15}
-
-def compute_pressure_temperature(df):
-    """
-    Compute equilibration pressures and temperatures for entire dataframe
-    and append results.
-    """
-    PT = df.apply(compute_sample_pressure_temperature, axis=1, result_type="expand")
-    return pd.concat([df, PT], axis=1)
+    out = {'P': P, 'T': T - 273.15}
+    return out
 
 # ---- Melt Path Fitting
 
 def melt_fraction_to_pressure_temperature(F, path):
     """
-    Find pressure and temperature of given melt fraction along given melting
-    path.
+    Find pressure and temperature corresponding to specified melt fraction
+    for a specified melting path.
+    
+    Parameters
+    ----------
+    F : float
+        The melt fraction.
+    path : instance of pyMelt meltingColumn
+        The melt path.
+        Can be instance of any class containing arrays of melt fraction (F),
+        pressure (P) and temperature (T).
+        
+    Returns
+    -------
+    P : float
+        Pressure corresponding to specified melt fraction.
+    T : float 
+        Temperature corresponding to specified melt fraction.
     """
     P = np.interp(F, path.F, path.P)
     T = np.interp(F, path.F, path.T)
