@@ -846,19 +846,113 @@ def combine(df):
 # ---- Suite class
 
 class Suite:
+    """
+    Store and process compositions of basaltic rocks.
+    
+    Includes methods to find primary compositions (i.e. correcting for the
+    crystallisation of olivine; Lee et al., 2009, EPSL), compute equilibration
+    pressures and temperatures (Plank & Forsyth, 2016, G-cubed), and fit
+    melting paths to those pressure-temperature estimates.
+    
+    Parameters
+    ----------
+    input_csv : str
+        Path to a csv containing data to be read.
+    src_FeIII_totFe : float
+        Ratio of Fe3+ to total Fe in the mantle source.
+    min_SiO2 : float, optional
+        Minimum amount of SiO2 in sample to be accepted.
+    min_MgO : float, optional
+        Minimum amound of MgO in sample to be accepted.
+        
+    Properties
+    ----------
+    data : pandas dataframe
+        The raw data from the provided csv.
+    primary : pandas dataframe or NoneType
+        If backtrack_compositions has been run, will contain the estimated
+        primary compositions in various forms.
+    PT : pandas dataframe or NoneType
+        If compute_pressure_temperature has been run, will contain the
+        esimated equilibration pressures and temperatures.
+    PT_to_fit : pandas dataframe or NoneType
+        If any melt-path fitting has been run, will contain pressure and
+        temperature estimates of samples that have been selected for fitting.
+    individual_melt_fractions : pandas dataframe or NoneType
+        If find_individual_melt_fractions, will contain results of fitting
+        suite of pressure-temperature estimates to a specified melt path.
+    individual_potential_temperatures : pandas dataframe or NoneType
+        If find_individual_potential_temperatures has been run, will contain
+        results of fitting melting paths to each individual pressure-
+        temperature estimate.
+    suite_melt_fractions : pandas dataframe or NoneType
+        If find_suite_potential_temperature has been run, will contain closest
+        points on best-fitting melting path for each pressure-temperature
+        estimate.
+    potential_temperature : float or NoneType
+        If find_suite_potential_temperature has been run, will be the best-
+        fitting potential temperature for the suite of pressure-temperature
+        estimates.
+    upper_potential_temperature : float or NoneType
+        If find_suite_potential_temperature has been run, with find_bounds,
+        will be the upper bound on potential temperature for the suite of
+        pressure-temperature estimates.
+    lower_potential_temperature : float or NoneType
+        If find_suite_potential_temperature has been run, with find_bounds,
+        will be the lower bound on potential temperature for the suite of
+        pressure-temperature estimates.
+    path : instance of pyMelt.meltingcolumn_classes.meltingColumn
+        If find_suite_potential_temperature has been run, will be the best-
+        fitting melting path.
+    upper_path : instance of pyMelt.meltingcolumn_classes.meltingColumn
+        If find_suite_potential_temperature has been run, with find_bounds,
+        will be the upper-bounding melting path.
+    lower_path : instance of pyMelt.meltingcolumn_classes.meltingColumn
+        If find_suite_potential_temperature has been run, with find_bounds,
+        will be the lower-bounding melting path.
+    
+    Methods
+    -------
+    backtrack_compositions :
+        Backtrack compositions for entire dataframe.
+    compute_pressure_temperature :
+        Compute equilibration pressures and temperatures for entire suite.
+    check_samples_for_fitting :
+        Determine whether a sample should be fit to or not.
+    find_individual_melt_fractions :
+        Find best-fitting melt fractions for each sample relative to given melt
+        path.
+    find_individual_potential_temperatures :
+        Find best-fitting potential temperatures and corresponding melt
+        fractions for each sample.
+    find_suite_potential_temperature :
+        Find best-fitting potential temperature for entire suite.
+    write_to_csv :
+        Write results to csv.
+    """
 
     def __init__(self, input_csv, src_FeIII_totFe=0.19, min_SiO2=0., min_MgO=0.):
-        self.data = parse_csv(input_csv, src_FeIII_totFe=src_FeIII_totFe, min_SiO2=min_SiO2, min_MgO=min_MgO)
+        self.data = parse_csv(
+            input_csv,
+            src_FeIII_totFe=src_FeIII_totFe,
+            min_SiO2=min_SiO2,
+            min_MgO=min_MgO)
         self.primary = None
         self.PT = None
         self.PT_to_fit = None
         self.individual_melt_fractions = None
         self.individual_potential_temperatures = None
         self.suite_melt_fractions = None
+        self.potential_temperature = None
+        self.upper_potential_temperature = None
+        self.lower_potential_temperature = None
+        self.path = None
+        self.upper_path = None
+        self.lower_path = None
 
     def backtrack_compositions(self, target_Fo=0.9, Kd=False, dm=0.0005, verbose=False):
         """
-        Backtrack compositions for entire dataframe and append results.
+        Backtrack compositions for entire dataframe.
         """
         self.primary = self.data.apply(
             backtrack_sample_composition,
@@ -869,8 +963,7 @@ class Suite:
 
     def compute_pressure_temperature(self):
         """
-        Compute equilibration pressures and temperaturesfor entire dataframe
-        and append results.
+        Compute equilibration pressures and temperatures for entire suite.
         """
         self.PT = self.primary.apply(compute_sample_pressure_temperature, axis=1, result_type="expand")
         
