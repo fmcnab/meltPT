@@ -5,8 +5,7 @@ from copy import deepcopy
 import sys
 import pyMelt as m
 from scipy.optimize import minimize, minimize_scalar
-from shapely.geometry import Point
-from shapely.geometry.polygon import Polygon
+import shapely.geometry as shp
 
 def parse_csv(infile, Ce_to_H2O=200., src_FeIII_totFe=0.2, min_SiO2=0., min_MgO=0.):
 
@@ -755,8 +754,41 @@ def compute_suite_potential_temperature_misfit(Tp, df, mantle):
     misfit = np.nanmean(melt_fraction_fits['misfit'])
     return misfit
 
-def find_bound(points, starting_temperature, mantle, lower=False):
+def find_bounding_potential_temperature(points, starting_temperature, mantle, lower=False, threshold=(2./3.)):
+    """
+    Find either upper or lower bound on best-fitting potential temperature for
+    suite of pressure-temperature estimates.
     
+    Works by computing melting paths progressively further away from the best-
+    fitting path, until a threshold number of points lie between the two paths.
+    
+    Parameters
+    ----------
+    points : list of shapely.geometry.point.Point objects
+        The points to be bounded.
+    starting_temperature : float
+        The best-fitting potential temperature for the suite.
+    mantle : instance of pyMelt.mantle_class.mantle
+        The mantle object to be used to calculate the melting paths.
+    lower : bool, optional
+        Specify whether an upper or lower bound is to be found.
+    threshold : float
+        The threshold fraction of points to be lie between the best-fitting
+        and bounding temperature melting paths.
+    
+    Returns
+    -------
+    bounding_temperature : float
+        The estimated bounding temperature.
+    bounding_path : instance of pyMelt.meltingcolumn_classes.meltingColumn
+        The melting path corresonding to the bounding potential temperature.
+    """
+    
+    # First check whether an upper or lower bound is to be found and define
+    # initial guess and the adjustment direction accordingly.
+    # If searching for an upper bound, initial guess given by rounding up
+    # best-fitting temperature to nearest whole degree and increment is
+    # positive. Otherwise, we round down and the increment is negative.
     if not lower:
         bounding_temperature = np.ceil(starting_temperature)
         adjustment = 1.
@@ -764,22 +796,42 @@ def find_bound(points, starting_temperature, mantle, lower=False):
         bounding_temperature = np.floor(starting_temperature)
         adjustment = -1.
     
+    # Initialise array specifying which points are inside (1) vs. outside (0)
+    # the bounding melting paths.
     inside = np.zeros(len(points))
-    
-    max_P = max([p.coords.xy[1][0] for p in points])
-    main_path = mantle.adiabaticMelt(starting_temperature, Pstart=max(max(mantle.solidusIntersection(starting_temperature))+0.01, max_P), dP=-0.01)
 
+    # Compute melting path corresponding to best-fitting potential temperature
+    # Use largest of solidus pressure or maximum pressure in points as the
+    # starting pressure.
+    max_P = max([p.coords.xy[1][0] for p in points])
+    main_path = mantle.adiabaticMelt(
+        starting_temperature,
+        Pstart=max(max(mantle.solidusIntersection(starting_temperature))+0.01, max_P),
+        dP=-0.01)
+
+    # Start incrementally expanding bounds.
     while True:
-        bounding_path = mantle.adiabaticMelt(bounding_temperature, Pstart=max(max(mantle.solidusIntersection(bounding_temperature))+0.01, max_P), dP=-0.01)
+        
+        # Compute melting bath corresponding to bounding potential temperature.
+        bounding_path = mantle.adiabaticMelt(
+            bounding_temperature,
+            Pstart=max(max(mantle.solidusIntersection(bounding_temperature))+0.01, max_P), 
+            dP=-0.01)
+        
+        # Create bounding polygon.
         bounds = np.vstack(( 
             np.column_stack(( main_path.T, main_path.P )),
             np.column_stack(( bounding_path.T[::-1], bounding_path.P[::-1] ))
             ))
-        poly = Polygon(bounds)
+        poly = shp.polygon.Polygon(bounds)
+        
+        # Check which points lie inside polygon.
         for i,p in enumerate(points):
             if poly.contains(p):
                 inside[i] = 1.
-        if sum(inside) / len(points) > 2./3.:
+        
+        # Stop if we have reached threshold, otherwise increment and continue.
+        if sum(inside) / len(points) > threshold:
             break
         else:
             bounding_temperature += adjustment
@@ -891,12 +943,12 @@ class Suite:
             lower_points = []
             for i in range(len(self.PT_to_fit)):
                 if self.PT_to_fit['T'].iloc[i] - self.suite_melt_fractions['T'].iloc[i] > 0:
-                    upper_points.append(Point(self.PT_to_fit['T'].iloc[i], self.PT_to_fit['P'].iloc[i]))
+                    upper_points.append(shp.Point(self.PT_to_fit['T'].iloc[i], self.PT_to_fit['P'].iloc[i]))
                 elif self.PT_to_fit['T'].iloc[i] - self.suite_melt_fractions['T'].iloc[i] < 0.:
-                    lower_points.append(Point(self.PT_to_fit['T'].iloc[i], self.PT_to_fit['P'].iloc[i]))
+                    lower_points.append(shp.Point(self.PT_to_fit['T'].iloc[i], self.PT_to_fit['P'].iloc[i]))
 
-        self.upper_potential_temperature, self.upper_path = find_bound(upper_points, self.potential_temperature, mantle)
-        self.lower_potential_temperature, self.lower_path = find_bound(lower_points, self.potential_temperature, mantle, lower=True)
+        self.upper_potential_temperature, self.upper_path = find_bounding_potential_temperature(upper_points, self.potential_temperature, mantle)
+        self.lower_potential_temperature, self.lower_path = find_bounding_potential_temperature(lower_points, self.potential_temperature, mantle, lower=True)
 
     def write_to_csv(self, outfile, write_primary=True, write_PT=True):
         """
