@@ -80,8 +80,8 @@ plt.legend()
 plt.gca().invert_yaxis()
 plt.show()
 
-# ---- Write CSV
-s.write_to_csv("North_Sea_output.csv")
+# # ---- Write CSV
+# s.write_to_csv("North_Sea_output.csv")
 
 
 

@@ -527,7 +527,7 @@ def melt_fraction_to_pressure_temperature(F, path):
     ----------
     F : float
         The melt fraction.
-    path : instance of pyMelt meltingColumn
+    path : instance of pyMelt.meltingcolumn_classes.meltingColumn
         The melt path.
         Can be instance of any class containing arrays of melt fraction (F),
         pressure (P) and temperature (T).
@@ -543,44 +543,169 @@ def melt_fraction_to_pressure_temperature(F, path):
     T = np.interp(F, path.F, path.T)
     return P, T
     
-def compute_sample_melt_fraction_misfit(F, df, path, full_output=True):
+def compute_sample_melt_fraction_misfit(F, df, path, P_err=0.24, T_err=39.):
     """
-    Compute misfit between sample and point along given melting path.
-    Point on melt path is specified by melt fraction.
+    Compute misfit between sample and point along given melting path,
+    specified by melt path.
+    
+    Parameters
+    ----------
+    F : float
+        The melt fraction with which to compare the pressure/temperature
+        point.
+    df : pandas dataframe
+        Dataframe containing sample pressure and temperature estimates.
+    path : instance of pyMelt.meltingcolumn_classes.meltingColumn
+        The melt path.
+        Can be instance of any class containing arrays of melt fraction (F),
+        pressure (P) and temperature (T).
+    P_err : float, optional
+        Uncertainty in pressure observation(s).
+    T_err : float, optional
+        Uncertainty in temperature observation(s).
+
+    Returns
+    -------
+    misfit : float
+        Misfit between observed pressure and temperature and point along
+        melt path. Defined as distance in normalised pressure-temperature
+        space. Pressure and temperature are normalised by their respective
+        uncertainties.
     """
     model_P, model_T = melt_fraction_to_pressure_temperature(F, path)
-    misfit = np.sqrt( (abs(df['P']-model_P)/0.24)**2. + (abs(df['T']-model_T)/39.)**2. )
+    misfit = np.sqrt( 
+        ((df['P']-model_P)/P_err)**2. + ((df['T']-model_T)/T_err)**2.
+        )
     return misfit
     
-def find_sample_melt_fraction(df, path, full_output=True):
+def find_sample_melt_fraction(df, path):
     """
-    Find best-fitting melt fraction between sample and given melting path.
+    Find best-fitting melt fraction for sample along given melting path.
     
-    If "full_output" is True, returns dictionary with best-fitting melt
-    fraction, corresponding pressure and temperature, and misfit at minimum.
-    If False, only returns misfit (for use in fitting melting paths to entire
-    suite.)
+    Uses scipy's minimize_scalar function to find melt fraction that minimizes 
+    misfit between estimated pressure and temperature and the melt path.
+    Options used are:
+        method: "bounded"
+        bounds:  min --> 0
+                 max --> Maximum melt fraction in "path"
+        bracket: min --> 0
+                 max --> Maximum melt fraction in "path"
+        
+    Parameters
+    ----------
+    df : pandas dataframe
+        Dataframe containing sample pressure and temperature estimates.
+        Should contain only one row. To use with a multi-row dataframe use
+        df.apply().
+    path : instance of pyMelt.meltingcolumn_classes.meltingColumn
+        The melting path.
+        Can be instance of any class containing arrays of melt fraction (F),
+        pressure (P) and temperature (T).
+        
+    Returns
+    -------
+    out : dict
+        Various properties of the result:
+            F : float 
+                The best-fitting melt fraction.
+            P : float
+                Pressure on path corresponding to best-fitting melt fraction.
+            T : float
+                Temperature on path corresponding to best-fitting melt fraction.
+            misfit : float
+                Distance between sample and closest point on melting path.
+        If sample pressure or temperature are nan, all returned values are nan.
     """
     if np.isnan(df['P']) or np.isnan(df['T']):
-        return {'F_path_ind': np.nan, 'P_path_ind': np.nan, 'T_path_ind': np.nan, 'misfit': np.nan}
+        out = {'F': np.nan, 'P': np.nan, 'T': np.nan, 'misfit': np.nan}
     else:
         fit = minimize_scalar(
             compute_sample_melt_fraction_misfit, 
             bounds=(0.,max(path.F)), 
             bracket=(0.,max(path.F)), 
-            args=(df, path,False), 
+            args=(df, path), 
             method="bounded")
         P, T = melt_fraction_to_pressure_temperature(fit.x, path)
-        return {'F_path_ind': fit.x, 'P_path_ind': P, 'T_path_ind': T, 'misfit': fit.fun}    
+        out = {'F': fit.x, 'P': P, 'T': T, 'misfit': fit.fun}
+    return out
 
 def compute_sample_potential_temperature_misfit(Tp, df, mantle):
-    path = mantle.adiabaticMelt(Tp, Pstart=max(mantle.solidusIntersection(Tp))+0.01, dP=-0.01)
-    fit = find_sample_melt_fraction(df, path, full_output=False)
-    return fit['misfit']
+    """
+    Compute a melting path for a given potential temperature then find misfit
+    between it and a sample pressure-temperature estimate.
+    
+    First uses mantle.adiabaticMelt() to compute melt path for specified
+    potential temperature. Then finds closest melt fraction 
+    
+    Parameters
+    ----------
+    Tp : float
+        The potential temperature to be used.
+    df : pandas dataframe
+        Dataframe containing sample pressure and temperature estimates.
+        Should contain only one row. To use with a multi-row dataframe use
+        df.apply().
+    mantle : instance of pyMelt.mantle_class.mantle
+        The mantle object to be used to calculate the melting path.
+    
+    Returns
+    -------
+    misfit : float
+        Distance between sample pressure-temperature estimate and its nearest
+        point on the calculated melting path.
+    """
+    path = mantle.adiabaticMelt(
+        Tp, 
+        Pstart=max(mantle.solidusIntersection(Tp))+0.01,
+        dP=-0.01)
+    misfit = find_sample_melt_fraction(df, path)['misfit']
+    return misfit
 
 def find_sample_potential_temperature(df, mantle):
+    """
+    Find best-fitting potential temperature for a sample pressure-temperature
+    estimate.
+    
+    Uses scipy's minimize_scalar function to find potential temperature that
+    minimizes misfit between estimated pressure and temperature and the
+    corresponding  melt path. Options used are:
+        method: "bounded"
+        bounds:  min --> 
+                 max --> 1600 oC
+        bracket: min --> intersection of solidus with surface
+                 max --> 1600 oC
+                 
+    Parameters
+    ----------
+    df : pandas dataframe
+        Dataframe containing sample pressure and temperature estimates.
+        Should contain only one row. To use with a multi-row dataframe use
+        df.apply().
+    mantle : instance of pyMelt.mantle_class.mantle
+        The mantle object to be used to calculate the melting paths.
+        
+    Returns
+    -------
+    out : dict
+        Various properties of the result:
+            F : float 
+                The melt fraction along the best-fitting melting path.
+            P : float
+                The pressure along the best-fitting melting path.
+            T : float
+                The temperature along the best-fitting melting path.
+            misfit : float
+                Distance between sample and closest point on melting path.
+            Tp : float
+                The best-fitting potential temperature.
+            path : instance of pyMelt.meltingcolumn_classes.meltingColumn
+                The best-fitting melting path.
+        If sample pressure or temperature are nan, all returned values are nan.
+    """
     if np.isnan(df['P']) or np.isnan(df['T']):
-        return {'F_path_ind': np.nan, 'P_path_ind': np.nan, 'T_path_ind': np.nan, 'misfit': np.nan, 'Tp_ind': np.nan, 'path_ind': np.nan}
+        out = {
+            'F': np.nan, 'P': np.nan, 'T': np.nan, 
+            'misfit': np.nan, 'Tp': np.nan, 'path': np.nan}
     else:    
         Tp_fit = minimize_scalar(
             compute_sample_potential_temperature_misfit, 
@@ -588,16 +713,47 @@ def find_sample_potential_temperature(df, mantle):
             bounds=(min([lith.TSolidus(0.) for lith in mantle.lithologies]),1600.), 
             args=(df,mantle), 
             method="bounded")
-        path = mantle.adiabaticMelt(Tp_fit.x, Pstart=max(mantle.solidusIntersection(Tp_fit.x))+0.01, dP=-0.01)
-        out_dict = find_sample_melt_fraction(df, path)
-        out_dict['Tp'] = Tp_fit.x 
-        out_dict['path'] = path
-        return out_dict
+        path = mantle.adiabaticMelt(
+            Tp_fit.x, 
+            Pstart=max(mantle.solidusIntersection(Tp_fit.x))+0.01, 
+            dP=-0.01)
+        out = find_sample_melt_fraction(df, path)
+        out['Tp'] = Tp_fit.x 
+        out['path'] = path
+    return out
         
 def compute_suite_potential_temperature_misfit(Tp, df, mantle):
-    path = mantle.adiabaticMelt(Tp, Pstart=max(mantle.solidusIntersection(Tp))+0.01, dP=-0.01)
-    melt_fraction_fits = df.apply(find_sample_melt_fraction, axis=1, result_type="expand", args=(path,))
-    return np.nanmean(melt_fraction_fits['misfit'])
+    """
+    Compute a melt path for a specified potential temperature then calculate
+    the misfit between it and one or more pressure-temperature estimates.
+    
+    Parameters
+    ----------
+    Tp : float
+        The potential temperature to be used.
+    df : pandas dataframe
+        Dataframe containing sample pressure and temperature estimates.
+        Can contain any number of samples.
+    mantle : instance of pyMelt.mantle_class.mantle
+        The mantle object to be used to calculate the melting paths.
+    
+    Returns
+    -------
+    misfit : float
+        The average distance between sample pressure-temperature estimates
+        and their nearest points on the calculated melting path.
+    """
+    path = mantle.adiabaticMelt(
+        Tp,
+        Pstart=max(mantle.solidusIntersection(Tp))+0.01, 
+        dP=-0.01)
+    melt_fraction_fits = df.apply(
+        find_sample_melt_fraction, 
+        axis=1, 
+        result_type="expand", 
+        args=(path,))
+    misfit = np.nanmean(melt_fraction_fits['misfit'])
+    return misfit
 
 def find_bound(points, starting_temperature, mantle, lower=False):
     
@@ -727,16 +883,16 @@ class Suite:
             args=(self.PT_to_fit, mantle),
             method="bounded")
         self.path = mantle.adiabaticMelt(Tp_fit.x, Pstart=max(mantle.solidusIntersection(Tp_fit.x))+0.01, dP=-0.01)
-        self.suite_melt_fractions = self.PT_to_fit.apply(find_sample_melt_fraction, axis=1, result_type="expand", args=(self.path,True))
+        self.suite_melt_fractions = self.PT_to_fit.apply(find_sample_melt_fraction, axis=1, result_type="expand", args=(self.path,))
         self.potential_temperature = Tp_fit.x
         
         if find_bounds:
             upper_points = []
             lower_points = []
             for i in range(len(self.PT_to_fit)):
-                if self.PT_to_fit['T'].iloc[i] - self.suite_melt_fractions['T_path_ind'].iloc[i] > 0:
+                if self.PT_to_fit['T'].iloc[i] - self.suite_melt_fractions['T'].iloc[i] > 0:
                     upper_points.append(Point(self.PT_to_fit['T'].iloc[i], self.PT_to_fit['P'].iloc[i]))
-                elif self.PT_to_fit['T'].iloc[i] - self.suite_melt_fractions['T_path_ind'].iloc[i] < 0.:
+                elif self.PT_to_fit['T'].iloc[i] - self.suite_melt_fractions['T'].iloc[i] < 0.:
                     lower_points.append(Point(self.PT_to_fit['T'].iloc[i], self.PT_to_fit['P'].iloc[i]))
 
         self.upper_potential_temperature, self.upper_path = find_bound(upper_points, self.potential_temperature, mantle)
