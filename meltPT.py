@@ -367,8 +367,8 @@ def melt_fraction_to_pressure_temperature(F, path):
     Find pressure and temperature of given melt fraction along given melting
     path.
     """
-    P = np.interp(F, path.F_total, path.P)
-    T = np.interp(F, path.F_total, path.T)
+    P = np.interp(F, path.F, path.P)
+    T = np.interp(F, path.F, path.T)
     return P, T
     
 def compute_sample_melt_fraction_misfit(F, df, path, full_output=True):
@@ -394,15 +394,15 @@ def find_sample_melt_fraction(df, path, full_output=True):
     else:
         fit = minimize_scalar(
             compute_sample_melt_fraction_misfit, 
-            bounds=(0.,max(path.F_total)), 
-            bracket=(0.,max(path.F_total)), 
+            bounds=(0.,max(path.F)), 
+            bracket=(0.,max(path.F)), 
             args=(df, path,False), 
             method="bounded")
         P, T = melt_fraction_to_pressure_temperature(fit.x, path)
         return {'F_path_ind': fit.x, 'P_path_ind': P, 'T_path_ind': T, 'misfit': fit.fun}    
 
 def compute_sample_potential_temperature_misfit(Tp, df, mantle):
-    path = mantle.AdiabaticMelt_1D(Tp, Pstart=max(mantle.solidus_intersection(Tp))+0.01, steps=101)
+    path = mantle.adiabaticMelt(Tp, Pstart=max(mantle.solidusIntersection(Tp))+0.01, steps=101)
     fit = find_sample_melt_fraction(df, path, full_output=False)
     return fit['misfit']
 
@@ -416,14 +416,14 @@ def find_sample_potential_temperature(df, mantle):
             bounds=(min([lith.TSolidus(0.) for lith in mantle.lithologies]),1600.), 
             args=(df,mantle), 
             method="bounded")
-        path = mantle.AdiabaticMelt_1D(Tp_fit.x, Pstart=max(mantle.solidus_intersection(Tp_fit.x))+0.01, steps=101)
+        path = mantle.adiabaticMelt(Tp_fit.x, Pstart=max(mantle.solidusIntersection(Tp_fit.x))+0.01, steps=101)
         out_dict = find_sample_melt_fraction(df, path)
         out_dict['Tp'] = Tp_fit.x 
         out_dict['path'] = path
         return out_dict
         
 def compute_suite_potential_temperature_misfit(Tp, df, mantle):
-    path = mantle.AdiabaticMelt_1D(Tp, Pstart=max(mantle.solidus_intersection(Tp))+0.01, steps=101)
+    path = mantle.adiabaticMelt(Tp, Pstart=max(mantle.solidusIntersection(Tp))+0.01, steps=101)
     melt_fraction_fits = df.apply(find_sample_melt_fraction, axis=1, result_type="expand", args=(path,))
     return np.nanmean(melt_fraction_fits['misfit'])
 
@@ -439,10 +439,10 @@ def find_bound(points, starting_temperature, mantle, lower=False):
     inside = np.zeros(len(points))
     
     max_P = max([p.coords.xy[1][0] for p in points])
-    main_path = mantle.AdiabaticMelt_1D(starting_temperature, Pstart=max(max(mantle.solidus_intersection(starting_temperature))+0.01, max_P), steps=101)
+    main_path = mantle.adiabaticMelt(starting_temperature, Pstart=max(max(mantle.solidusIntersection(starting_temperature))+0.01, max_P), steps=101)
 
     while True:
-        bounding_path = mantle.AdiabaticMelt_1D(bounding_temperature, Pstart=max(max(mantle.solidus_intersection(bounding_temperature))+0.01, max_P), steps=101)
+        bounding_path = mantle.adiabaticMelt(bounding_temperature, Pstart=max(max(mantle.solidusIntersection(bounding_temperature))+0.01, max_P), steps=101)
         bounds = np.vstack(( 
             np.column_stack(( main_path.T, main_path.P )),
             np.column_stack(( bounding_path.T[::-1], bounding_path.P[::-1] ))
@@ -554,7 +554,7 @@ class Suite:
             bounds=(min([lith.TSolidus(0.) for lith in mantle.lithologies]),1600.),
             args=(self.PT_to_fit, mantle),
             method="bounded")
-        self.path = mantle.AdiabaticMelt_1D(Tp_fit.x, Pstart=max(mantle.solidus_intersection(Tp_fit.x))+0.01, steps=101)
+        self.path = mantle.adiabaticMelt(Tp_fit.x, Pstart=max(mantle.solidusIntersection(Tp_fit.x))+0.01, steps=101)
         self.suite_melt_fractions = self.PT_to_fit.apply(find_sample_melt_fraction, axis=1, result_type="expand", args=(self.path,True))
         self.potential_temperature = Tp_fit.x
         
