@@ -9,7 +9,6 @@ s.compute_pressure_temperature()
 
 # ---- Set up mantle
 lz = m.lithologies.katz.lherzolite()
-lz.parameters['Mcpx'] = 0.25
 mantle = m.mantle([lz], [1], ['Lz'])
 max_P = -lz.parameters['A2'] / (2.*lz.parameters['A3'])
 P_sol = np.arange(0., max_P, 0.1)
