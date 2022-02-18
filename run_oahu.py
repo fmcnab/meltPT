@@ -32,3 +32,22 @@ plt.ylabel("Pressure [GPa]")
 plt.legend()
 plt.gca().invert_yaxis()
 plt.show()
+
+
+# ---- Plot Pressure vs. La/Sm
+
+fig, (ax1, ax2) = plt.subplots(1,2)
+
+ax1.scatter( s.data['Sm']/s.data['Yb'], s.PT['P'] )
+ax1.set_ylabel("P [Gpa]")
+ax1.set_xlabel("Sm/Yb")
+ax1.set_box_aspect(1)
+ax1.invert_yaxis()
+
+ax2.scatter( s.data['La']/s.data['Sm'], s.suite_melt_fractions['F'] )
+ax2.set_ylabel("F")
+ax2.set_xlabel("La/Sm")
+ax2.set_box_aspect(1)
+
+plt.tight_layout()
+plt.show()
