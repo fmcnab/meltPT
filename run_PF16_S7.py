@@ -15,7 +15,6 @@ lz = m.lithologies.katz.lherzolite()
 mantle = m.mantle([lz], [1], ['Lz'])
 P_sol = np.arange(0., 3., 0.1)
 T_sol = [lz.TSolidus(P) for P in P_sol]
-path = mantle.adiabaticMelt(1330., Pstart=6., steps=101)
 
 
 # ---- Perform fit to melt path
@@ -23,11 +22,11 @@ s.find_individual_potential_temperatures(mantle)
 print()
 print("Best-fitting melting model: Tp = %i oC, F = %.2f %%." % 
     (s.individual_potential_temperatures['Tp'], 
-    s.individual_potential_temperatures['F_path_ind']*100.))
-    
+    s.individual_potential_temperatures['F']*100.))
+
 
 # ---- Plot
-melt_label = "Melting path, $T_p = %i" % s.individual_potential_temperatures.iloc[0]['Tp']
+melt_label = "Melting path, $T_p = %i ^{\circ}$C" % s.individual_potential_temperatures.iloc[0]['Tp']
 plt.plot(T_sol, P_sol, "k", label="Solidus")
 plt.plot(
     s.individual_potential_temperatures.iloc[0]['path'].T, 

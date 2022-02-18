@@ -364,8 +364,8 @@ def backtrack_sample_composition(
             Fo = compute_forsterite_number(oxide_wt_hydrous, Kd=Kd)
             if verbose:
                 print(
-                    "    - iteration %d: %.2f%% olivine added, melt Fo = %.4f." %
-                    (i, dm_tot/(1.+dm_tot)*100., Fo)
+                    "    - %.2f%% olivine added, melt Fo = %.4f." %
+                    (dm_tot/(1.+dm_tot)*100., Fo)
                     )
             if dm_tot/(1. + dm_tot) > max_olivine_addition:
                 oxide_wt_hydrous = fill_dict_with_nans(oxide_wt_hydrous)
@@ -669,7 +669,7 @@ def find_sample_potential_temperature(df, mantle):
     minimizes misfit between estimated pressure and temperature and the
     corresponding  melt path. Options used are:
         method: "bounded"
-        bounds:  min --> 
+        bounds:  min --> intersection of solidus with surface
                  max --> 1600 oC
         bracket: min --> intersection of solidus with surface
                  max --> 1600 oC
@@ -839,10 +839,6 @@ def find_bounding_potential_temperature(points, starting_temperature, mantle, lo
     return bounding_temperature, bounding_path
 
 
-def combine(df):
-    return {'fit': df.to_numpy().all()}
-
-
 # ---- Suite class
 
 class Suite:
@@ -914,11 +910,11 @@ class Suite:
     Methods
     -------
     backtrack_compositions :
-        Backtrack compositions for entire dataframe.
+        Backtrack compositions for entire suite.
     compute_pressure_temperature :
         Compute equilibration pressures and temperatures for entire suite.
     check_samples_for_fitting :
-        Determine whether a sample should be fit to or not.
+        Determine which samples should be fitted.
     find_individual_melt_fractions :
         Find best-fitting melt fractions for each sample relative to given melt
         path.
@@ -950,9 +946,29 @@ class Suite:
         self.upper_path = None
         self.lower_path = None
 
-    def backtrack_compositions(self, target_Fo=0.9, Kd=False, dm=0.0005, verbose=False):
+    def backtrack_compositions(self, target_Fo=0.9, Kd=False, dm=0.0005, verbose=False, max_olivine_addition=0.3):
         """
-        Backtrack compositions for entire dataframe.
+        Backtrack compositions for entire suite.
+        
+        Applies backtrack_sample_composition to the "data" property. Result is
+        saved in the "primary" property.
+        
+        Parameters
+        ----------
+        target_Fo : float, optional
+            The forsterite number of the mantle source.
+            We add iteratively add olivine to the sample composition until this
+            value is reached.
+        Kd : float or NoneType, optional
+            Partition coefficient to be used.
+            If None, calculated from the sample composition provided.
+        dm : float, optional
+            The fraction of olivine to be added at each iteration.
+        verbose : bool, optional
+            If True, will print messages with information at each iteration.
+        max_olivine_addition : float, optional
+            Maximum fraction of olivine to add before backtracking is
+            abandoned.
         """
         self.primary = self.data.apply(
             backtrack_sample_composition,
@@ -964,19 +980,40 @@ class Suite:
     def compute_pressure_temperature(self):
         """
         Compute equilibration pressures and temperatures for entire suite.
+        
+        Applies "compute_sample_pressure_temperature" to the "primary"
+        property. Result is saved in the "PT" property.
         """
-        self.PT = self.primary.apply(compute_sample_pressure_temperature, axis=1, result_type="expand")
+        self.PT = self.primary.apply(
+            compute_sample_pressure_temperature, 
+            axis=1, 
+            result_type="expand")
         
     def check_samples_for_fitting(self, mantle, filters=(None,), args=((None,))):
         """
-        Determine whether sample should be fit to or not.
+        Determine which samples should be fitted.
         
-        Checks if within error of the solidus for given mantle composition.
-
-        Also applies any other filters provided. Filters should be in form of
-        function that returns True or False.
+        Samples below the solidus will be dropped. Also applies additional
+        filters if provided by the user. Samples which fail any filter will
+        be rejected.
+        
+        Result is saved in "PT_to_fit" property. Same as "PT" but rejected
+        samples are assigned nan pressure and temperature.
+        
+        Parameters
+        ----------
+        mantle : instance of pyMelt.mantle_class.mantle
+            The mantle object to be used to calculate the solidus.
+        filters : tuple of functions, optional
+            Set of functions to filter samples before fitting.
+            Filters take the form of a function that reads a single-row
+            dataframe and returns either true or force.
+        args : tuple of tuples, optional, same length as filters
+            Extra arguments to be passed to the filter functions.
         """
-                
+        def combine(df):
+            return {'fit': df.to_numpy().all()}
+
         def above_solidus(df, mantle):
             return {'fit': max([l.TSolidus(df['P']) for l in mantle.lithologies]) - df['T'] < 39.}
 
@@ -995,7 +1032,23 @@ class Suite:
     def find_individual_melt_fractions(self, mantle, path, filters=(None,), filter_args=(None,)):
         """
         Find best-fitting melt fractions for each sample relative to given melt
-        path. 
+        path.
+        
+        Applies "find_sample_melt_fraction" to "PT_to_fit" dataframe. Results
+        saved in "individual_melt_fractions" property.
+        
+        Parameters
+        ----------
+        mantle : instance of pyMelt.mantle_class.mantle
+            The mantle object to be used to calculate the solidus.
+        path : instance of pyMelt.meltingcolumn_classes.meltingColumn
+            The melting path to be used.
+        filters : tuple of functions, optional
+            Set of functions to filter samples before fitting.
+            Filters take the form of a function that reads a single-row
+            dataframe and returns either true or force.
+        args : tuple of tuples, optional, same length as filters
+            Extra arguments to be passed to the filter functions.
         """
         self.check_samples_for_fitting(mantle, filters, filter_args)
         self.individual_melt_fractions = self.PT_to_fit.apply(
@@ -1006,8 +1059,22 @@ class Suite:
 
     def find_individual_potential_temperatures(self, mantle, filters=(None,), filter_args=(None,)):
         """
-        Find best-fitting potential temperatures and corresponding melt
-        fractions for each sample.
+        Find best-fitting melting paths for each sample.
+        
+        Applies "find_sample_potential_temperature" to "PT_to_fit" dataframe.
+        Result is saved in "individual_potential_temperatures" property.
+
+        Parameters
+        ----------
+        mantle : instance of pyMelt.mantle_class.mantle
+            The mantle object to be used to calculate the solidus and melting
+            paths.
+        filters : tuple of functions, optional
+            Set of functions to filter samples before fitting.
+            Filters take the form of a function that reads a single-row
+            dataframe and returns either true or force.
+        args : tuple of tuples, optional, same length as filters
+            Extra arguments to be passed to the filter functions.
         """
         self.check_samples_for_fitting(mantle, filters, filter_args)
         self.individual_potential_temperatures = self.PT_to_fit.apply(
@@ -1016,9 +1083,55 @@ class Suite:
             result_type="expand", 
             args=(mantle,))
 
-    def find_suite_potential_temperature(self, mantle, find_bounds=False, filters=(None,), filter_args=(None,)):
+    def find_suite_potential_temperature(self, mantle, find_bounds=False, bounds_threshold=(2./3.), filters=(None,), filter_args=(None,)):
         """
-        Find best-fitting potential temperature for entire suite.
+        Find best-fitting potential temperature for suite.
+        
+        Uses scipy's minimize_scalar to minimize mean distance from suite
+        pressure-temperature estimates to melting path. Options used are:
+            method: "bounded"
+            bounds:  min --> intersection of solidus with surface
+                     max --> 1600 oC
+            bracket: min --> intersection of solidus with surface
+                     max --> 1600 oC
+        
+        Parameters
+        ----------
+        mantle : instance of pyMelt.mantle_class.mantle
+            The mantle object to be used to calculate the solidus and melting
+            paths.
+        find_bounds : bool, optional
+            If True, uses find_bounds to place upper and lower bounds on
+            best-fitting potential temperature.
+        bounds_threshold : float
+            The threshold fraction of points to be lie between the best-fitting
+            and bounding temperature melting paths.
+        filters : tuple of functions, optional
+            Set of functions to filter samples before fitting.
+            Filters take the form of a function that reads a single-row
+            dataframe and returns either true or force.
+        args : tuple of tuples, optional, same length as filters
+            Extra arguments to be passed to the filter functions.         
+        
+        Results (saved as class properties)
+        -------
+        potential_temperature : float
+            The best-fitting potential temperature.
+        path : instance of pyMelt.meltingcolumn_classes.meltingColumn
+            The best-fitting melting path.
+        suite_melt_fractions : pandas dataframe
+            Nearest melt fractions, pressures and temperatures along best-
+            fitting melting path for each sample.
+        upper_potential_temperature : float, if find_bounds is True
+            The upper bouding potential temperature.
+        lower_potential_temperature : float, if find_bounds is True
+            The lower bounding potential temperature.
+        upper_path : instance of pyMelt.meltingcolumn_classes.meltingColumn, 
+                        if finds_bounds is True
+            The upper bounding melting path.
+        lower_path : instance of pyMelt.meltingcolumn_classes.meltingColumn, 
+                        if finds_bounds is True
+            The lower bounding melting path.
         """
         self.check_samples_for_fitting(mantle, filters, filter_args)
         Tp_fit = minimize_scalar(
@@ -1040,8 +1153,8 @@ class Suite:
                 elif self.PT_to_fit['T'].iloc[i] - self.suite_melt_fractions['T'].iloc[i] < 0.:
                     lower_points.append(shp.Point(self.PT_to_fit['T'].iloc[i], self.PT_to_fit['P'].iloc[i]))
 
-        self.upper_potential_temperature, self.upper_path = find_bounding_potential_temperature(upper_points, self.potential_temperature, mantle)
-        self.lower_potential_temperature, self.lower_path = find_bounding_potential_temperature(lower_points, self.potential_temperature, mantle, lower=True)
+        self.upper_potential_temperature, self.upper_path = find_bounding_potential_temperature(upper_points, self.potential_temperature, mantle, threshold=bounds_threshold)
+        self.lower_potential_temperature, self.lower_path = find_bounding_potential_temperature(lower_points, self.potential_temperature, mantle, lower=True, threshold=bounds_threshold)
 
     def write_to_csv(self, outfile, write_primary=True, write_PT=True):
         """

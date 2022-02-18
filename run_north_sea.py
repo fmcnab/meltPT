@@ -17,10 +17,10 @@ melt_fraction_fit = find_sample_melt_fraction(s.PT.iloc[0], path)
 plt.plot(T_sol, P_sol, "k")
 plt.plot(path.T, path.P, "--")
 plt.plot(
-    [melt_fraction_fit['T_path_ind'], s.PT.iloc[0]['T']], 
-    [melt_fraction_fit['P_path_ind'], s.PT.iloc[0]['P']])
+    [melt_fraction_fit['T'], s.PT.iloc[0]['T']], 
+    [melt_fraction_fit['P'], s.PT.iloc[0]['P']])
 plt.scatter(s.PT.iloc[0]['T'], s.PT.iloc[0]['P'], marker="*")
-plt.scatter(melt_fraction_fit['T_path_ind'], melt_fraction_fit['P_path_ind'])
+plt.scatter(melt_fraction_fit['T'], melt_fraction_fit['P'])
 plt.xlabel(r"Temperature [$^\circ$C]")
 plt.ylabel("Pressure [GPa]")
 plt.gca().invert_yaxis()
@@ -32,10 +32,10 @@ plt.plot(T_sol, P_sol, "k")
 plt.plot(path.T, path.P, "--")
 for i in range(len(s.PT)):
     plt.plot(
-        [s.individual_melt_fractions.iloc[i]['T_path_ind'], s.PT.iloc[i]['T']], 
-        [s.individual_melt_fractions.iloc[i]['P_path_ind'], s.PT.iloc[i]['P']])
+        [s.individual_melt_fractions.iloc[i]['T'], s.PT.iloc[i]['T']], 
+        [s.individual_melt_fractions.iloc[i]['P'], s.PT.iloc[i]['P']])
     plt.scatter(s.PT.iloc[i]['T'], s.PT.iloc[i]['P'], marker="*")
-    plt.scatter(s.individual_melt_fractions.iloc[i]['T_path_ind'], s.individual_melt_fractions.iloc[i]['P_path_ind'])
+    plt.scatter(s.individual_melt_fractions.iloc[i]['T'], s.individual_melt_fractions.iloc[i]['P'])
 plt.xlabel(r"Temperature [$^\circ$C]")
 plt.ylabel("Pressure [GPa]")
 plt.gca().invert_yaxis()
