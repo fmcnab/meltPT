@@ -6,6 +6,7 @@ import sys
 import pyMelt as m
 from scipy.optimize import minimize, minimize_scalar
 import shapely.geometry as shp
+import warnings
 
 def parse_csv(infile, Ce_to_H2O=200., src_FeIII_totFe=0.2, min_SiO2=0., min_MgO=0.):
 
@@ -349,7 +350,8 @@ def backtrack_sample_composition(
     if target_Fo-Fo < 0.005:
         oxide_wt_hydrous = fill_dict_with_nans(oxide_wt_hydrous)
         dm_tot = np.nan
-        print(df.Sample + ": backtracking failed! Starting Fo above mantle Fo.")
+        message = df.Sample + ": backtracking failed! Starting Fo above mantle Fo."
+        warnings.warn(message)
     # Otherwise add olvine until primary Fo is reached
     else:
 
@@ -369,9 +371,10 @@ def backtrack_sample_composition(
                     )
             if dm_tot/(1. + dm_tot) > max_olivine_addition:
                 oxide_wt_hydrous = fill_dict_with_nans(oxide_wt_hydrous)
-                print(
+                message = (
                     df.Sample + ": backtracking failed! Olivine addition exceeding %d%%" 
                     % (max_olivine_addition*100.))
+                warnings.warn(message)
                 break
 
 
