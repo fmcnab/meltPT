@@ -2,13 +2,17 @@ from meltPT import *
 
 
 # ---- Oahu data
-s = Suite("Oahu.csv", src_FeIII_totFe=0.2, min_MgO=8.5, min_SiO2=40.)
+s = Suite("Oahu.csv", src_FeIII_totFe=0.15, min_MgO=8.5, min_SiO2=40.)
 s.backtrack_compositions()
 s.compute_pressure_temperature()
 
 
 # ---- Set up mantle
 lz = m.lithologies.katz.lherzolite()
+# lz.parameters['Mcpx'] = 0.15 # shorttle
+# lz.CP = 1187. # shorttle
+# lz.alphas = 30. # shorttle
+# lz.DeltaS = 407. # shorttle
 mantle = m.mantle([lz], [1], ['Lz'])
 max_P = -lz.parameters['A2'] / (2.*lz.parameters['A3'])
 P_sol = np.arange(0., max_P, 0.1)
@@ -25,7 +29,6 @@ lab=r"$T_p$ = $%i^{+%i}_{-%i}$ $^\circ$C" % (
 plt.plot(s.path.T, s.path.P, "--", label=lab)
 plt.plot(s.upper_path.T, s.upper_path.P, ":")
 plt.plot(s.lower_path.T, s.lower_path.P, ":")
-# plt.plot([0., 1360.], [0., 2.], "--")
 plt.scatter(s.PT['T'], s.PT['P'], marker="*")
 plt.xlabel(r"Temperature [$^\circ$C]")
 plt.ylabel("Pressure [GPa]")
