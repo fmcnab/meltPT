@@ -39,7 +39,7 @@ plt.show()
 
 # ---- Plot Pressure vs. La/Sm
 
-fig, (ax1, ax2) = plt.subplots(1,2)
+fig, ((ax1, ax2), (ax3, ax4)) = plt.subplots(2,2,sharey="row")
 
 ax1.scatter( s.data['Sm']/s.data['Yb'], s.PT['P'] )
 ax1.set_ylabel("P [Gpa]")
@@ -47,10 +47,21 @@ ax1.set_xlabel("Sm/Yb")
 ax1.set_box_aspect(1)
 ax1.invert_yaxis()
 
-ax2.scatter( s.data['La']/s.data['Sm'], s.suite_melt_fractions['F'] )
-ax2.set_ylabel("F")
-ax2.set_xlabel("La/Sm")
+inds = np.where(s.data['Nb'] != 0)[0]
+ax2.scatter( s.data['Nb'].iloc[inds]/s.data['Zr'].iloc[inds], s.PT['P'].iloc[inds] )
+ax2.set_xlabel("Nb/Zr")
 ax2.set_box_aspect(1)
+
+ax3.scatter( s.data['La']/s.data['Sm'], s.suite_melt_fractions['F'] )
+ax3.set_ylabel("F")
+ax3.set_xlabel("La/Sm")
+ax3.set_box_aspect(1)
+
+inds = np.where(s.data['Nb'] != 0)[0]
+ax4.scatter( s.data['Nb'].iloc[inds]/s.data['Zr'].iloc[inds], s.suite_melt_fractions['F'].iloc[inds] )
+ax4.set_xlabel("Nb/Zr")
+ax4.set_box_aspect(1)
 
 plt.tight_layout()
 plt.show()
+
