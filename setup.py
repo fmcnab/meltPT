@@ -14,5 +14,6 @@ setup(
         'shapely',
         'pyMelt',
         'PyQt5',
+        'sphinx'
     ],
 )
