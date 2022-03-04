@@ -1,4 +1,5 @@
 from meltPT import *
+import matplotlib.pyplot as plt
 
 # ---- North Sea data
 s = Suite("North_Sea.csv", src_FeIII_totFe=0.2)

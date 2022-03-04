@@ -1,5 +1,5 @@
 from meltPT import *
-
+import matplotlib.pyplot as plt
 
 # ---- Oahu data
 s = Suite("Oahu.csv", src_FeIII_totFe=0.15, min_MgO=8.5, min_SiO2=40.)
