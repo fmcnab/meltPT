@@ -1,4 +1,5 @@
 from meltPT import *
+import matplotlib.pyplot as plt
 
 # ---- check against plank & forsyth supplementary
 s = Suite("PF16_S7.csv", src_FeIII_totFe=0.19)
