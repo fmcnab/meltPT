@@ -184,12 +184,13 @@ class Suite:
             for f,a in zip(filters,args):
                 to_fit = pd.concat([to_fit, self.PT.apply(f, axis=1, args=a)], axis=1)
             to_fit = to_fit.apply(combine, axis=1, result_type="expand")
+        self.PT['Fit_Tp'] = to_fit.copy()
 
-        self.PT_to_fit = self.PT.copy()
-        for i,fit in enumerate(to_fit.to_numpy()):
-            if not fit:
-                self.PT_to_fit.iloc[i]['P'] = np.nan
-                self.PT_to_fit.iloc[i]['T'] = np.nan
+        # self.PT_to_fit = self.PT.copy()
+        # for i,fit in enumerate(to_fit.to_numpy()):
+        #     if not fit:
+        #         self.PT_to_fit.iloc[i]['P'] = np.nan
+        #         self.PT_to_fit.iloc[i]['T'] = np.nan
     
     def find_individual_melt_fractions(self, mantle, path, filters=(None,), filter_args=(None,)):
         """
@@ -213,7 +214,7 @@ class Suite:
             Extra arguments to be passed to the filter functions.
         """
         self.check_samples_for_fitting(mantle, filters, filter_args)
-        self.individual_melt_fractions = self.PT_to_fit.apply(
+        self.individual_melt_fractions = self.PT.apply(
             find_sample_melt_fraction, 
             axis=1, 
             result_type="expand", 
@@ -239,7 +240,7 @@ class Suite:
             Extra arguments to be passed to the filter functions.
         """
         self.check_samples_for_fitting(mantle, filters, filter_args)
-        self.individual_potential_temperatures = self.PT_to_fit.apply(
+        self.individual_potential_temperatures = self.PT.apply(
             find_sample_potential_temperature, 
             axis=1, 
             result_type="expand", 
@@ -300,47 +301,60 @@ class Suite:
             compute_suite_potential_temperature_misfit, 
             bracket=(min([lith.TSolidus(0.) for lith in mantle.lithologies]),1600.), 
             bounds=(min([lith.TSolidus(0.) for lith in mantle.lithologies]),1600.),
-            args=(self.PT_to_fit, mantle),
+            args=(self.PT, mantle),
             method="bounded")
         self.path = mantle.adiabaticMelt(Tp_fit.x, Pstart=max(mantle.solidusIntersection(Tp_fit.x))+0.01, dP=-0.01)
-        self.suite_melt_fractions = self.PT_to_fit.apply(find_sample_melt_fraction, axis=1, result_type="expand", args=(self.path,))
+        self.suite_melt_fractions = self.PT.apply(find_sample_melt_fraction, axis=1, result_type="expand", args=(self.path,))
         self.potential_temperature = Tp_fit.x
         
         if find_bounds:
             upper_points = []
             lower_points = []
-            for i in range(len(self.PT_to_fit)):
-                if self.PT_to_fit['T'].iloc[i] - self.suite_melt_fractions['T'].iloc[i] > 0:
-                    upper_points.append(shp.Point(self.PT_to_fit['T'].iloc[i], self.PT_to_fit['P'].iloc[i]))
-                elif self.PT_to_fit['T'].iloc[i] - self.suite_melt_fractions['T'].iloc[i] < 0.:
-                    lower_points.append(shp.Point(self.PT_to_fit['T'].iloc[i], self.PT_to_fit['P'].iloc[i]))
+            for i in range(len(self.PT)):
+                if self.PT['T'].iloc[i] - self.suite_melt_fractions['T'].iloc[i] > 0:
+                    upper_points.append(shp.Point(self.PT['T'].iloc[i], self.PT['P'].iloc[i]))
+                elif self.PT['T'].iloc[i] - self.suite_melt_fractions['T'].iloc[i] < 0.:
+                    lower_points.append(shp.Point(self.PT['T'].iloc[i], self.PT['P'].iloc[i]))
 
         self.upper_potential_temperature, self.upper_path = find_bounding_potential_temperature(upper_points, self.potential_temperature, mantle, threshold=bounds_threshold)
         self.lower_potential_temperature, self.lower_path = find_bounding_potential_temperature(lower_points, self.potential_temperature, mantle, lower=True, threshold=bounds_threshold)
 
-    def write_to_csv(self, outfile, write_primary=True, write_PT=True):
+    def write_to_csv(self, outfile, write_primary=True, write_primary_extended=False, write_PT=True, write_suite_Tp=False):
         """
         Write results to csv.
         """
         output_df = self.data.copy()
-        if write_primary and self.primary is not None:
+        if write_primary or write_primary_extended and self.primary is not None:
             output_df = pd.concat([output_df, self.primary], axis=1)
-            output_df = output_df.drop([
-                'SiO2_primary_wt_dry','Al2O3_primary_wt_dry',
-                'FeO_primary_wt_dry','Fe2O3_primary_wt_dry',
-                'MgO_primary_wt_dry','CaO_primary_wt_dry',
-                'Na2O_primary_wt_dry','K2O_primary_wt_dry',
-                'TiO2_primary_wt_dry','MnO_primary_wt_dry',
-                'Cr2O3_primary_wt_dry','SiO2_primary_mol',
-                'Al2O3_primary_mol','FeO_primary_mol',
-                'Fe2O3_primary_mol','MgO_primary_mol',
-                'CaO_primary_mol','Na2O_primary_mol',
-                'K2O_primary_mol','TiO2_primary_mol',
-                'MnO_primary_mol','Cr2O3_primary_mol',
-                'H2O_primary_mol',
-                'Si4O8','Al16/3O8', 'Fe4Si2O8','Fe16/3O8','Mg4Si2O8',
-                'Ca4Si2O8','Na2Al2Si2O8','K2Al2Si2O8','Ti4O8','Mn4Si2O8',
-                'Cr16/3O8'], axis=1)
+            if write_primary_extended is False:
+                output_df = output_df.drop([
+                    'SiO2_primary_wt_dry','Al2O3_primary_wt_dry',
+                    'FeO_primary_wt_dry','Fe2O3_primary_wt_dry',
+                    'MgO_primary_wt_dry','CaO_primary_wt_dry',
+                    'Na2O_primary_wt_dry','K2O_primary_wt_dry',
+                    'TiO2_primary_wt_dry','MnO_primary_wt_dry',
+                    'Cr2O3_primary_wt_dry','SiO2_primary_mol',
+                    'Al2O3_primary_mol','FeO_primary_mol',
+                    'Fe2O3_primary_mol','MgO_primary_mol',
+                    'CaO_primary_mol','Na2O_primary_mol',
+                    'K2O_primary_mol','TiO2_primary_mol',
+                    'MnO_primary_mol','Cr2O3_primary_mol',
+                    'H2O_primary_mol',
+                    'Si4O8','Al16/3O8', 'Fe4Si2O8','Fe16/3O8','Mg4Si2O8',
+                    'Ca4Si2O8','Na2Al2Si2O8','K2Al2Si2O8','Ti4O8', 'Mn4Si2O8',
+                    'Cr16/3O8'], axis=1)
         if write_PT and self.PT is not None:
             output_df = pd.concat([output_df, self.PT], axis=1)
+        if write_suite_Tp:
+            rename_dict = {
+                'F': 'F_suite_fit',
+                'P': 'P_suite_fit',
+                'T': 'T_suite_fit',
+                'misfit': 'misfit_suite_fit'
+            }
+            suite_out = self.suite_melt_fractions.rename(columns=rename_dict)
+            suite_out['Tp_suite_fit'] = self.potential_temperature
+            suite_out['Tp_max_suite_fit'] = self.upper_potential_temperature
+            suite_out['Tp_min_suite_fit'] = self.lower_potential_temperature
+            output_df = pd.concat([output_df, suite_out], axis=1)
         output_df.to_csv(outfile, index=False)
