@@ -1,0 +1,47 @@
+# ---------------------------------------------------------------------------- #
+# ---------------- PARAMETER FILE FOR USE WITH meltPT ------------------------ #
+#                                                                              #
+# To run, make sure this file is the same directory as the "run.py" file       #
+# and use the following command:                                               #
+#                                                                              #
+# $ python3 run.py parameters.yaml                                             #
+#                                                                              #
+# ---------------------------------------------------------------------------- #
+
+
+# ---- Input / output filenames ---------------------------------------------- #
+
+# Path to input data file.
+data_file: "Oahu.csv"
+
+# Path to output data file.
+output_file: "Oahu_out.csv"
+
+# ---- Parameters for backtracking compositions ------------------------------ #
+
+# Ratio of Fe3+ to total Fe in the source. 
+src_FeIII_totFe: 0.15
+
+# Minimum MgO for a sample to be processed in wt%. Should be above ~8.
+min_MgO: 8.5
+
+# Minimum SiO2 for a sample to be processed in wt%. Should be abvoe ~40.
+min_SiO2: 40.
+
+
+# ---- Options for fitting melting paths ------------------------------------- #
+
+# Fitting a melting path to the entire suite.
+# Each option is True / False.
+suite_Tp:
+  find: True
+  plot: True
+  save: True
+  
+# Fitting a melting path to each individual sample.
+# Note: with a lot of samples will be very slow!
+# Each option is True / False.
+individual_Tp:
+  find: False
+  plot: False
+  save: False
