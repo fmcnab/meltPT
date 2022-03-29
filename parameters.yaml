@@ -35,6 +35,20 @@ backtrack:
   # Minimum SiO2 for a sample to be processed in wt%. Should be abvoe ~40.
   min_SiO2: 40.
   
+  # Target Forsterite number for samples during backtracking.
+  target_Fo: 0.9
+  
+  # Partition coefficient for Mg and Fe exchange between olivine and melt.
+  # Can be a float (e.g. ~0.3) or if False will be calculated as a function
+  # of olivine Forsterite number.
+  Kd: False
+  
+  # Fraction of olivine to add at each iteration.
+  dm: 0.0005
+  
+  # Maximum fraction of olivine to add before giving up on backtracking.
+  max_olivine_addition: 0.3
+  
   # Save final primary compositions.
   save: True
   

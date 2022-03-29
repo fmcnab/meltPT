@@ -26,7 +26,12 @@ s = Suite(
 if params['backtrack']['apply']:
     print()
     print("Backtracking sample compositions.")
-    s.backtrack_compositions()
+    s.backtrack_compositions(
+        target_Fo=params['backtrack']['target_Fo'],
+        Kd=params['backtrack']['Kd'],
+        dm=params['backtrack']['dm'],
+        max_olivine_addition=params['backtrack']['max_olivine_addition']
+    )
 if params['PT']['apply']:
     print()
     print("Computing sample equilibration pressures and temperatures.")
