@@ -89,9 +89,10 @@ class Suite:
         Write results to csv.
     """
 
-    def __init__(self, input_csv, src_FeIII_totFe=0.19, min_SiO2=0., min_MgO=0.):
+    def __init__(self, input_csv, Ce_to_H2O=200., src_FeIII_totFe=0.19, min_SiO2=0., min_MgO=0.):
         self.data = parse_csv(
             input_csv,
+            Ce_to_H2O=Ce_to_H2O,
             src_FeIII_totFe=src_FeIII_totFe,
             min_SiO2=min_SiO2,
             min_MgO=min_MgO)

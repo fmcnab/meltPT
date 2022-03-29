@@ -18,7 +18,8 @@ with open(param_filename, 'r') as f:
     
 # ---- Read and process data
 s = Suite(
-    params['data_file'], 
+    params['data_file'],
+    Ce_to_H2O=params['backtrack']['Ce_to_H2O'],
     src_FeIII_totFe=params['backtrack']['src_FeIII_totFe'], 
     min_MgO=params['backtrack']['min_MgO'], 
     min_SiO2=params['backtrack']['min_SiO2'])

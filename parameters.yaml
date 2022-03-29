@@ -1,7 +1,7 @@
 # ---------------------------------------------------------------------------- #
 # -------------------- PARAMETER FILE FOR USE WITH meltPT -------------------- #
 #                                                                              #
-# To run, make sure this file is the same directory as the "run.py" file       #
+# To run, make sure this file is the same directory as the "run.py" script     #
 # and use the following command:                                               #
 #                                                                              #
 # $ python3 run.py parameters.yaml                                             #
@@ -23,7 +23,10 @@ backtrack:
   
   apply: True
   
-  # Ratio of Fe3+ to total Fe in the source. 
+  # Ration of Ce to H2O in the melt.
+  Ce_to_H2O: 200.
+  
+  # Ratio of Fe3+ to total Fe in the melt. 
   src_FeIII_totFe: 0.15
 
   # Minimum MgO for a sample to be processed in wt%. Should be above ~8.
@@ -52,14 +55,14 @@ PT:
 # Fitting a melting path to the entire suite.
 # Each option is True / False.
 suite_Tp:
-  apply: True
+  apply: False
   plot: False
-  save: True
+  save: False
   
 # Fitting a melting path to each individual sample.
 # Note: with a lot of samples will be very slow!
 # Each option is True / False.
 individual_Tp:
-  apply: True
+  apply: False
   plot: False
-  save: True
+  save: False
