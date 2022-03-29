@@ -42,7 +42,7 @@ T_sol = [lz.TSolidus(P) for P in P_sol]
 if params['suite_Tp']['apply']:
     print()
     print("Fitting melting path to suite.")
-    s.find_suite_potential_temperature(mantle, find_bounds=True)
+    s.find_suite_potential_temperature(mantle, find_bounds=True, filters=(lambda x: x['T'] < 1700.,), filter_args=(None,))
     print("Best-fitting potential temperature is: %i +%i/-%i oC." %
         (s.potential_temperature, 
          s.upper_potential_temperature-s.potential_temperature, 
@@ -67,7 +67,7 @@ if params['suite_Tp']['apply']:
 if params['individual_Tp']['apply']:
     print()
     print("Fitting melting paths to individual samples.")
-    s.find_individual_potential_temperatures(mantle)
+    s.find_individual_potential_temperatures(mantle, filters=(lambda x: x['T'] < 1700.,), filter_args=(None,))
     print("Average potential temperature is: %i +/- %i oC." % 
         (s.individual_potential_temperatures['Tp'].mean(),
          s.individual_potential_temperatures['Tp'].std()))

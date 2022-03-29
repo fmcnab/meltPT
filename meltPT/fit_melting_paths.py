@@ -106,7 +106,7 @@ def find_sample_melt_fraction(df, path):
                 Distance between sample and closest point on melting path.
         If sample pressure or temperature are nan, all returned values are nan.
     """
-    if df['Fit_Tp']:
+    if not df['Fit_Tp']:
         out = {'F': np.nan, 'P': np.nan, 'T': np.nan, 'misfit': np.nan}
     else:
         fit = minimize_scalar(
@@ -192,7 +192,7 @@ def find_sample_potential_temperature(df, mantle):
                 The best-fitting melting path.
         If sample pressure or temperature are nan, all returned values are nan.
     """
-    if df['Fit_Tp']:
+    if not df['Fit_Tp']:
         out = {
             'F': np.nan, 'P': np.nan, 'T': np.nan, 
             'misfit': np.nan, 'Tp': np.nan, 'path': np.nan}

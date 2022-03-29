@@ -353,9 +353,10 @@ class Suite:
                 'misfit': 'misfit_suite_fit'
             }
             suite_out = self.suite_melt_fractions.rename(columns=rename_dict)
-            suite_out['Tp_suite_fit'] = self.potential_temperature
-            suite_out['Tp_max_suite_fit'] = self.upper_potential_temperature
-            suite_out['Tp_min_suite_fit'] = self.lower_potential_temperature
+            suite_out['Tp_suite_fit'] = self.potential_temperature * self.PT['Fit_Tp']
+            suite_out['Tp_max_suite_fit'] = self.upper_potential_temperature * self.PT['Fit_Tp']
+            suite_out['Tp_min_suite_fit'] = self.lower_potential_temperature * self.PT['Fit_Tp']
+            suite_out = suite_out.replace(0, np.nan)
             output_df = pd.concat([output_df, suite_out], axis=1)
         if write_individual_Tp:
             rename_dict = {
