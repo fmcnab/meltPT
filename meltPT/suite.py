@@ -319,7 +319,7 @@ class Suite:
         self.upper_potential_temperature, self.upper_path = find_bounding_potential_temperature(upper_points, self.potential_temperature, mantle, threshold=bounds_threshold)
         self.lower_potential_temperature, self.lower_path = find_bounding_potential_temperature(lower_points, self.potential_temperature, mantle, lower=True, threshold=bounds_threshold)
 
-    def write_to_csv(self, outfile, write_primary=True, write_primary_extended=False, write_PT=True, write_suite_Tp=False):
+    def write_to_csv(self, outfile, write_primary=True, write_primary_extended=False, write_PT=True, write_suite_Tp=False, write_individual_Tp=False):
         """
         Write results to csv.
         """
@@ -357,4 +357,12 @@ class Suite:
             suite_out['Tp_max_suite_fit'] = self.upper_potential_temperature
             suite_out['Tp_min_suite_fit'] = self.lower_potential_temperature
             output_df = pd.concat([output_df, suite_out], axis=1)
+        if write_individual_Tp:
+            rename_dict = {
+                'F': 'F_ind_fit',
+                'Tp': 'Tp_ind_fit'
+            }
+            ind_out = self.individual_potential_temperatures.rename(columns=rename_dict)
+            ind_out = ind_out.drop(["P", "T", "path", "misfit"], axis=1)
+            output_df = pd.concat([output_df, ind_out], axis=1)
         output_df.to_csv(outfile, index=False)

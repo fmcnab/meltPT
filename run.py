@@ -5,7 +5,6 @@ import sys
 # matplotlib.use('TkAgg')
 import matplotlib.pyplot as plt
 
-
 # ---- Read parameter file
 if len(sys.argv) < 2:
     print("No parameter file provided, exiting.")
@@ -24,8 +23,12 @@ s = Suite(
     min_MgO=params['backtrack']['min_MgO'], 
     min_SiO2=params['backtrack']['min_SiO2'])
 if params['backtrack']['apply']:
+    print()
+    print("Backtracking sample compositions.")
     s.backtrack_compositions()
 if params['PT']['apply']:
+    print()
+    print("Computing sample equilibration pressures and temperatures.")
     s.compute_pressure_temperature()
 
 # ---- Set up mantle
@@ -37,7 +40,13 @@ T_sol = [lz.TSolidus(P) for P in P_sol]
 
 # ---- Fit Tp to suite
 if params['suite_Tp']['apply']:
+    print()
+    print("Fitting melting path to suite.")
     s.find_suite_potential_temperature(mantle, find_bounds=True)
+    print("Best-fitting potential temperature is: %i +%i/-%i oC." %
+        (s.potential_temperature, 
+         s.upper_potential_temperature-s.potential_temperature, 
+         s.potential_temperature-s.lower_potential_temperature))
     if params['suite_Tp']['plot']:
         plt.plot(T_sol, P_sol, "k")
         lab=r"$T_p$ = $%i^{+%i}_{-%i}$ $^\circ$C" % (
@@ -53,7 +62,18 @@ if params['suite_Tp']['apply']:
         plt.legend()
         plt.gca().invert_yaxis()
         plt.show()
-        
+
+# ---- Fit Tp to individual samples
+if params['individual_Tp']['apply']:
+    print()
+    print("Fitting melting paths to individual samples.")
+    s.find_individual_potential_temperatures(mantle)
+    print("Average potential temperature is: %i +/- %i oC." % 
+        (s.individual_potential_temperatures['Tp'].mean(),
+         s.individual_potential_temperatures['Tp'].std()))
+    if params['individual_Tp']['plot']:
+        pass
+
 # ---- Output
 if (
     params['backtrack']['save'] or
@@ -66,4 +86,5 @@ if (
         write_primary=params['backtrack']['save'],
         write_primary_extended=params['backtrack']['save_extended'],
         write_PT=params['PT']['save'],
-        write_suite_Tp=params['suite_Tp']['save'])
+        write_suite_Tp=params['suite_Tp']['save'],
+        write_individual_Tp=params['individual_Tp']['save'])

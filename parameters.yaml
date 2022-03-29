@@ -36,7 +36,7 @@ backtrack:
   save: True
   
   # Save extended compositions.
-  save_extended: True
+  save_extended: False
 
 
 # ---- Options for computing pressure and temperature of melting ------------- #
@@ -60,6 +60,6 @@ suite_Tp:
 # Note: with a lot of samples will be very slow!
 # Each option is True / False.
 individual_Tp:
-  apply: False
+  apply: True
   plot: False
-  save: False
+  save: True
