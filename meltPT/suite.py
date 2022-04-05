@@ -180,18 +180,13 @@ class Suite:
         def above_solidus(df, mantle):
             return {'fit': max([l.TSolidus(df['P']) for l in mantle.lithologies]) - df['T'] < 39.}
 
-        to_fit = self.PT.apply(above_solidus, axis=1, result_type="expand", args=(mantle,))
+        combined = pd.concat([self.data, self.PT], axis=1)
+        to_fit = combined.apply(above_solidus, axis=1, result_type="expand", args=(mantle,))
         if filters[0]:
             for f,a in zip(filters,args):
-                to_fit = pd.concat([to_fit, self.PT.apply(f, axis=1, args=a)], axis=1)
+                to_fit = pd.concat([to_fit, combined.apply(f, axis=1, args=a)], axis=1)
             to_fit = to_fit.apply(combine, axis=1, result_type="expand")
         self.PT['Fit_Tp'] = to_fit.copy()
-
-        # self.PT_to_fit = self.PT.copy()
-        # for i,fit in enumerate(to_fit.to_numpy()):
-        #     if not fit:
-        #         self.PT_to_fit.iloc[i]['P'] = np.nan
-        #         self.PT_to_fit.iloc[i]['T'] = np.nan
     
     def find_individual_melt_fractions(self, mantle, path, filters=(None,), filter_args=(None,)):
         """
@@ -317,8 +312,8 @@ class Suite:
                 elif self.PT['T'].iloc[i] - self.suite_melt_fractions['T'].iloc[i] < 0.:
                     lower_points.append(shp.Point(self.PT['T'].iloc[i], self.PT['P'].iloc[i]))
 
-        self.upper_potential_temperature, self.upper_path = find_bounding_potential_temperature(upper_points, self.potential_temperature, mantle, threshold=bounds_threshold)
-        self.lower_potential_temperature, self.lower_path = find_bounding_potential_temperature(lower_points, self.potential_temperature, mantle, lower=True, threshold=bounds_threshold)
+            self.upper_potential_temperature, self.upper_path = find_bounding_potential_temperature(upper_points, self.potential_temperature, mantle, threshold=bounds_threshold)
+            self.lower_potential_temperature, self.lower_path = find_bounding_potential_temperature(lower_points, self.potential_temperature, mantle, lower=True, threshold=bounds_threshold)
 
     def write_to_csv(self, outfile, write_primary=True, write_primary_extended=False, write_PT=True, write_suite_Tp=False, write_individual_Tp=False):
         """
