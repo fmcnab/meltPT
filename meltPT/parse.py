@@ -9,8 +9,8 @@ def parse_csv(infile, Ce_to_H2O=200., src_FeIII_totFe=0.2, min_SiO2=0., min_MgO=
     df = pd.read_csv(infile, delimiter=",")
 
     # Replace empties and NaNs with zeros
-    df = df.replace(r'^\s*$', 0., regex=True)
-    df = df.replace(np.nan, 0., regex=True)
+    # df = df.replace(r'^\s*$', 0., regex=True)
+    # df = df.replace(np.nan, 0., regex=True)
 
     # If these columns do not exist in the input make them and
     # give them zeros for every row.
