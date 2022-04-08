@@ -1,4 +1,5 @@
 from meltPT import *
+import matplotlib.pyplot as plt
 
 ##############
 # Find PT of each ridge sample
@@ -33,10 +34,10 @@ df_out = pd.DataFrame(columns = ['Ridge', 'Longitude', 'Latitude', 'N_Samples',
 
 # ---- Set up mantle
 lz = m.lithologies.katz.lherzolite()
-mantle = m.Mantle([lz], [1], ['Lz'])
+mantle = m.mantle([lz], [1], ['Lz'])
 P_sol = np.arange(0., 6., 0.1)
 T_sol = [lz.TSolidus(P) for P in P_sol]
-path = mantle.AdiabaticMelt_1D(1330., Pstart=6., steps=101)
+path = mantle.adiabaticMelt(1330., Pstart=6., steps=101)
 
 for i in range(0, (len(ridges) - 1), 1):
     
