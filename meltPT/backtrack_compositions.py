@@ -276,6 +276,7 @@ def backtrack_sample_composition(
     oxide_wt_hydrous = {}
     for ox in MAJOR_OXIDES:
         oxide_wt_hydrous[ox] = df[ox]
+    oxide_wt_hydrous = normalise(oxide_wt_hydrous)
 
     # Check Fo is below mantle Fo
     Fo = compute_forsterite_number(oxide_wt_hydrous)
