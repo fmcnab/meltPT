@@ -1,5 +1,10 @@
-Code Documentation 
+Code Documentation
 ^^^^^^^^^^^^^^^^^^
+.. contents::
+
+*******
+Modules
+*******
 
 .. automodule:: meltPT
   :members:

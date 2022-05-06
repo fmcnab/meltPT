@@ -15,6 +15,7 @@
     <script src="_static/doctools.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Code Documentation" href="codedoc.html" />
     <link rel="prev" title="Welcome to meltPT’s documentation!" href="index.html" />
    
   <link rel="stylesheet" href="_static/custom.css" type="text/css" />
@@ -34,6 +35,32 @@
             
   <section id="installation">
 <h1>Installation<a class="headerlink" href="#installation" title="Permalink to this headline">¶</a></h1>
+<section id="linux-mac">
+<h2>Linux/Mac<a class="headerlink" href="#linux-mac" title="Permalink to this headline">¶</a></h2>
+<p>We recommend running <strong>meltPT</strong> in a virtual environment. Start a terminal and enter:</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">$ </span><span class="c1"># Create virtual environment.</span>
+<span class="gp">$ </span><span class="c1"># Replace /path/to/virtual/environment with your desired path.</span>
+<span class="gp">$ </span>python3 -m venv /path/to/virtual/environment
+
+<span class="gp">$ </span><span class="c1"># Activate new virtual environment.</span>
+<span class="gp">$ </span><span class="nb">source</span> /path/to/virtual/environment/bin/activate
+</pre></div>
+</div>
+<p>Next, download the code. Navigate to your desired location and type:</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">$ </span>git clone git@github.com:fmcnab/meltPT.git
+</pre></div>
+</div>
+<p>You should now have a directory called “meltPT”. To install the package, enter this directory and run the setup script:</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">$ </span><span class="nb">cd</span> meltPT
+<span class="gp">$ </span>python3 setup.py install
+</pre></div>
+</div>
+<p>This will take a minute or two and print lots of stuff. If it completes successfully, you are now ready to use <strong>meltPT</strong>!</p>
+</section>
+<section id="windows">
+<h2>Windows<a class="headerlink" href="#windows" title="Permalink to this headline">¶</a></h2>
+<p>Unfortunately, we don’t know much about using Python on a Windows system. But we will find out!</p>
+</section>
 </section>
 
 
@@ -55,7 +82,13 @@
 <h3>Navigation</h3>
 <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
 <ul class="current">
-<li class="toctree-l1 current"><a class="current reference internal" href="#">Installation</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Installation</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#linux-mac">Linux/Mac</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#windows">Windows</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="codedoc.html">Code Documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="license.html">License</a></li>
 </ul>
 
 <div class="relations">
@@ -63,6 +96,7 @@
 <ul>
   <li><a href="index.html">Documentation overview</a><ul>
       <li>Previous: <a href="index.html" title="previous chapter">Welcome to meltPT’s documentation!</a></li>
+      <li>Next: <a href="codedoc.html" title="next chapter">Code Documentation</a></li>
   </ul></li>
 </ul>
 </div>
