@@ -1,5 +1,7 @@
 # meltPT
 
+
+
 ## Getting started
 
 ### Installation
@@ -34,7 +36,7 @@ You are now ready to use **meltPT**!
 
 We provide a command-line tool that will allow you start running the code without needing to write your own scripts. All you need to do is edit a parameter file that contains paths to your chosen input and output files, values for certain variables, and the analyses you would like to run.
 
-As an example, we recreate a result provided by Plank and Forsyth (2016, G<sup>3</sup>). From the base directory:
+As an example, we recreate a result provided by Plank and Forsyth (2016, *G<sup>3</sup>*). From the base directory:
 
 ```
 # Navigate to the Plank and Forsyth directory.
@@ -44,6 +46,18 @@ cd ./Examples/Plank_and_Forsyth_2016
 meltPT parameters.yaml
 ```
 
-The program should produce a file called "PF16_S7_out.csv", containing the sample's backtracked composition, estimated equilibration pressure and temperature, and potential temperature.
+The program should produce a file called "PF16_S7_out.csv", containing the sample's backtracked composition, estimated equilibration pressure and temperature, and potential temperature. See also an example parameter file in the "Examples/Hawaii" directory.
 
 Elsewhere in the "Examples" directory you will find lots of scripts that utilise all the different functionalities of meltPT, and will hopefully help you write your own.
+
+## Citing meltPT
+
+If you use our code, please cite us.
+
+We also urge you to cite the original literature on which our code is based:
+- Sample backtracking and thermobarometry: [Lee et al. (2009, *EPSL*)](doi.org/10.1016/j.epsl.2008.12.020)
+- Thermobarometry: [Plank and Forsyth (2016, *G<sup>3</sup>*)](doi.org/10.1002/2015GC006205)
+
+If you use our melt-path fitting routines you should also cite:
+- pyMelt: Matthews et al.
+- melting model for our examples: [Katz et al. (2003, *G<sup>3</sup>*)](doi.org/10.1029/2002GC000433)
