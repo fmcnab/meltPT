@@ -1,0 +1,784 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+    <title>&lt;no title&gt; &#8212; meltPT 0.0.1 documentation</title>
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="_static/alabaster.css" />
+    <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/doctools.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <span class="target" id="module-meltPT"></span><span class="target" id="module-meltPT.parse"></span><span class="target" id="module-meltPT.backtrack_compositions"></span><dl class="py function">
+<dt class="sig sig-object py" id="meltPT.backtrack_compositions.add_olivine">
+<span class="sig-prename descclassname"><span class="pre">meltPT.backtrack_compositions.</span></span><span class="sig-name descname"><span class="pre">add_olivine</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">in_comp</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">Kd</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dm</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0005</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#meltPT.backtrack_compositions.add_olivine" title="Permalink to this definition">¶</a></dt>
+<dd><p>Add olivine in equilibrium with given melt composition.</p>
+<dl class="simple">
+<dt>in_comp<span class="classifier">dict</span></dt><dd><p>The initial composition.
+Should be hydrous oxide weight concentrations.</p>
+</dd>
+<dt>Kd<span class="classifier">float or NoneType, optional</span></dt><dd><p>Partition coefficient to be used.
+If None, calculated from the sample composition provided.</p>
+</dd>
+<dt>dm<span class="classifier">float, optional</span></dt><dd><p>The fraction of olivine to be added.</p>
+</dd>
+</dl>
+<dl class="simple">
+<dt>out_comp<span class="classifier">dict</span></dt><dd><p>The updated concentrations.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="meltPT.backtrack_compositions.backtrack_sample_composition">
+<span class="sig-prename descclassname"><span class="pre">meltPT.backtrack_compositions.</span></span><span class="sig-name descname"><span class="pre">backtrack_sample_composition</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">df</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">target_Fo</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.9</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">Kd</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dm</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0005</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_olivine_addition</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.3</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">return_all</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#meltPT.backtrack_compositions.backtrack_sample_composition" title="Permalink to this definition">¶</a></dt>
+<dd><p>Backtrack composition to desired mantle forsterite number.</p>
+<p>Iteratively adds olivine in equilibrium with melt until desired composition
+is reached.</p>
+<dl class="simple">
+<dt>df<span class="classifier">pandas dataframe</span></dt><dd><p>Dataframe containing the initial composition to be backtracked.
+Should contain only one row. To use with a multi-row dataframe use
+df.apply().</p>
+</dd>
+<dt>target_Fo<span class="classifier">float, optional</span></dt><dd><p>The forsterite number of the mantle source.
+We add iteratively add olivine to the sample composition until this
+value is reached.</p>
+</dd>
+<dt>Kd<span class="classifier">float or NoneType, optional</span></dt><dd><p>Partition coefficient to be used.
+If None, calculated from the sample composition provided.</p>
+</dd>
+<dt>dm<span class="classifier">float, optional</span></dt><dd><p>The fraction of olivine to be added at each iteration.</p>
+</dd>
+<dt>verbose<span class="classifier">bool, optional</span></dt><dd><p>If True, will print messages with information at each iteration.</p>
+</dd>
+<dt>max_olivine_addition<span class="classifier">float, optional</span></dt><dd><p>Maximum fraction of olivine to add before backtracking is abandoned.</p>
+</dd>
+</dl>
+<dl class="simple">
+<dt>primary_oxide<span class="classifier">df</span></dt><dd><p>The backtracked compositions.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="meltPT.backtrack_compositions.compute_forsterite_number">
+<span class="sig-prename descclassname"><span class="pre">meltPT.backtrack_compositions.</span></span><span class="sig-name descname"><span class="pre">compute_forsterite_number</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">in_comp</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">Kd</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#meltPT.backtrack_compositions.compute_forsterite_number" title="Permalink to this definition">¶</a></dt>
+<dd><p>Compute forsterite number from oxide weight compositions.</p>
+<dl class="simple">
+<dt>in_comp<span class="classifier">dict</span></dt><dd><p>The oxide weight compositions.</p>
+</dd>
+<dt>Kd<span class="classifier">float or NoneType, optional</span></dt><dd><p>Partition coefficient to be used.
+If None, calculated from the sample composition provided.</p>
+</dd>
+</dl>
+<dl class="simple">
+<dt>Fo<span class="classifier">float</span></dt><dd><p>The calculated forsterite number.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="meltPT.backtrack_compositions.compute_partition_coefficient">
+<span class="sig-prename descclassname"><span class="pre">meltPT.backtrack_compositions.</span></span><span class="sig-name descname"><span class="pre">compute_partition_coefficient</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">in_comp</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#meltPT.backtrack_compositions.compute_partition_coefficient" title="Permalink to this definition">¶</a></dt>
+<dd><p>Compute the partition coefficient.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="meltPT.backtrack_compositions.fill_dict_with_nans">
+<span class="sig-prename descclassname"><span class="pre">meltPT.backtrack_compositions.</span></span><span class="sig-name descname"><span class="pre">fill_dict_with_nans</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">in_dict</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#meltPT.backtrack_compositions.fill_dict_with_nans" title="Permalink to this definition">¶</a></dt>
+<dd><p>Fill a dictionary with numpy.nan values.</p>
+<dl class="simple">
+<dt>in_dict<span class="classifier">dict</span></dt><dd><p>The dictionary to be filled with nans.</p>
+</dd>
+</dl>
+<p>Returns
+out_dict : dict</p>
+<blockquote>
+<div><p>The dictionary with all values replaces with nan.</p>
+</div></blockquote>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="meltPT.backtrack_compositions.normalise">
+<span class="sig-prename descclassname"><span class="pre">meltPT.backtrack_compositions.</span></span><span class="sig-name descname"><span class="pre">normalise</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">in_comp</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#meltPT.backtrack_compositions.normalise" title="Permalink to this definition">¶</a></dt>
+<dd><p>Normalise dictionary so that values sum to 100%.</p>
+<dl class="simple">
+<dt>in_comp<span class="classifier">dict</span></dt><dd><p>The values to be normalised.</p>
+</dd>
+</dl>
+<dl class="simple">
+<dt>out_comp<span class="classifier">dict</span></dt><dd><p>The normalised values.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="meltPT.backtrack_compositions.oxide_mole_to_mole_species">
+<span class="sig-prename descclassname"><span class="pre">meltPT.backtrack_compositions.</span></span><span class="sig-name descname"><span class="pre">oxide_mole_to_mole_species</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">in_comp</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#meltPT.backtrack_compositions.oxide_mole_to_mole_species" title="Permalink to this definition">¶</a></dt>
+<dd><p>Convert oxide concentrations in mole percent to mole species concentrations.</p>
+<dl class="simple">
+<dt>in_comp<span class="classifier">dict</span></dt><dd><p>The oxide concentrations to be converted.</p>
+</dd>
+</dl>
+<dl class="simple">
+<dt>out_comp<span class="classifier">dict</span></dt><dd><p>The mole species concentrations.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="meltPT.backtrack_compositions.oxide_wt_to_cation_mole">
+<span class="sig-prename descclassname"><span class="pre">meltPT.backtrack_compositions.</span></span><span class="sig-name descname"><span class="pre">oxide_wt_to_cation_mole</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">in_comp</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#meltPT.backtrack_compositions.oxide_wt_to_cation_mole" title="Permalink to this definition">¶</a></dt>
+<dd><p>Convert oxide concentrations in weight percent to cation concentrations.</p>
+<dl class="simple">
+<dt>in_comp<span class="classifier">dict</span></dt><dd><p>The oxide concentrations to be converted.</p>
+</dd>
+</dl>
+<dl class="simple">
+<dt>out_comp<span class="classifier">dict</span></dt><dd><p>The cation concentrations.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="meltPT.backtrack_compositions.oxide_wt_to_oxide_mole">
+<span class="sig-prename descclassname"><span class="pre">meltPT.backtrack_compositions.</span></span><span class="sig-name descname"><span class="pre">oxide_wt_to_oxide_mole</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">in_comp</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#meltPT.backtrack_compositions.oxide_wt_to_oxide_mole" title="Permalink to this definition">¶</a></dt>
+<dd><p>Convert oxide concentrations in weight percent to oxide concentrations
+in mole percent.</p>
+<dl class="simple">
+<dt>in_comp<span class="classifier">dict</span></dt><dd><p>The oxide concentrations in weight percent to be converted.</p>
+</dd>
+</dl>
+<dl class="simple">
+<dt>out_comp<span class="classifier">dict</span></dt><dd><p>The oxide concentrations in mole percent.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<span class="target" id="module-meltPT.thermobarometry"></span><dl class="py function">
+<dt class="sig sig-object py" id="meltPT.thermobarometry.compute_CO2_correction">
+<span class="sig-prename descclassname"><span class="pre">meltPT.thermobarometry.</span></span><span class="sig-name descname"><span class="pre">compute_CO2_correction</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">df</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#meltPT.thermobarometry.compute_CO2_correction" title="Permalink to this definition">¶</a></dt>
+<dd><p>Calculate temperature correction for samples with equlibration pressures
+above 2 GPa (assumed to be influenced by presence of CO2).</p>
+<p>Equation (3), Plank and Forsyth (2016, G-cubed).</p>
+<dl class="simple">
+<dt>df<span class="classifier">pandas dataframe</span></dt><dd><p>The sample compositions.</p>
+</dd>
+</dl>
+<dl class="simple">
+<dt>correction<span class="classifier">pandas dataframe</span></dt><dd><p>The temperature corrections.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="meltPT.thermobarometry.compute_pressure">
+<span class="sig-prename descclassname"><span class="pre">meltPT.thermobarometry.</span></span><span class="sig-name descname"><span class="pre">compute_pressure</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">df</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">T</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#meltPT.thermobarometry.compute_pressure" title="Permalink to this definition">¶</a></dt>
+<dd><p>Calculate equlibration pressure.</p>
+<p>Equation (2), Plank and Forsyth (2016, G-cubed).</p>
+<dl class="simple">
+<dt>df<span class="classifier">pandas dataframe</span></dt><dd><p>The sample compositions.</p>
+</dd>
+</dl>
+<dl class="simple">
+<dt>pressure<span class="classifier">pandas dataframe</span></dt><dd><p>The calculated pressure(s).</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="meltPT.thermobarometry.compute_sample_pressure_temperature">
+<span class="sig-prename descclassname"><span class="pre">meltPT.thermobarometry.</span></span><span class="sig-name descname"><span class="pre">compute_sample_pressure_temperature</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">df</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#meltPT.thermobarometry.compute_sample_pressure_temperature" title="Permalink to this definition">¶</a></dt>
+<dd><p>Compute equilibration pressure and temperature for a given sample.</p>
+<dl class="simple">
+<dt>df<span class="classifier">pandas dataframe</span></dt><dd><p>Dataframe containing the sample primary composition.
+Should contain only one row. To use with a multi-row dataframe use
+df.apply().</p>
+</dd>
+</dl>
+<dl class="simple">
+<dt>out<span class="classifier">dict</span></dt><dd><p>The equilibration pressure and temperature result.
+Temperature is in degrees celcius.
+Pressure is in GPa.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="meltPT.thermobarometry.compute_temperature">
+<span class="sig-prename descclassname"><span class="pre">meltPT.thermobarometry.</span></span><span class="sig-name descname"><span class="pre">compute_temperature</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">df</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#meltPT.thermobarometry.compute_temperature" title="Permalink to this definition">¶</a></dt>
+<dd><p>Calculate equlibration temperature.</p>
+<p>Equation (1), Plank and Forsyth (2016, G-cubed).</p>
+<dl class="simple">
+<dt>df<span class="classifier">pandas dataframe</span></dt><dd><p>The sample compositions.</p>
+</dd>
+</dl>
+<dl class="simple">
+<dt>temperature<span class="classifier">pandas dataframe</span></dt><dd><p>The calculated temperature(s).</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="meltPT.thermobarometry.compute_water_correction">
+<span class="sig-prename descclassname"><span class="pre">meltPT.thermobarometry.</span></span><span class="sig-name descname"><span class="pre">compute_water_correction</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">df</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#meltPT.thermobarometry.compute_water_correction" title="Permalink to this definition">¶</a></dt>
+<dd><p>Calculate temperature correction from water content.</p>
+<p>Equation (1), Plank and Forsyth (2016, G-cubed).</p>
+<dl class="simple">
+<dt>df<span class="classifier">pandas dataframe</span></dt><dd><p>The sample compositions.</p>
+</dd>
+</dl>
+<dl class="simple">
+<dt>correction<span class="classifier">pandas dataframe</span></dt><dd><p>The temperature corrections.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<span class="target" id="module-meltPT.fit_melting_paths"></span><dl class="py function">
+<dt class="sig sig-object py" id="meltPT.fit_melting_paths.compute_sample_melt_fraction_misfit">
+<span class="sig-prename descclassname"><span class="pre">meltPT.fit_melting_paths.</span></span><span class="sig-name descname"><span class="pre">compute_sample_melt_fraction_misfit</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">F</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">df</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">P_err</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.24</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">T_err</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">39.0</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#meltPT.fit_melting_paths.compute_sample_melt_fraction_misfit" title="Permalink to this definition">¶</a></dt>
+<dd><p>Compute misfit between sample and point along given melting path,
+specified by melt path.</p>
+<dl class="simple">
+<dt>F<span class="classifier">float</span></dt><dd><p>The melt fraction with which to compare the pressure/temperature
+point.</p>
+</dd>
+<dt>df<span class="classifier">pandas dataframe</span></dt><dd><p>Dataframe containing sample pressure and temperature estimates.</p>
+</dd>
+<dt>path<span class="classifier">instance of pyMelt.meltingcolumn_classes.meltingColumn</span></dt><dd><p>The melt path.
+Can be instance of any class containing arrays of melt fraction (F),
+pressure (P) and temperature (T).</p>
+</dd>
+<dt>P_err<span class="classifier">float, optional</span></dt><dd><p>Uncertainty in pressure observation(s).</p>
+</dd>
+<dt>T_err<span class="classifier">float, optional</span></dt><dd><p>Uncertainty in temperature observation(s).</p>
+</dd>
+</dl>
+<dl class="simple">
+<dt>misfit<span class="classifier">float</span></dt><dd><p>Misfit between observed pressure and temperature and point along
+melt path. Defined as distance in normalised pressure-temperature
+space. Pressure and temperature are normalised by their respective
+uncertainties.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="meltPT.fit_melting_paths.compute_sample_potential_temperature_misfit">
+<span class="sig-prename descclassname"><span class="pre">meltPT.fit_melting_paths.</span></span><span class="sig-name descname"><span class="pre">compute_sample_potential_temperature_misfit</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">Tp</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">df</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mantle</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#meltPT.fit_melting_paths.compute_sample_potential_temperature_misfit" title="Permalink to this definition">¶</a></dt>
+<dd><p>Compute a melting path for a given potential temperature then find misfit
+between it and a sample pressure-temperature estimate.</p>
+<p>First uses mantle.adiabaticMelt() to compute melt path for specified
+potential temperature. Then finds closest melt fraction</p>
+<dl class="simple">
+<dt>Tp<span class="classifier">float</span></dt><dd><p>The potential temperature to be used.</p>
+</dd>
+<dt>df<span class="classifier">pandas dataframe</span></dt><dd><p>Dataframe containing sample pressure and temperature estimates.
+Should contain only one row. To use with a multi-row dataframe use
+df.apply().</p>
+</dd>
+<dt>mantle<span class="classifier">instance of pyMelt.mantle_class.mantle</span></dt><dd><p>The mantle object to be used to calculate the melting path.</p>
+</dd>
+</dl>
+<dl class="simple">
+<dt>misfit<span class="classifier">float</span></dt><dd><p>Distance between sample pressure-temperature estimate and its nearest
+point on the calculated melting path.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="meltPT.fit_melting_paths.compute_suite_potential_temperature_misfit">
+<span class="sig-prename descclassname"><span class="pre">meltPT.fit_melting_paths.</span></span><span class="sig-name descname"><span class="pre">compute_suite_potential_temperature_misfit</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">Tp</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">df</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mantle</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#meltPT.fit_melting_paths.compute_suite_potential_temperature_misfit" title="Permalink to this definition">¶</a></dt>
+<dd><p>Compute a melt path for a specified potential temperature then calculate
+the misfit between it and one or more pressure-temperature estimates.</p>
+<dl class="simple">
+<dt>Tp<span class="classifier">float</span></dt><dd><p>The potential temperature to be used.</p>
+</dd>
+<dt>df<span class="classifier">pandas dataframe</span></dt><dd><p>Dataframe containing sample pressure and temperature estimates.
+Can contain any number of samples.</p>
+</dd>
+<dt>mantle<span class="classifier">instance of pyMelt.mantle_class.mantle</span></dt><dd><p>The mantle object to be used to calculate the melting paths.</p>
+</dd>
+</dl>
+<dl class="simple">
+<dt>misfit<span class="classifier">float</span></dt><dd><p>The average distance between sample pressure-temperature estimates
+and their nearest points on the calculated melting path.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="meltPT.fit_melting_paths.find_bounding_potential_temperature">
+<span class="sig-prename descclassname"><span class="pre">meltPT.fit_melting_paths.</span></span><span class="sig-name descname"><span class="pre">find_bounding_potential_temperature</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">points</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">starting_temperature</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mantle</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lower</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">threshold</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.6666666666666666</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#meltPT.fit_melting_paths.find_bounding_potential_temperature" title="Permalink to this definition">¶</a></dt>
+<dd><p>Find either upper or lower bound on best-fitting potential temperature for
+suite of pressure-temperature estimates.</p>
+<p>Works by computing melting paths progressively further away from the best-
+fitting path, until a threshold number of points lie between the two paths.</p>
+<dl class="simple">
+<dt>points<span class="classifier">list of shapely.geometry.point.Point objects</span></dt><dd><p>The points to be bounded.</p>
+</dd>
+<dt>starting_temperature<span class="classifier">float</span></dt><dd><p>The best-fitting potential temperature for the suite.</p>
+</dd>
+<dt>mantle<span class="classifier">instance of pyMelt.mantle_class.mantle</span></dt><dd><p>The mantle object to be used to calculate the melting paths.</p>
+</dd>
+<dt>lower<span class="classifier">bool, optional</span></dt><dd><p>Specify whether an upper or lower bound is to be found.</p>
+</dd>
+<dt>threshold<span class="classifier">float</span></dt><dd><p>The threshold fraction of points to be lie between the best-fitting
+and bounding temperature melting paths.</p>
+</dd>
+</dl>
+<dl class="simple">
+<dt>bounding_temperature<span class="classifier">float</span></dt><dd><p>The estimated bounding temperature.</p>
+</dd>
+<dt>bounding_path<span class="classifier">instance of pyMelt.meltingcolumn_classes.meltingColumn</span></dt><dd><p>The melting path corresonding to the bounding potential temperature.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="meltPT.fit_melting_paths.find_sample_melt_fraction">
+<span class="sig-prename descclassname"><span class="pre">meltPT.fit_melting_paths.</span></span><span class="sig-name descname"><span class="pre">find_sample_melt_fraction</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">df</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">path</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#meltPT.fit_melting_paths.find_sample_melt_fraction" title="Permalink to this definition">¶</a></dt>
+<dd><p>Find best-fitting melt fraction for sample along given melting path.</p>
+<p>Uses scipy’s minimize_scalar function to find melt fraction that minimizes 
+misfit between estimated pressure and temperature and the melt path.
+Options used are:</p>
+<blockquote>
+<div><p>method: “bounded”
+bounds:  min –&gt; 0</p>
+<blockquote>
+<div><p>max –&gt; Maximum melt fraction in “path”</p>
+</div></blockquote>
+<dl class="simple">
+<dt>bracket: min –&gt; 0</dt><dd><p>max –&gt; Maximum melt fraction in “path”</p>
+</dd>
+</dl>
+</div></blockquote>
+<dl class="simple">
+<dt>df<span class="classifier">pandas dataframe</span></dt><dd><p>Dataframe containing sample pressure and temperature estimates.
+Should contain only one row. To use with a multi-row dataframe use
+df.apply().</p>
+</dd>
+<dt>path<span class="classifier">instance of pyMelt.meltingcolumn_classes.meltingColumn</span></dt><dd><p>The melting path.
+Can be instance of any class containing arrays of melt fraction (F),
+pressure (P) and temperature (T).</p>
+</dd>
+</dl>
+<dl>
+<dt>out<span class="classifier">dict</span></dt><dd><dl class="simple">
+<dt>Various properties of the result:</dt><dd><dl class="simple">
+<dt>F<span class="classifier">float </span></dt><dd><p>The best-fitting melt fraction.</p>
+</dd>
+<dt>P<span class="classifier">float</span></dt><dd><p>Pressure on path corresponding to best-fitting melt fraction.</p>
+</dd>
+<dt>T<span class="classifier">float</span></dt><dd><p>Temperature on path corresponding to best-fitting melt fraction.</p>
+</dd>
+<dt>misfit<span class="classifier">float</span></dt><dd><p>Distance between sample and closest point on melting path.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+<p>If sample pressure or temperature are nan, all returned values are nan.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="meltPT.fit_melting_paths.find_sample_potential_temperature">
+<span class="sig-prename descclassname"><span class="pre">meltPT.fit_melting_paths.</span></span><span class="sig-name descname"><span class="pre">find_sample_potential_temperature</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">df</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mantle</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#meltPT.fit_melting_paths.find_sample_potential_temperature" title="Permalink to this definition">¶</a></dt>
+<dd><p>Find best-fitting potential temperature for a sample pressure-temperature
+estimate.</p>
+<p>Uses scipy’s minimize_scalar function to find potential temperature that
+minimizes misfit between estimated pressure and temperature and the
+corresponding  melt path. Options used are:</p>
+<blockquote>
+<div><p>method: “bounded”
+bounds:  min –&gt; intersection of solidus with surface</p>
+<blockquote>
+<div><p>max –&gt; 1600 oC</p>
+</div></blockquote>
+<dl class="simple">
+<dt>bracket: min –&gt; intersection of solidus with surface</dt><dd><p>max –&gt; 1600 oC</p>
+</dd>
+</dl>
+</div></blockquote>
+<dl class="simple">
+<dt>df<span class="classifier">pandas dataframe</span></dt><dd><p>Dataframe containing sample pressure and temperature estimates.
+Should contain only one row. To use with a multi-row dataframe use
+df.apply().</p>
+</dd>
+<dt>mantle<span class="classifier">instance of pyMelt.mantle_class.mantle</span></dt><dd><p>The mantle object to be used to calculate the melting paths.</p>
+</dd>
+</dl>
+<dl>
+<dt>out<span class="classifier">dict</span></dt><dd><dl class="simple">
+<dt>Various properties of the result:</dt><dd><dl class="simple">
+<dt>F<span class="classifier">float </span></dt><dd><p>The melt fraction along the best-fitting melting path.</p>
+</dd>
+<dt>P<span class="classifier">float</span></dt><dd><p>The pressure along the best-fitting melting path.</p>
+</dd>
+<dt>T<span class="classifier">float</span></dt><dd><p>The temperature along the best-fitting melting path.</p>
+</dd>
+<dt>misfit<span class="classifier">float</span></dt><dd><p>Distance between sample and closest point on melting path.</p>
+</dd>
+<dt>Tp<span class="classifier">float</span></dt><dd><p>The best-fitting potential temperature.</p>
+</dd>
+<dt>path<span class="classifier">instance of pyMelt.meltingcolumn_classes.meltingColumn</span></dt><dd><p>The best-fitting melting path.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+<p>If sample pressure or temperature are nan, all returned values are nan.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="meltPT.fit_melting_paths.melt_fraction_to_pressure_temperature">
+<span class="sig-prename descclassname"><span class="pre">meltPT.fit_melting_paths.</span></span><span class="sig-name descname"><span class="pre">melt_fraction_to_pressure_temperature</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">F</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">path</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#meltPT.fit_melting_paths.melt_fraction_to_pressure_temperature" title="Permalink to this definition">¶</a></dt>
+<dd><p>Find pressure and temperature corresponding to specified melt fraction
+for a specified melting path.</p>
+<dl class="simple">
+<dt>F<span class="classifier">float</span></dt><dd><p>The melt fraction.</p>
+</dd>
+<dt>path<span class="classifier">instance of pyMelt.meltingcolumn_classes.meltingColumn</span></dt><dd><p>The melt path.
+Can be instance of any class containing arrays of melt fraction (F),
+pressure (P) and temperature (T).</p>
+</dd>
+</dl>
+<dl class="simple">
+<dt>P<span class="classifier">float</span></dt><dd><p>Pressure corresponding to specified melt fraction.</p>
+</dd>
+<dt>T<span class="classifier">float </span></dt><dd><p>Temperature corresponding to specified melt fraction.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<span class="target" id="module-meltPT.suite"></span><dl class="py class">
+<dt class="sig sig-object py" id="meltPT.suite.Suite">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">meltPT.suite.</span></span><span class="sig-name descname"><span class="pre">Suite</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input_csv</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">Ce_to_H2O</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">200.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">src_FeIII_totFe</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.19</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">min_SiO2</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">min_MgO</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#meltPT.suite.Suite" title="Permalink to this definition">¶</a></dt>
+<dd><p>Store and process compositions of basaltic rocks.</p>
+<p>Includes methods to find primary compositions (i.e. correcting for the
+crystallisation of olivine; Lee et al., 2009, EPSL), compute equilibration
+pressures and temperatures (Plank &amp; Forsyth, 2016, G-cubed), and fit
+melting paths to those pressure-temperature estimates.</p>
+<dl class="simple">
+<dt>input_csv<span class="classifier">str</span></dt><dd><p>Path to a csv containing data to be read.</p>
+</dd>
+<dt>src_FeIII_totFe<span class="classifier">float</span></dt><dd><p>Ratio of Fe3+ to total Fe in the mantle source.</p>
+</dd>
+<dt>min_SiO2<span class="classifier">float, optional</span></dt><dd><p>Minimum amount of SiO2 in sample to be accepted.</p>
+</dd>
+<dt>min_MgO<span class="classifier">float, optional</span></dt><dd><p>Minimum amound of MgO in sample to be accepted.</p>
+</dd>
+</dl>
+<dl class="simple">
+<dt>data<span class="classifier">pandas dataframe</span></dt><dd><p>The raw data from the provided csv.</p>
+</dd>
+<dt>primary<span class="classifier">pandas dataframe or NoneType</span></dt><dd><p>If backtrack_compositions has been run, will contain the estimated
+primary compositions in various forms.</p>
+</dd>
+<dt>PT<span class="classifier">pandas dataframe or NoneType</span></dt><dd><p>If compute_pressure_temperature has been run, will contain the
+esimated equilibration pressures and temperatures.</p>
+</dd>
+<dt>PT_to_fit<span class="classifier">pandas dataframe or NoneType</span></dt><dd><p>If any melt-path fitting has been run, will contain pressure and
+temperature estimates of samples that have been selected for fitting.</p>
+</dd>
+<dt>individual_melt_fractions<span class="classifier">pandas dataframe or NoneType</span></dt><dd><p>If find_individual_melt_fractions, will contain results of fitting
+suite of pressure-temperature estimates to a specified melt path.</p>
+</dd>
+<dt>individual_potential_temperatures<span class="classifier">pandas dataframe or NoneType</span></dt><dd><p>If find_individual_potential_temperatures has been run, will contain
+results of fitting melting paths to each individual pressure-
+temperature estimate.</p>
+</dd>
+<dt>suite_melt_fractions<span class="classifier">pandas dataframe or NoneType</span></dt><dd><p>If find_suite_potential_temperature has been run, will contain closest
+points on best-fitting melting path for each pressure-temperature
+estimate.</p>
+</dd>
+<dt>potential_temperature<span class="classifier">float or NoneType</span></dt><dd><p>If find_suite_potential_temperature has been run, will be the best-
+fitting potential temperature for the suite of pressure-temperature
+estimates.</p>
+</dd>
+<dt>upper_potential_temperature<span class="classifier">float or NoneType</span></dt><dd><p>If find_suite_potential_temperature has been run, with find_bounds,
+will be the upper bound on potential temperature for the suite of
+pressure-temperature estimates.</p>
+</dd>
+<dt>lower_potential_temperature<span class="classifier">float or NoneType</span></dt><dd><p>If find_suite_potential_temperature has been run, with find_bounds,
+will be the lower bound on potential temperature for the suite of
+pressure-temperature estimates.</p>
+</dd>
+<dt>path<span class="classifier">instance of pyMelt.meltingcolumn_classes.meltingColumn</span></dt><dd><p>If find_suite_potential_temperature has been run, will be the best-
+fitting melting path.</p>
+</dd>
+<dt>upper_path<span class="classifier">instance of pyMelt.meltingcolumn_classes.meltingColumn</span></dt><dd><p>If find_suite_potential_temperature has been run, with find_bounds,
+will be the upper-bounding melting path.</p>
+</dd>
+<dt>lower_path<span class="classifier">instance of pyMelt.meltingcolumn_classes.meltingColumn</span></dt><dd><p>If find_suite_potential_temperature has been run, with find_bounds,
+will be the lower-bounding melting path.</p>
+</dd>
+</dl>
+<dl class="simple">
+<dt>backtrack_compositions :</dt><dd><p>Backtrack compositions for entire suite.</p>
+</dd>
+<dt>compute_pressure_temperature :</dt><dd><p>Compute equilibration pressures and temperatures for entire suite.</p>
+</dd>
+<dt>check_samples_for_fitting :</dt><dd><p>Determine which samples should be fitted.</p>
+</dd>
+<dt>find_individual_melt_fractions :</dt><dd><p>Find best-fitting melt fractions for each sample relative to given melt
+path.</p>
+</dd>
+<dt>find_individual_potential_temperatures :</dt><dd><p>Find best-fitting potential temperatures and corresponding melt
+fractions for each sample.</p>
+</dd>
+<dt>find_suite_potential_temperature :</dt><dd><p>Find best-fitting potential temperature for entire suite.</p>
+</dd>
+<dt>write_to_csv :</dt><dd><p>Write results to csv.</p>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="meltPT.suite.Suite.backtrack_compositions">
+<span class="sig-name descname"><span class="pre">backtrack_compositions</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">target_Fo</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.9</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">Kd</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dm</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0005</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_olivine_addition</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.3</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#meltPT.suite.Suite.backtrack_compositions" title="Permalink to this definition">¶</a></dt>
+<dd><p>Backtrack compositions for entire suite.</p>
+<p>Applies backtrack_sample_composition to the “data” property. Result is
+saved in the “primary” property.</p>
+<dl class="simple">
+<dt>target_Fo<span class="classifier">float, optional</span></dt><dd><p>The forsterite number of the mantle source.
+We add iteratively add olivine to the sample composition until this
+value is reached.</p>
+</dd>
+<dt>Kd<span class="classifier">float or NoneType, optional</span></dt><dd><p>Partition coefficient to be used.
+If None, calculated from the sample composition provided.</p>
+</dd>
+<dt>dm<span class="classifier">float, optional</span></dt><dd><p>The fraction of olivine to be added at each iteration.</p>
+</dd>
+<dt>verbose<span class="classifier">bool, optional</span></dt><dd><p>If True, will print messages with information at each iteration.</p>
+</dd>
+<dt>max_olivine_addition<span class="classifier">float, optional</span></dt><dd><p>Maximum fraction of olivine to add before backtracking is
+abandoned.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="meltPT.suite.Suite.check_samples_for_fitting">
+<span class="sig-name descname"><span class="pre">check_samples_for_fitting</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mantle</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">filters</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">(None,)</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">args</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">(None,)</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#meltPT.suite.Suite.check_samples_for_fitting" title="Permalink to this definition">¶</a></dt>
+<dd><p>Determine which samples should be fitted.</p>
+<p>Samples below the solidus will be dropped. Also applies additional
+filters if provided by the user. Samples which fail any filter will
+be rejected.</p>
+<p>Result is saved in “PT_to_fit” property. Same as “PT” but rejected
+samples are assigned nan pressure and temperature.</p>
+<dl class="simple">
+<dt>mantle<span class="classifier">instance of pyMelt.mantle_class.mantle</span></dt><dd><p>The mantle object to be used to calculate the solidus.</p>
+</dd>
+<dt>filters<span class="classifier">tuple of functions, optional</span></dt><dd><p>Set of functions to filter samples before fitting.
+Filters take the form of a function that reads a single-row
+dataframe and returns either true or force.</p>
+</dd>
+<dt>args<span class="classifier">tuple of tuples, optional, same length as filters</span></dt><dd><p>Extra arguments to be passed to the filter functions.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="meltPT.suite.Suite.compute_pressure_temperature">
+<span class="sig-name descname"><span class="pre">compute_pressure_temperature</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#meltPT.suite.Suite.compute_pressure_temperature" title="Permalink to this definition">¶</a></dt>
+<dd><p>Compute equilibration pressures and temperatures for entire suite.</p>
+<p>Applies “compute_sample_pressure_temperature” to the “primary”
+property. Result is saved in the “PT” property.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="meltPT.suite.Suite.find_individual_melt_fractions">
+<span class="sig-name descname"><span class="pre">find_individual_melt_fractions</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mantle</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">filters</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">(None,)</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">filter_args</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">(None,)</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#meltPT.suite.Suite.find_individual_melt_fractions" title="Permalink to this definition">¶</a></dt>
+<dd><p>Find best-fitting melt fractions for each sample relative to given melt
+path.</p>
+<p>Applies “find_sample_melt_fraction” to “PT_to_fit” dataframe. Results
+saved in “individual_melt_fractions” property.</p>
+<dl class="simple">
+<dt>mantle<span class="classifier">instance of pyMelt.mantle_class.mantle</span></dt><dd><p>The mantle object to be used to calculate the solidus.</p>
+</dd>
+<dt>path<span class="classifier">instance of pyMelt.meltingcolumn_classes.meltingColumn</span></dt><dd><p>The melting path to be used.</p>
+</dd>
+<dt>filters<span class="classifier">tuple of functions, optional</span></dt><dd><p>Set of functions to filter samples before fitting.
+Filters take the form of a function that reads a single-row
+dataframe and returns either true or force.</p>
+</dd>
+<dt>args<span class="classifier">tuple of tuples, optional, same length as filters</span></dt><dd><p>Extra arguments to be passed to the filter functions.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="meltPT.suite.Suite.find_individual_potential_temperatures">
+<span class="sig-name descname"><span class="pre">find_individual_potential_temperatures</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mantle</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">filters</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">(None,)</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">filter_args</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">(None,)</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#meltPT.suite.Suite.find_individual_potential_temperatures" title="Permalink to this definition">¶</a></dt>
+<dd><p>Find best-fitting melting paths for each sample.</p>
+<p>Applies “find_sample_potential_temperature” to “PT_to_fit” dataframe.
+Result is saved in “individual_potential_temperatures” property.</p>
+<dl class="simple">
+<dt>mantle<span class="classifier">instance of pyMelt.mantle_class.mantle</span></dt><dd><p>The mantle object to be used to calculate the solidus and melting
+paths.</p>
+</dd>
+<dt>filters<span class="classifier">tuple of functions, optional</span></dt><dd><p>Set of functions to filter samples before fitting.
+Filters take the form of a function that reads a single-row
+dataframe and returns either true or force.</p>
+</dd>
+<dt>args<span class="classifier">tuple of tuples, optional, same length as filters</span></dt><dd><p>Extra arguments to be passed to the filter functions.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="meltPT.suite.Suite.find_suite_potential_temperature">
+<span class="sig-name descname"><span class="pre">find_suite_potential_temperature</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mantle</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">find_bounds</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bounds_threshold</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.6666666666666666</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">filters</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">(None,)</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">filter_args</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">(None,)</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#meltPT.suite.Suite.find_suite_potential_temperature" title="Permalink to this definition">¶</a></dt>
+<dd><p>Find best-fitting potential temperature for suite.</p>
+<p>Uses scipy’s minimize_scalar to minimize mean distance from suite
+pressure-temperature estimates to melting path. Options used are:</p>
+<blockquote>
+<div><p>method: “bounded”
+bounds:  min –&gt; intersection of solidus with surface</p>
+<blockquote>
+<div><p>max –&gt; 1600 oC</p>
+</div></blockquote>
+<dl class="simple">
+<dt>bracket: min –&gt; intersection of solidus with surface</dt><dd><p>max –&gt; 1600 oC</p>
+</dd>
+</dl>
+</div></blockquote>
+<dl class="simple">
+<dt>mantle<span class="classifier">instance of pyMelt.mantle_class.mantle</span></dt><dd><p>The mantle object to be used to calculate the solidus and melting
+paths.</p>
+</dd>
+<dt>find_bounds<span class="classifier">bool, optional</span></dt><dd><p>If True, uses find_bounds to place upper and lower bounds on
+best-fitting potential temperature.</p>
+</dd>
+<dt>bounds_threshold<span class="classifier">float</span></dt><dd><p>The threshold fraction of points to be lie between the best-fitting
+and bounding temperature melting paths.</p>
+</dd>
+<dt>filters<span class="classifier">tuple of functions, optional</span></dt><dd><p>Set of functions to filter samples before fitting.
+Filters take the form of a function that reads a single-row
+dataframe and returns either true or force.</p>
+</dd>
+<dt>args<span class="classifier">tuple of tuples, optional, same length as filters</span></dt><dd><p>Extra arguments to be passed to the filter functions.</p>
+</dd>
+</dl>
+<dl>
+<dt>potential_temperature<span class="classifier">float</span></dt><dd><p>The best-fitting potential temperature.</p>
+</dd>
+<dt>path<span class="classifier">instance of pyMelt.meltingcolumn_classes.meltingColumn</span></dt><dd><p>The best-fitting melting path.</p>
+</dd>
+<dt>suite_melt_fractions<span class="classifier">pandas dataframe</span></dt><dd><p>Nearest melt fractions, pressures and temperatures along best-
+fitting melting path for each sample.</p>
+</dd>
+<dt>upper_potential_temperature<span class="classifier">float, if find_bounds is True</span></dt><dd><p>The upper bouding potential temperature.</p>
+</dd>
+<dt>lower_potential_temperature<span class="classifier">float, if find_bounds is True</span></dt><dd><p>The lower bounding potential temperature.</p>
+</dd>
+<dt>upper_path<span class="classifier">instance of pyMelt.meltingcolumn_classes.meltingColumn, </span></dt><dd><blockquote>
+<div><p>if finds_bounds is True</p>
+</div></blockquote>
+<p>The upper bounding melting path.</p>
+</dd>
+<dt>lower_path<span class="classifier">instance of pyMelt.meltingcolumn_classes.meltingColumn, </span></dt><dd><blockquote>
+<div><p>if finds_bounds is True</p>
+</div></blockquote>
+<p>The lower bounding melting path.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="meltPT.suite.Suite.write_to_csv">
+<span class="sig-name descname"><span class="pre">write_to_csv</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">outfile</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">write_primary</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">write_primary_extended</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">write_PT</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">write_suite_Tp</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">write_individual_Tp</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#meltPT.suite.Suite.write_to_csv" title="Permalink to this definition">¶</a></dt>
+<dd><p>Write results to csv.</p>
+</dd></dl>
+
+</dd></dl>
+
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="index.html">meltPT</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="index.html">Documentation overview</a><ul>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2022, F. McNab & P.W. Ball.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 4.4.0</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
+      
+      |
+      <a href="_sources/codedoc.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>
