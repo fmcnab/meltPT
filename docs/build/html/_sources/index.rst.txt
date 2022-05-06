@@ -10,7 +10,8 @@ Welcome to meltPT's documentation!
    :maxdepth: 2
    :caption: Contents:
 
-   installation
+   about
+   getstarted
    codedoc
    license
 
