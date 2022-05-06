@@ -1,6 +1,9 @@
 # meltPT
 
-
+**meltPT** is a Python package for whole-rock themormobarometric analyses of basaltic (mafic) rocks. It contains modules for:
+- Correcting sample compositions for effects of olivine crystallisation
+- Estimating pressures and temperatures at which samples were last in equilibrium with the mantle
+- Estimating melt fractions and potential temperatures on an individual basis or for a suite of samples
 
 ## Getting started
 
@@ -59,5 +62,5 @@ We also urge you to cite the original literature on which our code is based:
 - Thermobarometry: [Plank and Forsyth (2016, *G<sup>3</sup>*)](https://doi.org/10.1002/2015GC006205)
 
 If you use our melt-path fitting routines you should also cite:
-- pyMelt: Matthews et al.
+- pyMelt: [Matthews et al. (in rev., *Volcanica*)](https://doi.org/10.31223/X5JP7X)
 - melting model for our examples: [Katz et al. (2003, *G<sup>3</sup>*)](https://doi.org/10.1029/2002GC000433)
