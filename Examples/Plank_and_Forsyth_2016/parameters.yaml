@@ -1,0 +1,82 @@
+# ---------------------------------------------------------------------------- #
+# -------------------- PARAMETER FILE FOR USE WITH meltPT -------------------- #
+#                                                                              #
+# To run, make sure this file is the same directory as the "run.py" script     #
+# and use the following command:                                               #
+#                                                                              #
+# $ python3 run.py parameters.yaml                                             #
+#                                                                              #
+# ---------------------------------------------------------------------------- #
+
+
+# ---- Input / output filenames ---------------------------------------------- #
+
+# Path to input data file.
+data_file: "PF16_S7.csv"
+
+# Path to output data file.
+output_file: "PF16_S7_out.csv"
+
+# ---- Parameters for backtracking compositions ------------------------------ #
+
+backtrack:
+  
+  apply: True
+  
+  # Ration of Ce to H2O in the melt.
+  Ce_to_H2O: 200.
+  
+  # Ratio of Fe3+ to total Fe in the melt. 
+  src_FeIII_totFe: 0.19
+
+  # Minimum MgO for a sample to be processed in wt%. Should be above ~8.
+  min_MgO: 8.
+
+  # Minimum SiO2 for a sample to be processed in wt%. Should be abvoe ~40.
+  min_SiO2: 40.
+  
+  # Target Forsterite number for samples during backtracking.
+  target_Fo: 0.9
+  
+  # Partition coefficient for Mg and Fe exchange between olivine and melt.
+  # Can be a float (e.g. ~0.3) or if False will be calculated as a function
+  # of olivine Forsterite number.
+  Kd: 0.3
+  
+  # Fraction of olivine to add at each iteration.
+  dm: 0.0005
+  
+  # Maximum fraction of olivine to add before giving up on backtracking.
+  max_olivine_addition: 0.3
+  
+  # Save final primary compositions.
+  save: True
+  
+  # Save extended compositions.
+  save_extended: False
+
+
+# ---- Options for computing pressure and temperature of melting ------------- #
+
+PT:
+  
+  apply: True
+  save: True
+
+
+# ---- Options for fitting melting paths ------------------------------------- #
+
+# Fitting a melting path to the entire suite.
+# Each option is True / False.
+suite_Tp:
+  apply: False
+  plot: False
+  save: False
+  
+# Fitting a melting path to each individual sample.
+# Note: with a lot of samples will be very slow!
+# Each option is True / False.
+individual_Tp:
+  apply: True
+  plot: True
+  save: True

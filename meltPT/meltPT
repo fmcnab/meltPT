@@ -74,9 +74,10 @@ if params['individual_Tp']['apply']:
     print()
     print("Fitting melting paths to individual samples.")
     s.find_individual_potential_temperatures(mantle, filters=(lambda x: x['T'] < 1700.,), filter_args=(None,))
-    print("Average potential temperature is: %i +/- %i oC." % 
-        (s.individual_potential_temperatures['Tp'].mean(),
-         s.individual_potential_temperatures['Tp'].std()))
+    if len(s.individual_potential_temperatures) > 1:
+        print("Average potential temperature is: %i +/- %i oC." % 
+            (s.individual_potential_temperatures['Tp'].mean(),
+             s.individual_potential_temperatures['Tp'].std()))
     if params['individual_Tp']['plot']:
         pass
 
