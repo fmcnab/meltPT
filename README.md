@@ -55,9 +55,9 @@ Elsewhere in the "Examples" directory you will find lots of scripts that utilise
 If you use our code, please cite us.
 
 We also urge you to cite the original literature on which our code is based:
-- Sample backtracking and thermobarometry: [Lee et al. (2009, *EPSL*)](doi.org/10.1016/j.epsl.2008.12.020)
-- Thermobarometry: [Plank and Forsyth (2016, *G<sup>3</sup>*)](doi.org/10.1002/2015GC006205)
+- Sample backtracking and thermobarometry: [Lee et al. (2009, *EPSL*)](https://doi.org/10.1016/j.epsl.2008.12.020)
+- Thermobarometry: [Plank and Forsyth (2016, *G<sup>3</sup>*)](https://doi.org/10.1002/2015GC006205)
 
 If you use our melt-path fitting routines you should also cite:
 - pyMelt: Matthews et al.
-- melting model for our examples: [Katz et al. (2003, *G<sup>3</sup>*)](doi.org/10.1029/2002GC000433)
+- melting model for our examples: [Katz et al. (2003, *G<sup>3</sup>*)](https://doi.org/10.1029/2002GC000433)
