@@ -10,7 +10,9 @@ Welcome to meltPT's documentation!
    :maxdepth: 2
    :caption: Contents:
 
-
+   installation
+   codedoc
+   license
 
 Indices and tables
 ==================
