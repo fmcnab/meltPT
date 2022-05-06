@@ -15,6 +15,7 @@ setup(
         'pyMelt',
         'PyQt5',
         'sphinx',
-        'pyymal',
+        'pyyaml',
     ],
+    scripts=['meltPT/meltPT'],
 )
