@@ -140,7 +140,7 @@ class Suite:
             args=(target_Fo,Kd,dm,verbose)
             )
 
-    def compute_pressure_temperature(self):
+    def compute_pressure_temperature(self, thermobar="PF16"):
         """
         Compute equilibration pressures and temperatures for entire suite.
         
@@ -150,7 +150,8 @@ class Suite:
         self.PT = self.primary.apply(
             compute_sample_pressure_temperature, 
             axis=1, 
-            result_type="expand")
+            result_type="expand",
+            args=(thermobar,))
         
     def check_samples_for_fitting(self, mantle, filters=(None,), args=((None,))):
         """
