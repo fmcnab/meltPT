@@ -142,8 +142,8 @@ def oxide_mole_to_mole_species(in_comp):
         'K2Al2Si2O8': in_comp['K2O'],
         'Ti4O8': in_comp['TiO2'] * 0.25,
         'Mn4Si2O8': in_comp['MnO'] * 0.25,
-        'Cr16/3O8': in_comp['Cr2O3']  * (3./8.)
-        # 'H16O8': in_comp['H2O'] * 0.125
+        'Cr16/3O8': in_comp['Cr2O3']  * (3./8.),
+        'H16O8': in_comp['H2O'] * 0.125
     }
     return normalise(out_comp)
 
@@ -319,8 +319,10 @@ def backtrack_sample_composition(
 
     # Compute other concentrations
     oxide_mole_hydrous = oxide_wt_to_oxide_mole(oxide_wt_hydrous)
-    mole_species = oxide_mole_to_mole_species(oxide_mole_hydrous)
-
+    mole_species_hydrous = oxide_mole_to_mole_species(oxide_mole_hydrous)
+    mole_species_anhydrous = {phase:mole_species_hydrous[phase] for phase in mole_species_hydrous.keys() if phase != "H16O8"}
+    mole_species_anhydrous = normalise(mole_species_anhydrous)
+    
     # Package up
     primary_oxide = {}
     for phase in oxide_wt_hydrous:
@@ -329,9 +331,11 @@ def backtrack_sample_composition(
         primary_oxide[phase + "_primary_wt_dry"] = oxide_wt_anhydrous[phase]
     for phase in oxide_mole_hydrous:
         primary_oxide[phase + "_primary_mol"] = oxide_mole_hydrous[phase]
-    for phase in mole_species:
-        primary_oxide[phase] = mole_species[phase]
-
+    for phase in mole_species_hydrous:
+        primary_oxide[phase] = mole_species_hydrous[phase]
+    for phase in mole_species_anhydrous:
+        primary_oxide[phase + "_dry"] = mole_species_anhydrous[phase]
+        
     # Add amount olivine added
     primary_oxide['ol_added'] = dm_tot / (1. + dm_tot)
 

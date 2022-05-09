@@ -71,9 +71,9 @@ class PF16:
         """
         temperature = (
             1264.5 +
-            7.85*self.df['Mg4Si2O8'] +
-            8545./self.df['Si4O8'] -
-            5.96*self.df['Al16/3O8']
+            7.85*self.df['Mg4Si2O8_dry'] +
+            8545./self.df['Si4O8_dry'] -
+            5.96*self.df['Al16/3O8_dry']
             )
         return temperature
 
@@ -94,11 +94,11 @@ class PF16:
             The calculated pressure(s).
         """
         pressure = (
-            np.log(self.df['Si4O8']) -
+            np.log(self.df['Si4O8_dry']) -
             4.045 +
-            0.0114*self.df['Fe4Si2O8'] +
-            0.00052*self.df['Ca4Si2O8']**2. +
-            0.0024*self.df['Mg4Si2O8']) / (-336.3/T - 0.0007*np.sqrt(T)
+            0.0114*self.df['Fe4Si2O8_dry'] +
+            0.00052*self.df['Ca4Si2O8_dry']**2. +
+            0.0024*self.df['Mg4Si2O8_dry']) / (-336.3/T - 0.0007*np.sqrt(T)
             )
         return pressure
 
