@@ -128,12 +128,44 @@ class PF16:
             P = self.compute_pressure(T)
         out = {'P': P, 'T': T - 273.15}
         return out
+
+class L09:
+    
+    def __init__(self, df):
+        self.df = df
         
+    def compute_pressure(self, T):
+        
+        pressure = (
+            (np.log(self.df['Si4O8']) - 
+                4.019 + 
+                0.0165*self.df['Fe4Si2O8'] + 
+                0.0005*(self.df['Ca4Si2O8']**2.)) /
+            (-770*(T**(-1.)) + 0.0058*(T**0.5) - 0.003*self.df['H16O8'])
+            )
+        return pressure
+    
+    def compute_temperature(self):
+        
+        temperature = (
+            916.45 + 
+            (13.68 * self.df['Mg4Si2O8']) + 
+            (4580. / self.df['Si4O8']) -
+            (0.509 * self.df['H16O8'] * self.df['Mg4Si2O8'])
+            )
+        return temperature
+        
+    def compute_pressure_temperature(self):
+        T = self.compute_temperature()
+        P = self.compute_pressure(T)
+        return {'P': P, 'T': T}
 
 def compute_sample_pressure_temperature(df, thermobar="PF16"):
     
     if thermobar == "PF16":
         out = PF16(df).compute_pressure_temperature()
+    elif thermobar == "L09":
+        out = L09(df).compute_pressure_temperature()
     else:
         out = thermobar(df).compute_pressure_temperature()
         
