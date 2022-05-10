@@ -160,11 +160,11 @@ class L09:
         P = self.compute_pressure(T)
         return {'P': P, 'T': T}
 
-def compute_sample_pressure_temperature(df, thermobar="PF16"):
+def compute_sample_pressure_temperature(df, method="PF16"):
     
-    if thermobar == "PF16":
+    if method == "PF16":
         out = PF16(df).compute_pressure_temperature()
-    elif thermobar == "L09":
+    elif method == "L09":
         out = L09(df).compute_pressure_temperature()
     else:
         out = thermobar(df).compute_pressure_temperature()
