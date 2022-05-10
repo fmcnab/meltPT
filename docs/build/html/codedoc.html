@@ -13,11 +13,12 @@
     <script src="_static/jquery.js"></script>
     <script src="_static/underscore.js"></script>
     <script src="_static/doctools.js"></script>
+    <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
     <link rel="author" title="About these documents" href="about.html" />
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
     <link rel="next" title="License" href="license.html" />
-    <link rel="prev" title="Getting Started" href="getstarted.html" />
+    <link rel="prev" title="This is a tutorial" href="Tutorial.html" />
    
   <link rel="stylesheet" href="_static/custom.css" type="text/css" />
   
@@ -194,86 +195,7 @@ in mole percent.</p>
 </dl>
 </dd></dl>
 
-<span class="target" id="module-meltPT.thermobarometry"></span><dl class="py function">
-<dt class="sig sig-object py" id="meltPT.thermobarometry.compute_CO2_correction">
-<span class="sig-prename descclassname"><span class="pre">meltPT.thermobarometry.</span></span><span class="sig-name descname"><span class="pre">compute_CO2_correction</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">df</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#meltPT.thermobarometry.compute_CO2_correction" title="Permalink to this definition">¶</a></dt>
-<dd><p>Calculate temperature correction for samples with equlibration pressures
-above 2 GPa (assumed to be influenced by presence of CO2).</p>
-<p>Equation (3), Plank and Forsyth (2016, G-cubed).</p>
-<dl class="simple">
-<dt>df<span class="classifier">pandas dataframe</span></dt><dd><p>The sample compositions.</p>
-</dd>
-</dl>
-<dl class="simple">
-<dt>correction<span class="classifier">pandas dataframe</span></dt><dd><p>The temperature corrections.</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="meltPT.thermobarometry.compute_pressure">
-<span class="sig-prename descclassname"><span class="pre">meltPT.thermobarometry.</span></span><span class="sig-name descname"><span class="pre">compute_pressure</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">df</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">T</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#meltPT.thermobarometry.compute_pressure" title="Permalink to this definition">¶</a></dt>
-<dd><p>Calculate equlibration pressure.</p>
-<p>Equation (2), Plank and Forsyth (2016, G-cubed).</p>
-<dl class="simple">
-<dt>df<span class="classifier">pandas dataframe</span></dt><dd><p>The sample compositions.</p>
-</dd>
-</dl>
-<dl class="simple">
-<dt>pressure<span class="classifier">pandas dataframe</span></dt><dd><p>The calculated pressure(s).</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="meltPT.thermobarometry.compute_sample_pressure_temperature">
-<span class="sig-prename descclassname"><span class="pre">meltPT.thermobarometry.</span></span><span class="sig-name descname"><span class="pre">compute_sample_pressure_temperature</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">df</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#meltPT.thermobarometry.compute_sample_pressure_temperature" title="Permalink to this definition">¶</a></dt>
-<dd><p>Compute equilibration pressure and temperature for a given sample.</p>
-<dl class="simple">
-<dt>df<span class="classifier">pandas dataframe</span></dt><dd><p>Dataframe containing the sample primary composition.
-Should contain only one row. To use with a multi-row dataframe use
-df.apply().</p>
-</dd>
-</dl>
-<dl class="simple">
-<dt>out<span class="classifier">dict</span></dt><dd><p>The equilibration pressure and temperature result.
-Temperature is in degrees celcius.
-Pressure is in GPa.</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="meltPT.thermobarometry.compute_temperature">
-<span class="sig-prename descclassname"><span class="pre">meltPT.thermobarometry.</span></span><span class="sig-name descname"><span class="pre">compute_temperature</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">df</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#meltPT.thermobarometry.compute_temperature" title="Permalink to this definition">¶</a></dt>
-<dd><p>Calculate equlibration temperature.</p>
-<p>Equation (1), Plank and Forsyth (2016, G-cubed).</p>
-<dl class="simple">
-<dt>df<span class="classifier">pandas dataframe</span></dt><dd><p>The sample compositions.</p>
-</dd>
-</dl>
-<dl class="simple">
-<dt>temperature<span class="classifier">pandas dataframe</span></dt><dd><p>The calculated temperature(s).</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="meltPT.thermobarometry.compute_water_correction">
-<span class="sig-prename descclassname"><span class="pre">meltPT.thermobarometry.</span></span><span class="sig-name descname"><span class="pre">compute_water_correction</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">df</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#meltPT.thermobarometry.compute_water_correction" title="Permalink to this definition">¶</a></dt>
-<dd><p>Calculate temperature correction from water content.</p>
-<p>Equation (1), Plank and Forsyth (2016, G-cubed).</p>
-<dl class="simple">
-<dt>df<span class="classifier">pandas dataframe</span></dt><dd><p>The sample compositions.</p>
-</dd>
-</dl>
-<dl class="simple">
-<dt>correction<span class="classifier">pandas dataframe</span></dt><dd><p>The temperature corrections.</p>
-</dd>
-</dl>
-</dd></dl>
-
-<span class="target" id="module-meltPT.fit_melting_paths"></span><dl class="py function">
+<span class="target" id="module-meltPT.thermobarometry"></span><span class="target" id="module-meltPT.fit_melting_paths"></span><dl class="py function">
 <dt class="sig sig-object py" id="meltPT.fit_melting_paths.compute_sample_melt_fraction_misfit">
 <span class="sig-prename descclassname"><span class="pre">meltPT.fit_melting_paths.</span></span><span class="sig-name descname"><span class="pre">compute_sample_melt_fraction_misfit</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">F</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">df</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">P_err</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.24</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">T_err</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">39.0</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#meltPT.fit_melting_paths.compute_sample_melt_fraction_misfit" title="Permalink to this definition">¶</a></dt>
 <dd><p>Compute misfit between sample and point along given melting path,
@@ -621,7 +543,7 @@ dataframe and returns either true or force.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="meltPT.suite.Suite.compute_pressure_temperature">
-<span class="sig-name descname"><span class="pre">compute_pressure_temperature</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#meltPT.suite.Suite.compute_pressure_temperature" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">compute_pressure_temperature</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">thermobar</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'PF16'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#meltPT.suite.Suite.compute_pressure_temperature" title="Permalink to this definition">¶</a></dt>
 <dd><p>Compute equilibration pressures and temperatures for entire suite.</p>
 <p>Applies “compute_sample_pressure_temperature” to the “primary”
 property. Result is saved in the “PT” property.</p>
@@ -758,6 +680,7 @@ fitting melting path for each sample.</p>
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="about.html">About</a></li>
 <li class="toctree-l1"><a class="reference internal" href="getstarted.html">Getting Started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Tutorial.html">This is a tutorial</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Code Documentation</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#module-meltPT">Modules</a></li>
 </ul>
@@ -769,7 +692,7 @@ fitting melting path for each sample.</p>
 <h3>Related Topics</h3>
 <ul>
   <li><a href="index.html">Documentation overview</a><ul>
-      <li>Previous: <a href="getstarted.html" title="previous chapter">Getting Started</a></li>
+      <li>Previous: <a href="Tutorial.html" title="previous chapter">This is a tutorial</a></li>
       <li>Next: <a href="license.html" title="next chapter">License</a></li>
   </ul></li>
 </ul>
