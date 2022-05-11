@@ -1,6 +1,6 @@
 # meltPT
 
-**meltPT** is a Python package for whole-rock themormobarometric analyses of basaltic (mafic) rocks. It contains modules for:
+**meltPT** is a Python package for whole-rock major-element themormobarometric analyses of basaltic (mafic) rocks. It contains modules for:
 - Correcting sample compositions for effects of olivine crystallisation
 - Estimating pressures and temperatures at which samples were last in equilibrium with the mantle
 - Estimating melt fractions and potential temperatures on an individual basis or for a suite of samples
@@ -30,16 +30,16 @@ You should now have a directory called "meltPT". To install the package, enter t
 
 ```
 cd meltPT
-python3 setup.py install
+pip install .
 ```
 
-You are now ready to use **meltPT**!
+This will take a minute or two and print lots of stuff. If it completes successfully, you are now ready to use **meltPT**!
 
 ### Running meltPT
 
 We provide a command-line tool that will allow you start running the code without needing to write your own scripts. All you need to do is edit a parameter file that contains paths to your chosen input and output files, values for certain variables, and the analyses you would like to run.
 
-As an example, we recreate a result provided by Plank and Forsyth (2016, *G<sup>3</sup>*). From the base directory:
+As an example, we recreate a result provided by [Plank and Forsyth (2016, *G<sup>3</sup>*)](https://doi.org/10.1002/2015GC006205)  . From the base directory:
 
 ```
 # Navigate to the Plank and Forsyth directory.
