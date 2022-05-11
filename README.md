@@ -55,7 +55,7 @@ Elsewhere in the "Examples" directory you will find lots of scripts that utilise
 
 ## Citing meltPT
 
-If you use our code, please cite us.
+If you use our code, please cite us. We are currently preparing an accompnaying manuscript for publication. In the meantime, you can cite the package with its Zenodo doi.
 
 We also urge you to cite the original literature on which our code is based:
 - Sample backtracking and thermobarometry: [Lee et al. (2009, *EPSL*)](https://doi.org/10.1016/j.epsl.2008.12.020)
