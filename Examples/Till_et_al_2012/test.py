@@ -36,10 +36,15 @@ s.primary = pd.DataFrame(processed)
 def Mg_num(df):
     return df['MgO_primary_mol_dry'] / (df['MgO_primary_mol_dry'] + df['FeO_primary_mol_dry'])
 
+# def NaK_num(df):
+#     return (
+#         (df['Na2O_primary_mol_dry'] + df['K2O_primary_mol_dry']) / 
+#         (df['Na2O_primary_mol_dry'] + df['K2O_primary_mol_dry'] + df['CaO_primary_mol_dry'])
+#         )
 def NaK_num(df):
     return (
-        (df['Na2O_primary_mol_dry'] + df['K2O_primary_mol_dry']) / 
-        (df['Na2O_primary_mol_dry'] + df['K2O_primary_mol_dry'] + df['CaO_primary_mol_dry'])
+        (df['Na2O_primary_wt_dry'] + df['K2O_primary_wt_dry']) / 
+        (df['Na2O_primary_wt_dry'] + df['K2O_primary_wt_dry'] + df['CaO_primary_wt_dry'])
         )
 
 def compute_pressure(df, Oliv):
