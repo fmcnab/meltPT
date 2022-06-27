@@ -14,7 +14,9 @@ def parse_csv(infile, Ce_to_H2O=200., src_FeIII_totFe=0.2, min_SiO2=0., min_MgO=
 
     # If these columns do not exist in the input make them and
     # give them zeros for every row.
-    check_cols=['Cr2O3', 'MnO', 'H2O', 'FeO', 'Fe2O3', 'src_FeIII_totFe', 'Ce']
+    check_cols=[
+        'Cr2O3', 'MnO', 'H2O', 'FeO', 'Fe2O3', 'src_FeIII_totFe', 'Ce', 
+        'P2O5', 'NiO', 'CoO']
     df = df.reindex(df.columns.union(check_cols, sort=False), axis=1, fill_value=0)
 
     # Calculate H2O value if H2O value is zero
