@@ -3,6 +3,10 @@ from .backtrack_compositions import *
 from .thermobarometry import *
 from .fit_melting_paths import *
 
+MAJOR_OXIDES = [
+    'SiO2','Al2O3','FeO','Fe2O3','MgO','CaO','Na2O','K2O','TiO2','MnO',
+    'Cr2O3','H2O', 'P2O5', 'NiO', 'CoO']
+
 class Suite:
     """
     Store and process compositions of basaltic rocks.
@@ -89,14 +93,13 @@ class Suite:
         Write results to csv.
     """
 
-    def __init__(self, input_csv, Ce_to_H2O=200., src_FeIII_totFe=0.19, min_SiO2=0., min_MgO=0.):
+    def __init__(self, input_csv, Ce_to_H2O=200., src_FeIII_totFe=0.19, min_SiO2=0., min_MgO=0., read_as_primary=False):
         self.data = parse_csv(
             input_csv,
             Ce_to_H2O=Ce_to_H2O,
             src_FeIII_totFe=src_FeIII_totFe,
             min_SiO2=min_SiO2,
             min_MgO=min_MgO)
-        self.primary = None
         self.PT = None
         self.PT_to_fit = None
         self.individual_melt_fractions = None
@@ -108,6 +111,13 @@ class Suite:
         self.path = None
         self.upper_path = None
         self.lower_path = None
+        
+        if read_as_primary:
+            self.primary = self.data.filter(items=MAJOR_OXIDES, axis=1)
+            primary_labels = {x: x + "_primary_wt" for x in MAJOR_OXIDES}
+            self.primary = self.primary.rename(primary_labels, axis=1)
+        else:
+            self.primary = None
 
     def backtrack_compositions(self, target_Fo=0.9, Kd=False, dm=0.0005, verbose=False, max_olivine_addition=0.3):
         """
