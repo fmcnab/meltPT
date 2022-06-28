@@ -99,7 +99,8 @@ class Suite:
             Ce_to_H2O=Ce_to_H2O,
             src_FeIII_totFe=src_FeIII_totFe,
             min_SiO2=min_SiO2,
-            min_MgO=min_MgO)
+            min_MgO=min_MgO,
+            read_as_primary=read_as_primary)
         self.PT_to_fit = None
         self.individual_melt_fractions = None
         self.individual_potential_temperatures = None
@@ -123,7 +124,7 @@ class Suite:
             self.data = self.data.drop(labels=['P', 'T'], axis=1)
         else:
             self.PT = None
-            self.data = self.data.drop(labels=['P', 'T'], axis=1)
+            # self.data = self.data.drop(labels=['P', 'T'], axis=1)
 
     def backtrack_compositions(self, target_Fo=0.9, Kd=False, dm=0.0005, verbose=False, max_olivine_addition=0.3):
         """
