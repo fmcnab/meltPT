@@ -124,7 +124,7 @@ class Suite:
             self.data = self.data.drop(labels=['P', 'T'], axis=1)
         else:
             self.PT = None
-            # self.data = self.data.drop(labels=['P', 'T'], axis=1)
+            self.data = self.data.drop(labels=['P', 'T'], axis=1, errors='ignore')
 
     def backtrack_compositions(self, target_Fo=0.9, Kd=False, dm=0.0005, verbose=False, max_olivine_addition=0.3):
         """
