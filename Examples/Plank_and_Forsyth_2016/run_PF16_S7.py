@@ -11,6 +11,11 @@ print("Result from PF16 supplementary 7: P = 2.09 GPa, T = 1347 oC.")
 print("Our result:                       P = %.2f GPa, T = %i oC." % 
     (s.PT['P'], s.PT['T']))
 
+# ---- check reading in primaries
+s2 = Suite("PF16_S7_Primary.csv", read_as_primary=True)
+s2.compute_pressure_temperature()
+print("Our result (2):                   P = %.2f GPa, T = %i oC." % 
+    (s2.PT['P'], s2.PT['T']))
 
 # ---- Set up mantle
 lz = m.lithologies.katz.lherzolite()
