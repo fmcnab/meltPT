@@ -93,14 +93,13 @@ class Suite:
         Write results to csv.
     """
 
-    def __init__(self, input_csv, Ce_to_H2O=200., src_FeIII_totFe=0.19, min_SiO2=0., min_MgO=0., read_as_primary=False):
+    def __init__(self, input_csv, Ce_to_H2O=200., src_FeIII_totFe=0.19, min_SiO2=0., min_MgO=0., read_as_primary=False, read_PT=False):
         self.data = parse_csv(
             input_csv,
             Ce_to_H2O=Ce_to_H2O,
             src_FeIII_totFe=src_FeIII_totFe,
             min_SiO2=min_SiO2,
             min_MgO=min_MgO)
-        self.PT = None
         self.PT_to_fit = None
         self.individual_melt_fractions = None
         self.individual_potential_temperatures = None
@@ -118,6 +117,13 @@ class Suite:
             self.primary = self.primary.rename(primary_labels, axis=1)
         else:
             self.primary = None
+            
+        if read_PT:
+            self.PT = self.data.filter(items=['P', 'T'], axis=1)
+            self.data = self.data.drop(labels=['P', 'T'], axis=1)
+        else:
+            self.PT = None
+            self.data = self.data.drop(labels=['P', 'T'], axis=1)
 
     def backtrack_compositions(self, target_Fo=0.9, Kd=False, dm=0.0005, verbose=False, max_olivine_addition=0.3):
         """
