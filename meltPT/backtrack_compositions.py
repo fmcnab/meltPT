@@ -324,28 +324,28 @@ def backtrack_sample_composition(
                 break
 
 
-    # Anhydrous concentrations: remove water and renormalise
-    oxide_wt_anhydrous = {phase:oxide_wt_hydrous[phase] for phase in oxide_wt_hydrous.keys() if phase != "H2O"}
-    oxide_wt_anhydrous = normalise(oxide_wt_anhydrous)
-
-    # Compute other concentrations
-    oxide_mole_hydrous = oxide_wt_to_oxide_mole(oxide_wt_hydrous)
-    mole_species_hydrous = oxide_mole_to_mole_species(oxide_mole_hydrous)
-    mole_species_anhydrous = {phase:mole_species_hydrous[phase] for phase in mole_species_hydrous.keys() if phase != "H16O8"}
-    mole_species_anhydrous = normalise(mole_species_anhydrous)
-    
-    # Package up
+    # # Anhydrous concentrations: remove water and renormalise
+    # oxide_wt_anhydrous = {phase:oxide_wt_hydrous[phase] for phase in oxide_wt_hydrous.keys() if phase != "H2O"}
+    # oxide_wt_anhydrous = normalise(oxide_wt_anhydrous)
+    # 
+    # # Compute other concentrations
+    # oxide_mole_hydrous = oxide_wt_to_oxide_mole(oxide_wt_hydrous)
+    # mole_species_hydrous = oxide_mole_to_mole_species(oxide_mole_hydrous)
+    # mole_species_anhydrous = {phase:mole_species_hydrous[phase] for phase in mole_species_hydrous.keys() if phase != "H16O8"}
+    # mole_species_anhydrous = normalise(mole_species_anhydrous)
+    # 
+    # # Package up
     primary_oxide = {}
     for phase in oxide_wt_hydrous:
         primary_oxide[phase + "_primary_wt"] = oxide_wt_hydrous[phase]
-    for phase in oxide_wt_anhydrous:
-        primary_oxide[phase + "_primary_wt_dry"] = oxide_wt_anhydrous[phase]
-    for phase in oxide_mole_hydrous:
-        primary_oxide[phase + "_primary_mol"] = oxide_mole_hydrous[phase]
-    for phase in mole_species_hydrous:
-        primary_oxide[phase] = mole_species_hydrous[phase]
-    for phase in mole_species_anhydrous:
-        primary_oxide[phase + "_dry"] = mole_species_anhydrous[phase]
+    # for phase in oxide_wt_anhydrous:
+    #     primary_oxide[phase + "_primary_wt_dry"] = oxide_wt_anhydrous[phase]
+    # for phase in oxide_mole_hydrous:
+    #     primary_oxide[phase + "_primary_mol"] = oxide_mole_hydrous[phase]
+    # for phase in mole_species_hydrous:
+    #     primary_oxide[phase] = mole_species_hydrous[phase]
+    # for phase in mole_species_anhydrous:
+    #     primary_oxide[phase + "_dry"] = mole_species_anhydrous[phase]
         
     # Add amount olivine added
     primary_oxide['ol_added'] = dm_tot / (1. + dm_tot)
