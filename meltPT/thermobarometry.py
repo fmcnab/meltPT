@@ -208,8 +208,8 @@ def compute_components_compound(df):
         
     MAJOR_OXIDES = ['SiO2','Al2O3','FeO','MgO','CaO','Na2O','K2O','TiO2',
         'MnO','Cr2O3','P2O5', 'NiO']
-    OXIDE_WEIGHT = [60.085,101.962,71.846,40.311,56.079,61.979,
-        94.203,79.899,70.937,151.99,141.945,74.71]
+    OXIDE_WEIGHT = [60.08,101.96,71.84,40.3,56.08,61.98,
+        94.2,79.86,70.94,151.99,141.945,74.71]
 
     df['FeO_primary_wt'] = df['FeO_primary_wt'] + 0.8998 * df['Fe2O3_primary_wt']
     df['Fe2O3_primary_wt'] = 0.
@@ -437,7 +437,7 @@ class L09:
     def compute_pressure_temperature(self):
         compute_components_species(self.df)
         T = self.compute_temperature()
-        P = self.compute_pressure(T)
+        P = self.compute_pressure((T+273.15))
         return {'P': P, 'T': T}
 
 class TGK12_SPL:
@@ -464,6 +464,8 @@ class TGK12_SPL:
         """
         pressure = -0.862
         pressure += 9.471 * compute_olivine(self.df)
+        OL = compute_olivine(self.df)
+        print(OL)
         pressure -= 2.383 * (1. - Mg_num(self.df)) 
         pressure += 2.922 * NaK_num(self.df)
         pressure += 0.218 * self.df['TiO2_primary_wt_dry'] 

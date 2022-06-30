@@ -63,7 +63,7 @@ def parse_csv(infile, Ce_to_H2O=200., src_FeIII_totFe=0.2, min_SiO2=0., min_MgO=
     # Remove lines with MgO < 8.5 wt%
     df = df.loc[(df['MgO'] > min_MgO)]
     # Remove lines with no water values
-    df = df.loc[(df['H2O'] > 0.)]
+    #df = df.loc[(df['H2O'] > 0.)]
 
     # df_wt_hydrous = df[major_cols]
     # to_drop = np.hstack((major_cols, "Sample", "Total"))
