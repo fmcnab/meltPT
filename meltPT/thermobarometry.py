@@ -154,7 +154,10 @@ def compute_components_species(df):
     OXIDES_DRY = ['SiO2','Al2O3','FeO','Fe2O3','MgO','CaO','Na2O','K2O',
         'TiO2','MnO','Cr2O3', 'P2O5']
     OXIDE_WEIGHT = [60.08,101.96,71.84,159.69,40.3,56.08,61.98,
-        94.2,79.86,70.94,151.99,141.942524,18.014680000000002]  
+        94.2,79.86,70.94,151.99,141.942524,18.014680000000002]
+    SPECIES = ['Si4O8','Al16/3O8','Fe4Si2O8','Fe16/3O8','Mg4Si2O8',
+        'Ca4Si2O8','Na2Al2Si2O8','K2Al2Si2O8','Ti4O8','Mn4Si2O8','Cr16/3O8',
+        'P16/5O8']     
     SPECIES_DRY = ['Si4O8','Al16/3O8','Fe4Si2O8','Fe16/3O8','Mg4Si2O8',
         'Ca4Si2O8','Na2Al2Si2O8','K2Al2Si2O8','Ti4O8','Mn4Si2O8','Cr16/3O8',
         'P16/5O8']         
@@ -183,6 +186,7 @@ def compute_components_species(df):
     df['P16/5O8'] = df['P2O5_primary_mol'] * 0.625
     df['H16O8'] = df['H2O_primary_mol'] * 0.125
 
+    normalize_v2(df, SPECIES, '', '', 100.)
     normalize_v2(df, SPECIES_DRY, '', '_dry', 100.)
 
     return
