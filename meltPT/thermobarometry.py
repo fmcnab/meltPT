@@ -77,7 +77,7 @@ def compute_olivine(df):
     Returns
     -------
     OL: predicted proportion of olivine
-    """        
+    """      
     Sum = df["SiO2_primary_mol_dry"] + df["TiO2_primary_mol_dry"] + (df["Al2O3_primary_mol_dry"]*2.) 
     Sum += (df["Cr2O3_primary_mol_dry"]*2) + df["FeO_primary_mol_dry"]
     Sum += df["MnO_primary_mol_dry"] + df["MgO_primary_mol_dry"] 
@@ -97,40 +97,24 @@ def compute_olivine(df):
     ####     
     Total = sio2 - cao - 2*(k2o+na2o) + cr2o3 + tio2 + (2*p2o5)
     ####    
-    ol = feo + mgo + 5/3*p2o5
-    ol += 0.5*(al2o3 - k2o - na2o)
-    ol -= cao + tio2 + cr2o3
-    ol *= 0.5
-    ol /= Total*2
+    ol = (0.5*(feo+mgo+0.5*(al2o3-k2o-na2o)-cao-tio2-cr2o3+5/3*p2o5))/Total*2
     ####
-    qz = sio2
-    qz -= 0.5*(feo+mgo)
-    qz -= 1.5*cao
-    qz -= 0.25*al2o3   
-    qz -= 2.75*(k2o+na2o)
-    qz += 0.5*(cr2o3+tio2)
-    qz += 2.5*p2o5
-    qz /= Total    
-    ####
-    cpx = cao
-    cpx -= 0.5*al2o3
-    cpx += 0.5*(k2o+na2o)
-    cpx -= 5/3*p2o5 
-    cpx /= Total    
+    qz = (sio2-0.5*(feo+mgo)-1.5*cao-0.25*al2o3-2.75*(k2o+na2o)+0.5*cr2o3+0.5*tio2+2.5*p2o5)/Total
+    ####  
+    cpx = (cao-0.5*al2o3+0.5*(k2o+na2o)-5/3*p2o5)/Total*3
     ####    
-    plg = 0.5*(al2o3+na2o-k2o)
-    plg /= Total*4
+    plg = (0.5*(al2o3+na2o-k2o))/Total*4
     ####    
-    opx = k2o/Total*4    
+    opx = k2o/Total*4
     #### 
     spl = (cr2o3+tio2)/Total*1.5
     ####   
-    ap = p2o5/3/Total*6    
+    ap = p2o5/3/Total*6
     ####     
     Min_Tot = ol + qz + plg + cpx + opx + spl + ap
     ####       
     OL = ol / Min_Tot
-    OL /= (ol+qz+plg+cpx) / Min_Tot 
+    OL /= ((ol+qz+plg+cpx) / Min_Tot) 
     return OL
 
 def compute_components_species(df):
@@ -219,7 +203,9 @@ def compute_components_compound(df):
     for i in range(0, len(MAJOR_OXIDES), 1):
         OXIDE = MAJOR_OXIDES[i]
         df[OXIDE + '_primary_mol_dry'] = df[OXIDE + '_primary_wt_dry'] / OXIDE_WEIGHT[i]
-        
+    
+    normalize_v2(df, MAJOR_OXIDES, '_primary_mol_dry', '_primary_mol_dry', 100.)      
+    
     return
 
 def compute_components_cation(df):
@@ -464,8 +450,6 @@ class TGK12_SPL:
         """
         pressure = -0.862
         pressure += 9.471 * compute_olivine(self.df)
-        OL = compute_olivine(self.df)
-        print(OL)
         pressure -= 2.383 * (1. - Mg_num(self.df)) 
         pressure += 2.922 * NaK_num(self.df)
         pressure += 0.218 * self.df['TiO2_primary_wt_dry'] 
@@ -594,7 +578,7 @@ class K21_GNT:
     """
     Same as TGK12_GNT but equations have been recalibrated with additional data.
 
-    Line (5 and 27) of Table (1), Krein et al (2021, JGR: Solid Earth).
+   Equations 1G-P and 1G-T of Table (1), Krein et al (2021, JGR: Solid Earth).
         
     Parameters
     ----------
@@ -616,7 +600,7 @@ class K21_GNT:
         pressure += 46.44 * Mg_num(self.df)
         pressure += 28.72 * NaK_num(self.df)
         pressure += 1.52 * self.df['TiO2_primary_wt_dry'] 
-        pressure -= 3.25 * self.df['K2O_primary_wt_dry']         
+        pressure += 3.25 * self.df['K2O_primary_wt_dry']         
         pressure += 18.62 * (self.df['CaO_primary_wt_dry']/self.df['Al2O3_primary_wt_dry']) 
         pressure *= 0.1              
         return pressure
@@ -717,12 +701,12 @@ class K21_PLG:
 
     def compute_temperature(self, P):
         temperature = 1074.
-        temperature += 11.86 * (P/0.1)
-        temperature += 65.55 * Mg_num(self.df)
-        temperature -= 138.2 * NaK_num(self.df)
-        temperature += 20.55 * self.df['TiO2_primary_wt_dry'] 
-        temperature += 5.855 * self.df['K2O_primary_wt_dry']        
-        temperature += 79.02 * (self.df['CaO_primary_wt_dry'] / self.df['Al2O3_primary_wt_dry'])    
+        temperature += (11.86 * (P/0.1))
+        temperature += (65.55 * Mg_num(self.df))
+        temperature -= (138.2 * NaK_num(self.df))
+        temperature += (20.55 * self.df['TiO2_primary_wt_dry'] )
+        temperature += (5.855 * self.df['K2O_primary_wt_dry']  )      
+        temperature += (79.02 * (self.df['CaO_primary_wt_dry'] / self.df['Al2O3_primary_wt_dry'])    )
         return temperature
     
     def compute_pressure_temperature(self):

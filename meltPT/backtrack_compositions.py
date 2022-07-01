@@ -291,7 +291,7 @@ def backtrack_sample_composition(
 
     # Check Fo is below mantle Fo
     Fo = compute_forsterite_number(oxide_wt_hydrous)
-    if target_Fo-Fo < 0.005:
+    if target_Fo-Fo < 0.001:
         oxide_wt_hydrous = fill_dict_with_nans(oxide_wt_hydrous)
         dm_tot = np.nan
         message = df.Sample + ": backtracking failed! Starting Fo above mantle Fo."
@@ -305,7 +305,7 @@ def backtrack_sample_composition(
         dm_tot = 0.
         composition_through_addition = []
         # while abs(target_Fo - Fo) > 1.e-15:
-        while abs(target_Fo - Fo) > dm:
+        while target_Fo - Fo > 0.0002:
             oxide_wt_hydrous = add_olivine(oxide_wt_hydrous, Kd=Kd, dm=dm)
             composition_through_addition.append(oxide_wt_hydrous)
             dm_tot += dm
