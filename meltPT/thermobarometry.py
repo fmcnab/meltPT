@@ -64,7 +64,7 @@ def normalize_v2(df, list_parameters, input_suffix, output_suffix, end_sum):
         
     return df
 
-def compute_olivine(df):
+def compute_minerals(df):
     """
     Calculate mineral components using equations
     listed in Grove (1982) Contrib Mineral Petrol 80:160-182
@@ -113,9 +113,30 @@ def compute_olivine(df):
     ####     
     Min_Tot = ol + qz + plg + cpx + opx + spl + ap
     ####       
-    OL = ol / Min_Tot
-    OL /= ((ol+qz+plg+cpx) / Min_Tot) 
-    return OL
+    MINS = [ol/Min_Tot, cpx/Min_Tot, plg/Min_Tot, qz/Min_Tot, opx/Min_Tot, spl/Min_Tot, ap/Min_Tot]
+    #OL /= ((ol+qz+plg+cpx) / Min_Tot) 
+    return MINS
+
+def compute_parameter_BK21(df, OL, P, regression_params):
+    result = regression_params[0]
+    result += regression_params[1] * OL 
+    result += regression_params[2] * P
+    result += regression_params[3] * Mg_num(df)
+    result += regression_params[4] * NaK_num(df)
+    result += regression_params[5] * df['TiO2_primary_wt_dry'] 
+    result += regression_params[6] * df['K2O_primary_wt_dry']
+    result += regression_params[7] * (df['CaO_primary_wt_dry']/df['Al2O3_primary_wt_dry'])        
+    return result
+
+def compute_parameter_TGK12(df, MINS, P, regression_params):
+    result = regression_params[0]
+    result += regression_params[1] * (MINS[0]/(MINS[0]+MINS[1]+MINS[2]+MINS[3]))
+    result += regression_params[2] * P
+    result += regression_params[3] * (1. - Mg_num(df))
+    result += regression_params[4] * NaK_num(df)
+    result += regression_params[5] * df['TiO2_primary_wt_dry'] 
+    result += regression_params[6] * df['K2O_primary_wt_dry']    
+    return result
 
 def compute_components_species(df):
     """
@@ -223,19 +244,31 @@ def compute_components_cation(df):
     """
         
     MAJOR_OXIDES = ['SiO2','Al2O3','FeO','Fe2O3','MgO','CaO','Na2O','K2O',
+        'TiO2','MnO','Cr2O3', 'P2O5', 'NiO', 'H2O']
+    CAT_WEIGHT = [60.08,50.98,71.85,159.96/2.,40.3,56.08,30.99,
+        47.1,79.9,70.94,151.99/2.,141.945/2.,74.71, 18.014680000000002]    
+    MAJOR_OXIDES_DRY = ['SiO2','Al2O3','FeO','Fe2O3','MgO','CaO','Na2O','K2O',
         'TiO2','MnO','Cr2O3', 'P2O5', 'NiO']
-    CAT_WEIGHT = [60.085,101.962/2.,71.846,159.96/2.,40.311,56.079,61.979/2.,
-        94.203/2.,79.899,70.937,151.99/2.,141.945/2.,74.71]
+    CAT_WEIGHT_DRY = [60.08,50.98,71.85,159.96/2.,40.3,56.08,30.99,
+        47.1,79.9,70.94,151.99/2.,141.945/2.,74.71] 
 
-    normalize_v2(df, MAJOR_OXIDES, '_primary_wt', '_primary_wt_dry', 100.) 
+    normalize_v2(df, MAJOR_OXIDES_DRY, '_primary_wt', '_primary_wt_dry', 100.)    
+    normalize_v2(df, MAJOR_OXIDES, '_primary_wt', '_primary_wt', 100.)
+
+    for i in range(0, len(MAJOR_OXIDES_DRY), 1):
+        OXIDE = MAJOR_OXIDES_DRY[i]
+        df[OXIDE + '_primary_mol_dry'] = df[OXIDE + '_primary_wt_dry'] / CAT_WEIGHT_DRY[i]
 
     for i in range(0, len(MAJOR_OXIDES), 1):
         OXIDE = MAJOR_OXIDES[i]
-        df[OXIDE + '_primary_mol_dry'] = df[OXIDE + '_primary_wt_dry'] / CAT_WEIGHT[i]
+        df[OXIDE + '_primary_mol'] = df[OXIDE + '_primary_wt'] / CAT_WEIGHT[i]
+
+    normalize_v2(df, MAJOR_OXIDES, '_primary_mol', '_primary_mol', 1.)     
+    normalize_v2(df, MAJOR_OXIDES_DRY, '_primary_mol_dry', '_primary_mol_dry', 1.)  
     
-    normalize_v2(df, MAJOR_OXIDES, '_primary_mol_dry', '_primary_mol_dry', 100.)     
-        
     return
+
+
 
 class PF16:
     
@@ -431,61 +464,11 @@ class TGK12_SPL:
     def __init__(self, df):
         self.df = df
     
-    def compute_pressure(self):
-        """
-        Calculate equlibration pressure assuming
-        spinel is stable.
-
-        Line (8) of Table (5), Till et al (2012, JGR).
-        
-        Parameters
-        ----------
-        df : pandas dataframe
-            The sample compositions.
-            
-        Returns
-        -------
-        temperature : pandas dataframe
-            The calculated pressure(s).
-        """
-        pressure = -0.862
-        pressure += 9.471 * compute_olivine(self.df)
-        pressure -= 2.383 * (1. - Mg_num(self.df)) 
-        pressure += 2.922 * NaK_num(self.df)
-        pressure += 0.218 * self.df['TiO2_primary_wt_dry'] 
-        pressure -= 0.146 * self.df['K2O_primary_wt_dry']
-        return pressure
-
-    def compute_temperature(self, P):
-        """
-        Calculate equlibration temperature assuming
-        spinel is stable.
-
-        Line (7) of Table (5), Till et al (2012, JGR).
-        
-        Parameters
-        ----------
-        df : pandas dataframe
-            The sample compositions.
-        P : equilibration pressure
-            
-        Returns
-        -------
-        temperature : pandas dataframe
-            The calculated temperature(s).
-        """
-        temperature = 1212.
-        temperature += 119.9 * P
-        temperature -= 97.33 * (1. - Mg_num(self.df)) 
-        temperature -= 87.76 * NaK_num(self.df)
-        temperature += 3.44 * self.df['TiO2_primary_wt_dry'] 
-        temperature -= 4.58 * self.df['K2O_primary_wt_dry']
-        return temperature
-    
     def compute_pressure_temperature(self):
         compute_components_compound(self.df)       
-        P = self.compute_pressure()
-        T = self.compute_temperature(P)
+        MINS = compute_minerals(self.df)
+        P = compute_parameter_TGK12(self.df, MINS, 0., [-0.862,9.471,0.,-2.383,2.922,0.218,-0.146])
+        T = compute_parameter_TGK12(self.df, MINS, P, [1212,0.,119.9,-97.33,-87.76,3.44,-4.58])  
         return {'P': P, 'T': T}   
     
 class TGK12_PLG:
@@ -507,29 +490,12 @@ class TGK12_PLG:
     """    
     def __init__(self, df):
         self.df = df
-    
-    def compute_pressure(self):
-        pressure = - 1.64
-        pressure += 12.94 * compute_olivine(self.df)
-        pressure -= 2.363 * (1. - Mg_num(self.df)) 
-        pressure += 3.51 * NaK_num(self.df)
-        pressure += 0.152 * self.df['TiO2_primary_wt_dry'] 
-        pressure -= 0.176 * self.df['K2O_primary_wt_dry']
-        return pressure
 
-    def compute_temperature(self, P):
-        temperature = 1216.
-        temperature += 104.4 * P
-        temperature -= 72.83 * (1. - Mg_num(self.df)) 
-        temperature -= 194.9 * NaK_num(self.df)
-        temperature += 24.08 * self.df['TiO2_primary_wt_dry'] 
-        temperature -= 1.55 * self.df['K2O_primary_wt_dry']
-        return temperature
-    
     def compute_pressure_temperature(self):
         compute_components_compound(self.df)
-        P = self.compute_pressure()
-        T = self.compute_temperature(P)
+        MINS = compute_minerals(self.df)
+        P = compute_parameter_TGK12(self.df, MINS, 0., [-1.64,12.94,0.,-2.363,3.51,0.152,-0.176])
+        T = compute_parameter_TGK12(self.df, MINS, P, [1216,0.,104.4,-72.83,-194.9,24.08,-1.55])        
         return {'P': P, 'T': T}  
 
 class G13:
@@ -553,38 +519,49 @@ class G13:
         self.df = df   
 
     def compute_pressure(self):
-        pressure = - 1.73
-        pressure += 14.64 * compute_olivine(self.df)
-        pressure -= 3.84 * (1. - Mg_num(self.df)) 
-        pressure += 1.96 * NaK_num(self.df)
-        pressure += 0.481 * self.df['P2O5_primary_wt_dry'] 
+        compute_components_compound(self.df) 
+        MINS = compute_minerals(self.df)
+        pressure = -17.3
+        pressure += 146.4 * MINS[0]
+        pressure -= 38.4 * (1. - Mg_num(self.df)) 
+        pressure += 19.6 * NaK_num(self.df)
+        pressure += 4.81 * self.df['P2O5_primary_wt_dry'] 
+        pressure *= 0.1
         return pressure
 
-    def compute_temperature(self, P):
+    def compute_temperature1(self, P):
         temperature = 1313.67
-        temperature += 8.423 * ((P/0.1)-1)
+        temperature += 8.423 * ((P*10.)-1.)
         temperature -= 149.92 * (1. - Mg_num(self.df)) 
         temperature += 55.02 * NaK_num(self.df)
         temperature -= 59.69 * self.df['P2O5_primary_wt_dry'] 
         return temperature
+
+    def compute_temperature(self, P):
+        compute_components_compound(self.df)  
+        T = 1313.67
+        T += 8.423 * ((P/0.1)-1)
+        T -= 149.92 * (1. - Mg_num(self.df))
+        T += 55.02 * NaK_num(self.df)
+        T -= 59.69 * self.df['P2O5_primary_wt_dry']
+        return {'P': P, 'T': T} 
     
     def compute_pressure_temperature(self):
         compute_components_compound(self.df)
         P = self.compute_pressure()
-        T = self.compute_temperature(P)
+        T = self.compute_temperature1(P)
         return {'P': P, 'T': T} 
 
-class K21_GNT:
+class BK21_GNT:
     """
     Same as TGK12_GNT but equations have been recalibrated with additional data.
 
-   Equations 1G-P and 1G-T of Table (1), Krein et al (2021, JGR: Solid Earth).
+    Equations 1G-P and 1G-T of Table (1), Brown Krein et al (2021, JGR: Solid Earth).
         
     Parameters
     ----------
     df : pandas dataframe
         The sample compositions.
-    P : equilibration pressure
             
     Returns
     -------
@@ -593,45 +570,24 @@ class K21_GNT:
     """ 
     def __init__(self, df):
         self.df = df
-        
-    def compute_pressure(self):
-        pressure = - 77.53
-        pressure += 139.9 * compute_olivine(self.df)
-        pressure += 46.44 * Mg_num(self.df)
-        pressure += 28.72 * NaK_num(self.df)
-        pressure += 1.52 * self.df['TiO2_primary_wt_dry'] 
-        pressure += 3.25 * self.df['K2O_primary_wt_dry']         
-        pressure += 18.62 * (self.df['CaO_primary_wt_dry']/self.df['Al2O3_primary_wt_dry']) 
-        pressure *= 0.1              
-        return pressure
-
-    def compute_temperature(self, P):
-        temperature = 1136.
-        temperature += 8.739 * (P/0.1)
-        temperature += 184.9 * Mg_num(self.df)
-        temperature -= 19.48 * NaK_num(self.df)
-        temperature += 29 * self.df['TiO2_primary_wt_dry'] 
-        temperature -= 23.42 * self.df['K2O_primary_wt_dry']        
-        temperature -= 22.48 * (self.df['CaO_primary_wt_dry'] / self.df['Al2O3_primary_wt_dry'])    
-        return temperature
     
     def compute_pressure_temperature(self):
         compute_components_compound(self.df)
-        P = self.compute_pressure()
-        T = self.compute_temperature(P)
+        MINS = compute_minerals(self.df)
+        P = 0.1 * compute_parameter_BK21(self.df, MINS[0], 0., [-77.53423,139.87872,0,46.43963,28.72057,1.52179,3.25095,18.62211])
+        T = compute_parameter_BK21(self.df, 0., P/0.1, [1136.36052,0,8.73915,184.88412,-19.48245,29.00187,-23.41730,-22.48205])
         return {'P': P, 'T': T} 
     
-class K21_SPL:
+class BK21_SPL:
     """
     Same as TGK12_SPL but equations have been recalibrated with additional data.
 
-    Line (3 and 17) of Table (1), Krein et al (2021, JGR: Solid Earth).
+    Line (3 and 17) of Table (1), Brown Krein et al (2021, JGR: Solid Earth).
         
     Parameters
     ----------
     df : pandas dataframe
         The sample compositions.
-    P : equilibration pressure
             
     Returns
     -------
@@ -641,44 +597,51 @@ class K21_SPL:
     def __init__(self, df):
         self.df = df
 
-    def compute_pressure(self):
-        pressure = - 29.5
-        pressure += 84.82 * compute_olivine(self.df)
-        pressure += 25 * Mg_num(self.df)
-        pressure += 24.67 * NaK_num(self.df)
-        pressure += 2.79 * self.df['TiO2_primary_wt_dry'] 
-        pressure -= 0.138 * self.df['K2O_primary_wt_dry']         
-        pressure -= 1.848 * (self.df['CaO_primary_wt_dry']/self.df['Al2O3_primary_wt_dry']) 
-        pressure *= 0.1              
-        return pressure
-
-    def compute_temperature(self, P):
-        temperature = 1049.
-        temperature += 12.71 * (P/0.1)
-        temperature += 63.47 * Mg_num(self.df)
-        temperature -= 3.325 * NaK_num(self.df)
-        temperature += 2.658 * self.df['TiO2_primary_wt_dry'] 
-        temperature -= 12.03 * self.df['K2O_primary_wt_dry']        
-        temperature += 117.8 * (self.df['CaO_primary_wt_dry'] / self.df['Al2O3_primary_wt_dry'])    
-        return temperature
-    
     def compute_pressure_temperature(self):
         compute_components_compound(self.df)
-        P = self.compute_pressure()
-        T = self.compute_temperature(P)
+        MINS = compute_minerals(self.df)
+        P = 0.1 * compute_parameter_BK21(self.df, MINS[0], 0., [-29.5,84.82,0,25.,24.67,2.79,-0.138,-1.848]) 
+        T = compute_parameter_BK21(self.df, 0., P/0.1, [1049.24929,0,12.71243,63.47484,-3.32516,2.65802,-12.03128,117.75713])
         return {'P': P, 'T': T} 
 
-class K21_PLG:
+class BK21_PLG:
     """
     Same as TGK12_PLG but equations have been recalibrated with additional data.
 
-    Line (1 and 7) of Table (1), Krein et al (2021, JGR: Solid Earth).
+    Line (1 and 7) of Table (1), Brown Krein et al (2021, JGR: Solid Earth).
         
+    
     Parameters
     ----------
     df : pandas dataframe
         The sample compositions.
-    P : equilibration pressure
+            
+    Returns
+    -------
+    PT : pandas dataframe
+       The calculated pressure(s) and temperature(s).
+    """    
+    def __init__(self, df):
+        self.df = df
+    
+    def compute_pressure_temperature(self):
+        compute_components_compound(self.df)
+        MINS = compute_minerals(self.df)
+        P = 0.1 * compute_parameter_BK21(self.df, MINS[0], 0., [-43.58532,136.94746,0,24.54202,37.54688,2.10967,-0.77250,1.63584])
+        T = compute_parameter_BK21(self.df, 0., P/0.1, [1074.38633,0,11.86431,65.55420,-138.22714,20.55173,5.85532,79.01883])
+        return {'P': P, 'T': T} 
+
+class BK21:
+    """
+    Brown Krein et al (2021, JGR: Solid Earth).
+    Calculate PT and mineral contents for all three phases.
+    Work out which one best replicates original minerals.
+        
+    
+    Parameters
+    ----------
+    df : pandas dataframe
+        The sample compositions.
             
     Returns
     -------
@@ -689,36 +652,82 @@ class K21_PLG:
         self.df = df
     
     def compute_pressure(self):
-        pressure = - 43.59
-        pressure += 136.9 * compute_olivine(self.df)
-        pressure += 24.54 * Mg_num(self.df)
-        pressure += 37.55 * NaK_num(self.df)
-        pressure += 2.11 * self.df['TiO2_primary_wt_dry'] 
-        pressure -= 0.773 * self.df['K2O_primary_wt_dry']         
-        pressure += 1.636 * (self.df['CaO_primary_wt_dry']/self.df['Al2O3_primary_wt_dry']) 
-        pressure *= 0.1              
+        MINS = compute_minerals(self.df)
+        pressure = [0]*3
+        # Compute Pressure Plag        
+        pressure[0] = 0.1 * compute_parameter_BK21(self.df, MINS[0], 0., [-43.58532,136.94746,0,24.54202,37.54688,2.10967,-0.77250,1.63584]) 
+        # Compute Pressure Spl
+        pressure[1] = 0.1 * compute_parameter_BK21(self.df, MINS[0], 0., [-29.5,84.82,0,25.,24.67,2.79,-0.138,-1.848]) 
+        # Compute Pressure Gnt 
+        pressure[2] = 0.1 * compute_parameter_BK21(self.df, MINS[0], 0., [-77.53423,139.87872,0,46.43963,28.72057,1.52179,3.25095,18.62211])
+  
         return pressure
 
     def compute_temperature(self, P):
-        temperature = 1074.
-        temperature += (11.86 * (P/0.1))
-        temperature += (65.55 * Mg_num(self.df))
-        temperature -= (138.2 * NaK_num(self.df))
-        temperature += (20.55 * self.df['TiO2_primary_wt_dry'] )
-        temperature += (5.855 * self.df['K2O_primary_wt_dry']  )      
-        temperature += (79.02 * (self.df['CaO_primary_wt_dry'] / self.df['Al2O3_primary_wt_dry'])    )
+        temperature = [0]*3
+        # Compute Temperature Plag
+        temperature[0] = compute_parameter_BK21(self.df, 0., P[0]/0.1, [1074.38633,0,11.86431,65.55420,-138.22714,20.55173,5.85532,79.01883])
+        # Compute Temperature Spl
+        temperature[1] = compute_parameter_BK21(self.df, 0., P[1]/0.1, [1049.24929,0,12.71243,63.47484,-3.32516,2.65802,-12.03128,117.75713])           
+        # Compute Temperature Gnt
+        temperature[2] = compute_parameter_BK21(self.df, 0., P[2]/0.1, [1136.36052,0,8.73915,184.88412,-19.48245,29.00187,-23.41730,-22.48205])           
+                  
         return temperature
+
+    def compute_mins(self, P):
+        MINS = compute_minerals(self.df)
+        RMSD = [0]*3
+        # Calculated minerals order: OL, CPX, PLG, QTZ
+        # Mineral Residuals for Plagioclase
+        Mplg = [0]*4
+        Mplg[0] = compute_parameter_BK21(self.df, 0., P[0]/0.1, [0.412,0,0.005,-0.162,-0.363,-0.011,-0.001,-0.126])
+        Mplg[0] -= MINS[0]
+        Mplg[1] = compute_parameter_BK21(self.df, 0., P[0]/0.1, [-0.256,0,0,0.032,0.339,-0.004,-0.01,0.497])
+        Mplg[1] -= MINS[1]        
+        Mplg[2] = compute_parameter_BK21(self.df, 0., P[0]/0.1, [0.429,0,0.012,0.132,0.503,0.001,-0.073,-0.157])        
+        Mplg[2] -= MINS[2]        
+        Mplg[3] = compute_parameter_BK21(self.df, 0., P[0]/0.1, [0.423,0,-0.018,0.001,-0.487,-0.001,0.023,-0.225])       
+        Mplg[3] -= MINS[3]
+        
+        RMSD[0] = np.sqrt((Mplg[0]**2. + Mplg[1]**2. + Mplg[2]**2. + Mplg[3]**2.)/4.)
+        
+        # Mineral Residuals for Spinel
+        Mspl = [0]*4
+        Mspl[0] = compute_parameter_BK21(self.df, 0., P[1]/0.1, [0.294,0,0.009,-0.215,-0.208,-0.027,-0.003,-0.046])
+        Mspl[0] -= MINS[0]        
+        Mspl[1] = compute_parameter_BK21(self.df, 0., P[1]/0.1, [-0.256,0,0,0.016,0.336,-0.001,-0.006,0.525])
+        Mspl[1] -= MINS[1]        
+        Mspl[2] = compute_parameter_BK21(self.df, 0., P[1]/0.1, [0.826,0,-0.004,0.116,0.392,-0.012,-0.072,-0.482]) 
+        Mspl[2] -= MINS[2]        
+        Mspl[3] = compute_parameter_BK21(self.df, 0., P[1]/0.1, [0.148,0,-0.005,0.085,-0.53,0.023,0.02,-0.107])  
+        Mspl[3] -= MINS[3]    
+        
+        RMSD[1] = np.sqrt((Mspl[0]**2. + Mspl[1]**2. + Mspl[2]**2. + Mspl[3]**2.)/4.)
+         
+        # Mineral Residuals for Garnet
+        Mgnt = [0]*4
+        Mgnt[0] = compute_parameter_BK21(self.df, 0., P[2]/0.1, [0.531,0,0.007,-0.314,-0.185,-0.01,-0.023,-0.107])
+        Mgnt[0] -= MINS[0]          
+        Mgnt[1] = compute_parameter_BK21(self.df, 0., P[2]/0.1, [-0.192,0,-0.003,0.109,0.358,-0.005,-0.011,0.413])
+        Mgnt[1] -= MINS[1]          
+        Mgnt[2] = compute_parameter_BK21(self.df, 0., P[2]/0.1, [0.613,0,-0.006,0.237,0.365,-0.018,-0.042,-0.243]) 
+        Mgnt[2] -= MINS[2]          
+        Mgnt[3] = compute_parameter_BK21(self.df, 0., P[2]/0.1, [0.048,0,0.003,-0.026,-0.547,0.019,0.010,-0.069])  
+        Mgnt[3] -= MINS[3]   
+
+        RMSD[2] = np.sqrt((Mgnt[0]**2. + Mgnt[1]**2. + Mgnt[2]**2. + Mgnt[3]**2.)/4.)
+        
+        return RMSD      
     
     def compute_pressure_temperature(self):
         compute_components_compound(self.df)
         P = self.compute_pressure()
         T = self.compute_temperature(P)
-        return {'P': P, 'T': T} 
+        RMSD = self.compute_mins(P)
+        return {'P': P[np.argmin(RMSD)], 'T': T[np.argmin(RMSD)]} 
 
 class HA15:
     """
-    Method of Herzberg and O'Hara (2008, )
-    
     Calculate temperate of olivine liquidus at 1 bar
     using Beattie (1993) Cointrib Min & Pet 115:103-111 
     Equations 10 and 12.
@@ -730,6 +739,7 @@ class HA15:
     ----------
     df : pandas dataframe
         The sample compositions in mol fraction.
+    P : Pressure in GPa.
             
     Returns
     -------
@@ -741,25 +751,25 @@ class HA15:
     
     def compute_temperature(self, P):
         compute_components_cation(self.df)
-        Sum_A = (self.df["FeO_primary_mol"]*0.279)
-        Sum_A += (self.df["MnO_primary_mol"]*0.259)
-        Sum_A += (self.df["MgO_primary_mol"]*1.)
-        Sum_A += (self.df["CaO_primary_mol"]*0.0056)
-        Sum_A += (self.df["NiO_primary_mol"]*3.346)
+        Sum_A = (self.df["FeO_primary_mol_dry"]*0.279)
+        Sum_A += (self.df["MnO_primary_mol_dry"]*0.259)
+        Sum_A += (self.df["MgO_primary_mol_dry"]*1.)
+        Sum_A += (self.df["CaO_primary_mol_dry"]*0.0056)
+        Sum_A += (self.df["NiO_primary_mol_dry"]*3.346)
         #####
-        Sum_B = (self.df["FeO_primary_mol"]*0.031)
-        Sum_B -= (self.df["MnO_primary_mol"]*0.049)
-        Sum_B += (self.df["CaO_primary_mol"]*0.0135)
-        Sum_B += (self.df["NiO_primary_mol"]*-3.665)
-        Sum_B += 0.0001*(self.df["TiO2_primary_mol"]+self.df["Al2O3_primary_mol"]+self.df["Cr2O3_primary_mol"]+self.df["Fe2O3_primary_mol"]+self.df["Na2O_primary_mol"]+self.df["K2O_primary_mol"]+self.df["P2O5_primary_mol"])
+        Sum_B = (self.df["FeO_primary_mol_dry"]*0.031)
+        Sum_B -= (self.df["MnO_primary_mol_dry"]*0.049)
+        Sum_B += (self.df["CaO_primary_mol_dry"]*0.0135)
+        Sum_B += (self.df["NiO_primary_mol_dry"]*-3.665)
+        Sum_B += 0.0001*(self.df["TiO2_primary_mol_dry"]+self.df["Al2O3_primary_mol_dry"]+self.df["Cr2O3_primary_mol_dry"]+self.df["Fe2O3_primary_mol_dry"]+self.df["Na2O_primary_mol_dry"]+self.df["K2O_primary_mol_dry"]+self.df["P2O5_primary_mol_dry"])
         #####
         DMGO2 = (2./3. - Sum_B) / Sum_A
         #####
         Temp_Denom = 52.05/8.3143
         Temp_Denom += 2.*np.log(DMGO2)
-        Temp_Denom += 2.*np.log(1.5*(self.df["FeO_primary_mol"]+self.df["MnO_primary_mol"]+self.df["MgO_primary_mol"]+self.df["CaO_primary_mol"]+self.df["NiO_primary_mol"]))
-        Temp_Denom += 2.*np.log(3.*self.df["SiO2_primary_mol"])
-        Temp_Denom -= 3.5*np.log(1-self.df["Al2O3_primary_mol"]) + 7*np.log(1-self.df["TiO2_primary_mol"])
+        Temp_Denom += 2.*np.log(1.5*(self.df["FeO_primary_mol_dry"]+self.df["MnO_primary_mol_dry"]+self.df["MgO_primary_mol_dry"]+self.df["CaO_primary_mol_dry"]+self.df["NiO_primary_mol_dry"]))
+        Temp_Denom += 2.*np.log(3.*self.df["SiO2_primary_mol_dry"])
+        Temp_Denom -= 3.5*np.log(1-self.df["Al2O3_primary_mol_dry"]) + 7*np.log(1-self.df["TiO2_primary_mol_dry"])
         Temp_1bar = (113100/8.3143 + P*0.00000411/8.3143)
         Temp_1bar /= Temp_Denom
         Temp_1bar -= 273.15
@@ -768,30 +778,140 @@ class HA15:
         
         return {'P': P, 'T': T} 
 
-class P07:
+class P07_P08:
+    """
+    Calculate temperate and pressure of melt
+    equilibration by simultaneously solving
+    Equation 4 of Putirka et al., (2007, Chemical Geology)
+    and Equation 42 of Putirka (2008).
+    
+    Parameters
+    ----------
+    df : pandas dataframe
+        The sample compositions in mol fraction.
+    P: Pressure in GPa
+            
+    Returns
+    -------
+    T: temperature     
+    """
+
+    def __init__(self, df):
+        self.df = df
+    
+    def compute_pressure_temperature(self):
+        compute_components_cation(self.df)
+        DMg = (0.666-(-0.049*self.df["MnO_primary_mol_dry"]+0.027*self.df["FeO_primary_mol_dry"]))/(1*self.df["MgO_primary_mol_dry"]+0.259*self.df["MnO_primary_mol_dry"]+0.299*self.df["FeO_primary_mol_dry"])
+        aSiO2 = (3*self.df["SiO2_primary_mol_dry"])**-2*(1-self.df["Al2O3_primary_mol_dry"])**(7/2)*(1-self.df["TiO2_primary_mol_dry"])**(7/2)
+
+        P, T = sym.symbols('P, T')
+        eq1 = sym.Eq(1 / ((np.log(DMg) + 2.158 - 5.115*10**-2*(self.df["Na2O_primary_wt"]+self.df["K2O_primary_wt"]) + 6.213*10**-2*self.df["H2O_primary_wt"]) / (55.09*P + 4430)), T)
+        eq2 = sym.Eq((231.5+0.186*T+0.1244*T*(np.log(aSiO2))-528*(aSiO2)**0.5+103.3*self.df["TiO2_primary_mol_dry"]+69.9*(self.df["Na2O_primary_mol_dry"]+self.df["K2O_primary_mol_dry"])+77.3*(self.df["Al2O3_primary_mol_dry"]/(self.df["Al2O3_primary_mol_dry"]+self.df["SiO2_primary_mol_dry"])))/10, P)
+        result = sym.solve([eq1,eq2],(P,T))
+        T = result[T]
+        P = result[P]
+            
+        return {'P': P, 'T': T} 
+
+class B93:
+    """
+    Calculate temperate of olivine liquidus at P GPa
+    using Equations 10
+    Beattie (1993, Contrib. to Min. and Pet.)
+    
+    Parameters
+    ----------
+    df : pandas dataframe
+        The sample compositions in mol fraction.
+    P: Pressure in GPa
+            
+    Returns
+    -------
+    T: temperature in oC
+    """
 
     def __init__(self, df):
         self.df = df
     
     def compute_temperature(self, P):
         compute_components_cation(self.df)
+        # Eq 20 of Putirka 2008 Rev in Min. & Geochem. 69:1
+        DMg = (0.666-(-0.049*self.df["MnO_primary_mol"]+0.027*self.df["FeO_primary_mol"]))/(self.df["MgO_primary_mol"]+0.259*self.df["MnO_primary_mol_dry"]+0.299*self.df["FeO_primary_mol"])
         C_NM = self.df["MgO_primary_mol"] + self.df["FeO_primary_mol"] 
         C_NM += self.df["CaO_primary_mol"] + self.df["MnO_primary_mol"]
         NF = 7/2*np.log(1.-self.df["Al2O3_primary_mol"]) 
-        NF += 7.*np.log(1.-self.dfc["TiO2_primary_mol"])
-        ln_DMg, ln_DFe, Temp_Pk = sym.symbols('ln_DMg, ln_DFe, Temp_Pk')
-        eq1 = sym.Eq((self.df["MgO_primary_mol"] / ln_DMg) + (self.df["FeO_primary_mol"] / ln_DFe), 0.667)
-        eq2 = sym.Eq(-2.158 + (55.09*(P/Temp_Pk)) - (6.213*10**-2 * self.df["H2O_primary_wt"]) + (4430. / Temp_Pk) + (5.115*10**-2 * (self.df["Na2O_primary_wt"]+self.df["K2O_primary_wt"])),ln_DMg)
-        eq3 = sym.Eq(-3.3 + (47.57*(P/Temp_Pk)) - (5.192*10**-2 * self.df["H2O_primary_wt"]) + (3344. / Temp_Pk) + (5.595*10**-2 * (self.df["Na2O_primary_wt"]+self.df["K2O_primary_wt"])) + (1.633*10**-2 * self.df["SiO2_primary_wt"]), ln_DFe)
-        result = sym.solve([eq1,eq2,eq3],(ln_DMg, ln_DFe, Temp_Pk))
+        NF += 7.*np.log(1.-self.df["TiO2_primary_mol"])
 
-        if result[1][2] < 1700.:
-            T = result[1][2]
-        elif result[0][2] < 1700.:
-            T = result[0][2] 
-            
+        # Eq 19 of Putirka 2008 Rev in Min. & Geochem. 69:1
+        T = (13603. + ((P*10.**9.-10.**-5.)*4.943*10**-7.))
+        T /= (6.26 + 2.*np.log(DMg) + 2.*np.log(1.5*C_NM) + 2.*np.log(3.*self.df["SiO2_primary_mol"]) - NF)
+        T -= 273.15
+  
         return {'P': P, 'T': T} 
 
+class P07_2:
+    """
+    Calculate temperate of olivine liquidus at P GPa
+    using Equations 1 and 2 of
+    Putirka et al., (2007, Chemical Geology)
+    
+    Parameters
+    ----------
+    df : pandas dataframe
+        The sample compositions in mol fraction.
+    P: Pressure in GPa
+            
+    Returns
+    -------
+    T: temperature in oC     
+    """
+
+    def __init__(self, df):
+        self.df = df
+    
+    def compute_temperature(self, P):
+        compute_components_cation(self.df)
+        # Eq 20 of Putirka 2008 Rev in Min. & Geochem. 69:1
+        DMg = (0.666-(-0.049*self.df["MnO_primary_mol"]+0.027*self.df["FeO_primary_mol"]))/(self.df["MgO_primary_mol"]+0.259*self.df["MnO_primary_mol_dry"]+0.299*self.df["FeO_primary_mol"])
+        # Eq 21 of Putirka 2008 Rev in Min. & Geochem. 69:1
+        T = 1 / ((np.log(DMg) + 2.158 - 5.115*10**-2*(self.df["Na2O_primary_wt"]+self.df["K2O_primary_wt"]) + 6.213*10**-2*self.df["H2O_primary_wt"]) / (55.09*P + 4430))
+  
+        return {'P': P, 'T': T} 
+
+class P07_4:
+    """
+    Calculate temperate of olivine liquidus at P GPa
+    using Equation 4 of
+    Putirka et al., (2007, Chemical Geology)
+    
+    Parameters
+    ----------
+    df : pandas dataframe
+        The sample compositions in mol fraction.
+    P: Pressure in GPa
+            
+    Returns
+    -------
+    T: temperature     
+    """
+
+    def __init__(self, df):
+        self.df = df
+    
+    def compute_temperature(self, P):
+        compute_components_cation(self.df)
+        # Eq 20 of Putirka 2008 Rev in Min. & Geochem. 69:1
+        DMg = (0.666-(-0.049*self.df["MnO_primary_mol"]+0.027*self.df["FeO_primary_mol"]))/(self.df["MgO_primary_mol"]+0.259*self.df["MnO_primary_mol_dry"]+0.299*self.df["FeO_primary_mol"])
+ 
+        C_NM = self.df["MgO_primary_mol"] + self.df["FeO_primary_mol"] 
+        C_NM += self.df["CaO_primary_mol"] + self.df["MnO_primary_mol"]
+        NF = 7/2*np.log(1.-self.df["Al2O3_primary_mol"]) 
+        NF += 7.*np.log(1.-self.df["TiO2_primary_mol"])
+
+        # Eq 22 of Putirka 2008 Rev in Min. & Geochem. 69:1        
+        T = (15294.6+1318.8*P+2.4834*P**2)/(8.048+2.8352*np.log(DMg)+2.097*np.log(1.5*C_NM)+2.575*np.log(3*self.df["SiO2_primary_mol"])-1.41*NF+0.222*self.df["H2O_primary_wt"]+0.5*P)
+            
+        return {'P': P, 'T': T} 
 
 def compute_sample_pressure_temperature(df, method="PF16"):
     
@@ -805,24 +925,34 @@ def compute_sample_pressure_temperature(df, method="PF16"):
         out = TGK12_SPL(df).compute_pressure_temperature()
     elif method == "G13":
         out = G13(df).compute_pressure_temperature()
-    elif method == "K21_PLG":
-        out = K21_PLG(df).compute_pressure_temperature()
-    elif method == "K21_SPL":
-        out = K21_SPL(df).compute_pressure_temperature()
-    elif method == "K21_GNT":
-        out = K21_GNT(df).compute_pressure_temperature()
+    elif method == "BK21_PLG":
+        out = BK21_PLG(df).compute_pressure_temperature()
+    elif method == "BK21_SPL":
+        out = BK21_SPL(df).compute_pressure_temperature()
+    elif method == "BK21_GNT":
+        out = BK21_GNT(df).compute_pressure_temperature()
+    elif method == "BK21":
+        out = BK21(df).compute_pressure_temperature()        
+    elif method == "P07_P08":
+        out = P07_P08(df).compute_pressure_temperature()        
     else:
         out = thermobar(df).compute_pressure_temperature()
         
     return out
 
 
-def compute_sample_temperature(df, P, method="HA15"):
+def compute_sample_temperature(df, method="HA15", P=1.):
     if method == "HA15":
-        out = HA15(df).compute_temperature()     
-    elif method == "P07":
-        out = P07(df).compute_temperature()            
+        out = HA15(df).compute_temperature(P) 
+    elif method == "P07_2":
+        out = P07_4(df).compute_temperature(P)          
+    elif method == "P07_4":
+        out = P07_4(df).compute_temperature(P)
+    elif method == "B93":
+        out = B93(df).compute_temperature(P)        
+    elif method == "G13":
+        out = G13(df).compute_temperature(P)            
     else:
-        out = thermobar(df).compute_pressure_temperature()
+        out = thermobar(df).compute_temperature(P)
         
     return out

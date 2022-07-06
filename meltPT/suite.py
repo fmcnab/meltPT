@@ -169,6 +169,20 @@ class Suite:
             axis=1, 
             result_type="expand",
             args=(method,))
+    
+    def compute_temperature(self, method="PF16", P=1.):
+        """
+        Compute equilibration temperatures for entire suite at given pressure.
+        
+        Applies "compute_sample_temperature" to the "primary"
+        property. Result is saved in the "PT" property.
+        """
+        self.PT = self.primary.apply(
+            compute_sample_temperature, 
+            axis=1, 
+            result_type="expand",
+            args=(method,P,)
+            )    
         
     def check_samples_for_fitting(self, mantle, filters=(None,), args=((None,))):
         """
