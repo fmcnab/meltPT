@@ -13,7 +13,6 @@ setup(
         'scipy',
         'shapely',
         'pyMelt',
-        'PyQt5',
         'sphinx',
         'pyyaml',
         'sympy'
