@@ -33,7 +33,7 @@ def melt_fraction_to_pressure_temperature(F, path):
     T = np.interp(F, path.F, path.T)
     return P, T
     
-def compute_sample_melt_fraction_misfit(F, df, path, P_err=0.24, T_err=39.):
+def compute_sample_melt_fraction_misfit(F, df, path):
     """
     Compute misfit between sample and point along given melting path,
     specified by melt path.
@@ -64,7 +64,7 @@ def compute_sample_melt_fraction_misfit(F, df, path, P_err=0.24, T_err=39.):
     """
     model_P, model_T = melt_fraction_to_pressure_temperature(F, path)
     misfit = np.sqrt( 
-        ((df['P']-model_P)/P_err)**2. + ((df['T']-model_T)/T_err)**2.
+        ((df['P']-model_P)/df['P_err'])**2. + ((df['T']-model_T)/df['T_err'])**2.
         )
     return misfit
     

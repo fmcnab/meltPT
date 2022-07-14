@@ -274,6 +274,8 @@ class PF16:
     
     def __init__(self, df):
         self.df = df
+        self.P_err = 0.24
+        self.T_err = 39.
 
     def compute_water_correction(self):
         """
@@ -393,13 +395,15 @@ class PF16:
         if P > 2.:
             T -= self.compute_CO2_correction()
             P = self.compute_pressure(T)
-        out = {'P': P, 'T': T - 273.15}
+        out = {'P': P, 'T': T - 273.15, 'P_err': self.P_err, 'T_err': self.T_err}
         return out
 
 class L09:
         
     def __init__(self, df):
         self.df = df
+        self.P_err = 0.2
+        self.T_err = 40.
         
     def compute_pressure(self, T):
         """
@@ -457,19 +461,21 @@ class L09:
         compute_components_species(self.df)
         T = self.compute_temperature()
         P = self.compute_pressure((T+273.15))
-        return {'P': P, 'T': T}
+        return {'P': P, 'T': T, 'P_err': self.P_err, 'T_err': self.T_err}
 
 class TGK12_SPL:
     
     def __init__(self, df):
         self.df = df
+        self.P_err = 0.15
+        self.T_err = 10.78
     
     def compute_pressure_temperature(self):
         compute_components_compound(self.df)       
         MINS = compute_minerals(self.df)
         P = compute_parameter_TGK12(self.df, MINS, 0., [-0.862,9.471,0.,-2.383,2.922,0.218,-0.146])
         T = compute_parameter_TGK12(self.df, MINS, P, [1212,0.,119.9,-97.33,-87.76,3.44,-4.58])  
-        return {'P': P, 'T': T}   
+        return {'P': P, 'T': T, 'P_err': self.P_err, 'T_err': self.T_err}   
     
 class TGK12_PLG:
     """
@@ -490,13 +496,15 @@ class TGK12_PLG:
     """    
     def __init__(self, df):
         self.df = df
+        self.P_err = 0.08
+        self.T_err = 11.7
 
     def compute_pressure_temperature(self):
         compute_components_compound(self.df)
         MINS = compute_minerals(self.df)
         P = compute_parameter_TGK12(self.df, MINS, 0., [-1.64,12.94,0.,-2.363,3.51,0.152,-0.176])
         T = compute_parameter_TGK12(self.df, MINS, P, [1216,0.,104.4,-72.83,-194.9,24.08,-1.55])        
-        return {'P': P, 'T': T}  
+        return {'P': P, 'T': T, 'P_err': self.P_err, 'T_err': self.T_err}  
 
 class G13:
     """
@@ -516,7 +524,9 @@ class G13:
        The calculated pressure(s) and temperature(s).
     """ 
     def __init__(self, df):
-        self.df = df   
+        self.df = df
+        self.P_err = 0.24
+        self.T_err = 24.
 
     def compute_pressure(self):
         compute_components_compound(self.df) 
@@ -544,13 +554,13 @@ class G13:
         T -= 149.92 * (1. - Mg_num(self.df))
         T += 55.02 * NaK_num(self.df)
         T -= 59.69 * self.df['P2O5_primary_wt_dry']
-        return {'P': P, 'T': T} 
+        return {'P': P, 'T': T, 'P_err': P * self.T_err/T, 'T_err': self.T_err} 
     
     def compute_pressure_temperature(self):
         compute_components_compound(self.df)
         P = self.compute_pressure()
         T = self.compute_temperature1(P)
-        return {'P': P, 'T': T} 
+        return {'P': P, 'T': T, 'P_err': self.P_err, 'T_err': self.T_err} 
 
 class BK21_GNT:
     """
@@ -570,13 +580,15 @@ class BK21_GNT:
     """ 
     def __init__(self, df):
         self.df = df
+        self.P_err = 1.26
+        self.T_err = 18.72
     
     def compute_pressure_temperature(self):
         compute_components_compound(self.df)
         MINS = compute_minerals(self.df)
         P = 0.1 * compute_parameter_BK21(self.df, MINS[0], 0., [-77.53423,139.87872,0,46.43963,28.72057,1.52179,3.25095,18.62211])
         T = compute_parameter_BK21(self.df, 0., P/0.1, [1136.36052,0,8.73915,184.88412,-19.48245,29.00187,-23.41730,-22.48205])
-        return {'P': P, 'T': T} 
+        return {'P': P, 'T': T, 'P_err': self.P_err, 'T_err': self.T_err} 
     
 class BK21_SPL:
     """
@@ -596,13 +608,15 @@ class BK21_SPL:
     """ 
     def __init__(self, df):
         self.df = df
+        self.P_err = 1.53
+        self.T_err = 14.28
 
     def compute_pressure_temperature(self):
         compute_components_compound(self.df)
         MINS = compute_minerals(self.df)
         P = 0.1 * compute_parameter_BK21(self.df, MINS[0], 0., [-29.5,84.82,0,25.,24.67,2.79,-0.138,-1.848]) 
         T = compute_parameter_BK21(self.df, 0., P/0.1, [1049.24929,0,12.71243,63.47484,-3.32516,2.65802,-12.03128,117.75713])
-        return {'P': P, 'T': T} 
+        return {'P': P, 'T': T, 'P_err': self.P_err, 'T_err': self.T_err} 
 
 class BK21_PLG:
     """
@@ -623,13 +637,15 @@ class BK21_PLG:
     """    
     def __init__(self, df):
         self.df = df
+        self.P_err = 0.79
+        self.T_err = 11.5
     
     def compute_pressure_temperature(self):
         compute_components_compound(self.df)
         MINS = compute_minerals(self.df)
         P = 0.1 * compute_parameter_BK21(self.df, MINS[0], 0., [-43.58532,136.94746,0,24.54202,37.54688,2.10967,-0.77250,1.63584])
         T = compute_parameter_BK21(self.df, 0., P/0.1, [1074.38633,0,11.86431,65.55420,-138.22714,20.55173,5.85532,79.01883])
-        return {'P': P, 'T': T} 
+        return {'P': P, 'T': T, 'P_err': self.P_err, 'T_err': self.T_err} 
 
 class BK21:
     """
@@ -650,6 +666,8 @@ class BK21:
     """    
     def __init__(self, df):
         self.df = df
+        self.P_err = [0.79, 1.53, 1.26]
+        self.T_err = [11.5, 14.28, 18.72]
     
     def compute_pressure(self):
         MINS = compute_minerals(self.df)
@@ -724,7 +742,8 @@ class BK21:
         P = self.compute_pressure()
         T = self.compute_temperature(P)
         RMSD = self.compute_mins(P)
-        return {'P': P[np.argmin(RMSD)], 'T': T[np.argmin(RMSD)]} 
+        return {'P': P[np.argmin(RMSD)], 'T': T[np.argmin(RMSD)],
+                'P_err': self.P_err[np.argmin(RMSD)], 'T_err': self.T_err[np.argmin(RMSD)]} 
 
 class HA15:
     """
@@ -747,7 +766,9 @@ class HA15:
     """     
 
     def __init__(self, df):
-        self.df = df 
+        self.df = df
+        self.P_err = np.nan
+        self.T_err = np.nan
     
     def compute_temperature(self, P):
         compute_components_cation(self.df)
@@ -776,7 +797,7 @@ class HA15:
         #####
         T = Temp_1bar + 54.*P - 2.*P**2.
         
-        return {'P': P, 'T': T} 
+        return {'P': P, 'T': T, 'P_err': self.P_err, 'T_err': self.T_err} 
 
 class P07_P08:
     """
@@ -798,6 +819,8 @@ class P07_P08:
 
     def __init__(self, df):
         self.df = df
+        self.P_err = 0.29
+        self.T_err = 52.
     
     def compute_pressure_temperature(self):
         compute_components_cation(self.df)
@@ -811,7 +834,7 @@ class P07_P08:
         T = result[T]
         P = result[P]
             
-        return {'P': P, 'T': T} 
+        return {'P': P, 'T': T, 'P_err': self.P_err, 'T_err': self.T_err} 
 
 class B93:
     """
@@ -832,6 +855,7 @@ class B93:
 
     def __init__(self, df):
         self.df = df
+        self.T_err = 20.
     
     def compute_temperature(self, P):
         compute_components_cation(self.df)
@@ -847,7 +871,7 @@ class B93:
         T /= (6.26 + 2.*np.log(DMg) + 2.*np.log(1.5*C_NM) + 2.*np.log(3.*self.df["SiO2_primary_mol"]) - NF)
         T -= 273.15
   
-        return {'P': P, 'T': T} 
+        return {'P': P, 'T': T, 'P_err': P * self.T_err/T, 'T_err': self.T_err} 
 
 class P07_2:
     """
@@ -868,6 +892,7 @@ class P07_2:
 
     def __init__(self, df):
         self.df = df
+        self.T_err = 52.
     
     def compute_temperature(self, P):
         compute_components_cation(self.df)
@@ -876,7 +901,7 @@ class P07_2:
         # Eq 21 of Putirka 2008 Rev in Min. & Geochem. 69:1
         T = 1 / ((np.log(DMg) + 2.158 - 5.115*10**-2*(self.df["Na2O_primary_wt"]+self.df["K2O_primary_wt"]) + 6.213*10**-2*self.df["H2O_primary_wt"]) / (55.09*P + 4430))
   
-        return {'P': P, 'T': T} 
+        return {'P': P, 'T': T, 'P_err': P * self.T_err/T, 'T_err': self.T_err} 
 
 class P07_4:
     """
@@ -897,6 +922,7 @@ class P07_4:
 
     def __init__(self, df):
         self.df = df
+        self.T_err = 52.
     
     def compute_temperature(self, P):
         compute_components_cation(self.df)
@@ -911,7 +937,7 @@ class P07_4:
         # Eq 22 of Putirka 2008 Rev in Min. & Geochem. 69:1        
         T = (15294.6+1318.8*P+2.4834*P**2)/(8.048+2.8352*np.log(DMg)+2.097*np.log(1.5*C_NM)+2.575*np.log(3*self.df["SiO2_primary_mol"])-1.41*NF+0.222*self.df["H2O_primary_wt"]+0.5*P)
             
-        return {'P': P, 'T': T} 
+        return {'P': P, 'T': T, 'P_err': P * self.T_err/T, 'T_err': self.T_err} 
 
 def compute_sample_pressure_temperature(df, method="PF16"):
     
