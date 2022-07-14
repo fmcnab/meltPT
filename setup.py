@@ -16,6 +16,7 @@ setup(
         'PyQt5',
         'sphinx',
         'pyyaml',
+        'sympy'
     ],
     scripts=['meltPT/meltPT'],
 )
