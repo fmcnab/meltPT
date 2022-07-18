@@ -3,7 +3,7 @@ import warnings
 import numpy as np
 import pandas as pd
 
-def parse_csv(infile, Ce_to_H2O=200., src_FeIII_totFe=0.2, min_SiO2=0., min_MgO=0., read_as_primary=False):
+def parse_csv(infile, Ce_to_H2O=0., src_FeIII_totFe=0.2, min_SiO2=0., min_MgO=0., read_as_primary=False, param_co2=False):
 
     # Read in file
     df = pd.read_csv(infile, delimiter=",")
@@ -15,7 +15,7 @@ def parse_csv(infile, Ce_to_H2O=200., src_FeIII_totFe=0.2, min_SiO2=0., min_MgO=
     # If these columns do not exist in the input make them and
     # give them zeros for every row.
     check_cols=[
-        'Cr2O3', 'MnO', 'H2O', 'FeO', 'Fe2O3', 'src_FeIII_totFe', 'Ce', 
+        'Cr2O3', 'MnO', 'H2O', 'CO2', 'FeO', 'Fe2O3', 'src_FeIII_totFe', 'Ce', 
         'P2O5', 'NiO', 'CoO', 'Ni', 'Co', 'Cr']
     df = df.reindex(df.columns.union(check_cols, sort=False), axis=1, fill_value=0)
 
@@ -25,11 +25,17 @@ def parse_csv(infile, Ce_to_H2O=200., src_FeIII_totFe=0.2, min_SiO2=0., min_MgO=
     df.loc[df['CoO'] == 0, 'CoO'] = df['Co'] * 1.2715 / 10000.
     df.loc[df['Cr2O3'] == 0, 'Cr2O3'] = df['Cr'] * 1.4616 / 10000.
 
-    if not read_as_primary:
+    # Calculate H2O value if H2O value is zero
+    # parameterizes water by converting Ce to H20
+    df.loc[df['H2O'] == 0, 'H2O'] = df['Ce'] * Ce_to_H2O / 10000.
+    
+    if param_co2:
+        
+        # Calculate CO2 value if CO2 value is zero
+        # parameterize CO2 using Equation 8 of Sun & Dasgupta, 2020
+        df.loc[df['CO2'] == 0, 'CO2'] = 43.77 - 0.9 * df['SiO2']
 
-        # Calculate H2O value if H2O value is zero
-        # parameterizes water by converting Ce to H20
-        df.loc[df['H2O'] == 0, 'H2O'] = df['Ce'] * Ce_to_H2O / 10000.
+    if not read_as_primary:
         
         # Add chosen FeIII_totFe value if none are given
         df.loc[df['src_FeIII_totFe'] == 0, 'src_FeIII_totFe'] = src_FeIII_totFe
@@ -40,7 +46,7 @@ def parse_csv(infile, Ce_to_H2O=200., src_FeIII_totFe=0.2, min_SiO2=0., min_MgO=
         df['Fe2O3'] = df['FeO_tot'] * df['src_FeIII_totFe'] * 159.69 / 71.84 / 2.
 
     # Calculate total
-    major_cols = ['SiO2','Al2O3','FeO','Fe2O3','MgO','CaO','Na2O','K2O','TiO2','MnO','Cr2O3','H2O']
+    major_cols = ['SiO2','Al2O3','FeO','Fe2O3','MgO','CaO','Na2O','K2O','TiO2','MnO','Cr2O3','H2O','CO2']
     df['Total'] = df[major_cols].sum(axis=1)
 
     # Normalise major elements to sum to 100%
@@ -56,6 +62,7 @@ def parse_csv(infile, Ce_to_H2O=200., src_FeIII_totFe=0.2, min_SiO2=0., min_MgO=
     df['MnO'] = df['MnO'] / df['Total'] * 100.
     df['Cr2O3'] = df['Cr2O3'] / df['Total'] * 100.
     df['H2O'] = df['H2O'] / df['Total'] * 100.
+    df['CO2'] = df['CO2'] / df['Total'] * 100.    
     df['Total'] = df[major_cols].sum(axis=1)
 
     # Filter dataset to only include usable samples

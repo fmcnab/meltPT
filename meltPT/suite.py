@@ -5,7 +5,7 @@ from .fit_melting_paths import *
 
 MAJOR_OXIDES = [
     'SiO2','Al2O3','FeO','Fe2O3','MgO','CaO','Na2O','K2O','TiO2','MnO',
-    'Cr2O3','H2O', 'P2O5', 'NiO', 'CoO']
+    'Cr2O3', 'P2O5', 'NiO', 'CoO', 'H2O', 'CO2']
 
 class Suite:
     """
@@ -20,20 +20,30 @@ class Suite:
     ----------
     input_csv : str
         Path to a csv containing data to be read.
+    Ce_to_H2O : float
+        Ratio of Ce to H2O in mantle source.
     src_FeIII_totFe : float
         Ratio of Fe3+ to total Fe in the mantle source.
     min_SiO2 : float, optional
         Minimum amount of SiO2 in sample to be accepted.
     min_MgO : float, optional
         Minimum amound of MgO in sample to be accepted.
+    read_as_primary : bool
+        If true, data from input_csv is assumed to be primary
+        and backtracking is avoided.
+    param_co2 : bool
+        If true, CO2 is calculated from SiO2 concentration.
+    read_PT : bool
+        If true, pressures and temperatures are not calculated.
         
     Properties
     ----------
     data : pandas dataframe
         The raw data from the provided csv.
     primary : pandas dataframe or NoneType
-        If backtrack_compositions has been run, will contain the estimated
-        primary compositions in various forms.
+        If backtrack_compositions has been run, or read_as_primary is set 
+        to true, will contain the estimated primary compositions in 
+        various forms.
     PT : pandas dataframe or NoneType
         If compute_pressure_temperature has been run, will contain the
         esimated equilibration pressures and temperatures.
@@ -93,14 +103,15 @@ class Suite:
         Write results to csv.
     """
 
-    def __init__(self, input_csv, Ce_to_H2O=200., src_FeIII_totFe=0.19, min_SiO2=0., min_MgO=0., read_as_primary=False, read_PT=False):
+    def __init__(self, input_csv, Ce_to_H2O=0., src_FeIII_totFe=0.2, min_SiO2=0., min_MgO=0., read_as_primary=False, param_co2=False, read_PT=False):
         self.data = parse_csv(
             input_csv,
             Ce_to_H2O=Ce_to_H2O,
             src_FeIII_totFe=src_FeIII_totFe,
             min_SiO2=min_SiO2,
             min_MgO=min_MgO,
-            read_as_primary=read_as_primary)
+            read_as_primary=read_as_primary,
+            param_co2=param_co2)
         self.PT_to_fit = None
         self.individual_melt_fractions = None
         self.individual_potential_temperatures = None

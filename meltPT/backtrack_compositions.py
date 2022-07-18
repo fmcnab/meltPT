@@ -6,7 +6,7 @@ import pandas as pd
 
 MAJOR_OXIDES = [
     'SiO2','Al2O3','FeO','Fe2O3','MgO','CaO','Na2O','K2O','TiO2','MnO',
-    'Cr2O3','H2O', 'P2O5', 'NiO', 'CoO']
+    'Cr2O3', 'P2O5', 'NiO', 'CoO', 'H2O', 'CO2']
 
 def normalise(in_comp):
     """
@@ -57,10 +57,11 @@ def oxide_wt_to_cation_mole(in_comp):
         'TiO2': 79.86,
         'MnO': 70.94,
         'Cr2O3': 151.99 / 2.,
-        'H2O': 18.014680000000002 / 2.,
         'P2O5': 141.942524 / 2.,
         'NiO': 74.69239999999999,
-        'CoO': 74.932195
+        'CoO': 74.932195,
+        'H2O': 18.014680000000002 / 2.,
+        'CO2': 44.009
         }
     keys = {
         'SiO2': 'Si',
@@ -74,10 +75,11 @@ def oxide_wt_to_cation_mole(in_comp):
         'TiO2': 'Ti',
         'MnO': 'Mn',
         'Cr2O3': 'Cr',
-        'H2O': 'H',
         'P2O5': 'P',
         'NiO': 'Ni',
-        'CoO': 'Co'
+        'CoO': 'Co',
+        'H2O': 'H',
+        'CO2': 'C'
     }
     out_comp = {}
     for phase in in_comp:
@@ -113,10 +115,11 @@ def oxide_wt_to_oxide_mole(in_comp):
         'TiO2': 79.86,
         'MnO': 70.94,
         'Cr2O3': 151.99,
-        'H2O': 18.014680000000002,
         'P2O5': 141.942524,
         'NiO': 74.69239999999999,
-        'CoO': 74.932195
+        'CoO': 74.932195,
+        'H2O': 18.014680000000002,
+        'CO2': 44.009
         }
     out_comp = {}
     for phase in in_comp:
