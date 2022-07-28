@@ -104,9 +104,11 @@ for i in range(0, (len(ridges) - 1), 1):
             if seg.empty:
                 Na90 = np.nan
                 R_Depth = np.nan
+                R_Depth_Err = np.nan
             else:
                 Na90 = float(seg['Na90'].to_numpy()[0])
                 R_Depth = float(seg['mean depth'].to_numpy()[0])
+                R_Depth_Err = float(seg['minmax depth'].to_numpy()[0])
             
             
             # ---- Output ridge segment data to df_out
@@ -119,7 +121,8 @@ for i in range(0, (len(ridges) - 1), 1):
                             'upper_Tp' : [s2.upper_potential_temperature],
                             'lower_Tp' : [s2.lower_potential_temperature],
                             'Na90' : [Na90],
-                            'R_Depth' : [R_Depth]}
+                            'R_Depth' : [R_Depth],
+                            'R_Depth_Err' : [R_Depth_Err]}
             df_result = pd.DataFrame.from_dict(dict_result)
             df_out = pd.concat([df_out, df_result], ignore_index = True)
 
@@ -141,8 +144,8 @@ print()
 
 print("Plot MORB Figure (c)")
 # ---- Plot Histogram of Tp Results
-ax3.scatter(df_out['Tp'], df_out['Na90'], marker="o", facecolors='none', 
-            edgecolors='k')
+#ax3.scatter(df_out['Tp'], df_out['Na90'], marker="o", facecolors='none', 
+#            edgecolors='k')
 ax3.errorbar(df_out['Tp'], df_out['Na90'], xerr=(df_out['Tp']-df_out['lower_Tp'], df_out['upper_Tp']-df_out['Tp']), fmt="o")
 ax3.set_xlabel(r"Tp [$^\circ$C]")
 ax3.set_ylabel("Na$_{90}$ wt%")
@@ -152,11 +155,11 @@ print("Done!")
 print("---------------")
 print()
 
-print("Plot MORB Figure (c)")
+print("Plot MORB Figure (d)")
 # ---- Plot Histogram of Tp Results
 #ax4.scatter(df_out['Tp'], df_out['R_Depth']/1000., marker="o", facecolors='none', 
 #            edgecolors='k')
-ax4.errorbar(df_out['Tp'], df_out['R_Depth']/-1000., xerr=(df_out['Tp']-df_out['lower_Tp'], df_out['upper_Tp']-df_out['Tp']), fmt="o")
+ax4.errorbar(df_out['Tp'], df_out['R_Depth']/-1000., xerr=(df_out['Tp']-df_out['lower_Tp'], df_out['upper_Tp']-df_out['Tp']), yerr=df_out['R_Depth_Err']/1000., fmt="o")
 ax4.set_xlabel(r"Tp [$^\circ$C]")
 ax4.set_ylabel("Ridge Depth [km]")
 ax4.text(0.05, 0.05, 'd', verticalalignment='bottom', 
