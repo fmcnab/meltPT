@@ -51,9 +51,6 @@ backtrack:
   
   # Save final primary compositions.
   save: True
-  
-  # Save extended compositions.
-  save_extended: False
 
 
 # ---- Options for computing pressure and temperature of melting ------------- #

@@ -91,7 +91,6 @@ if (
     s.write_to_csv(
         params['output_file'],
         write_primary=params['backtrack']['save'],
-        write_primary_extended=params['backtrack']['save_extended'],
         write_PT=params['PT']['save'],
         write_suite_Tp=params['suite_Tp']['save'],
         write_individual_Tp=params['individual_Tp']['save'])
