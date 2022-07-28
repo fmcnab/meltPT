@@ -358,33 +358,16 @@ class Suite:
             self.upper_potential_temperature, self.upper_path = find_bounding_potential_temperature(upper_points, self.potential_temperature, mantle, threshold=bounds_threshold)
             self.lower_potential_temperature, self.lower_path = find_bounding_potential_temperature(lower_points, self.potential_temperature, mantle, lower=True, threshold=bounds_threshold)
 
-    def write_to_csv(self, outfile, write_primary=True, write_primary_extended=False, write_PT=True, write_suite_Tp=False, write_individual_Tp=False):
+    def write_to_csv(self, outfile, write_primary=True, write_PT=True, write_suite_Tp=False, write_individual_Tp=False):
         """
         Write results to csv.
         """
         output_df = self.data.copy()
-        if write_primary or write_primary_extended and self.primary is not None:
+        if write_primary and self.primary is not None:
             output_df = pd.concat([output_df, self.primary], axis=1)
-            if write_primary_extended is False:
-                output_df = output_df.drop([
-                    'SiO2_primary_wt_dry','Al2O3_primary_wt_dry',
-                    'FeO_primary_wt_dry','Fe2O3_primary_wt_dry',
-                    'MgO_primary_wt_dry','CaO_primary_wt_dry',
-                    'Na2O_primary_wt_dry','K2O_primary_wt_dry',
-                    'TiO2_primary_wt_dry','MnO_primary_wt_dry',
-                    'Cr2O3_primary_wt_dry','SiO2_primary_mol',
-                    'Al2O3_primary_mol','FeO_primary_mol',
-                    'Fe2O3_primary_mol','MgO_primary_mol',
-                    'CaO_primary_mol','Na2O_primary_mol',
-                    'K2O_primary_mol','TiO2_primary_mol',
-                    'MnO_primary_mol','Cr2O3_primary_mol',
-                    'H2O_primary_mol',
-                    'Si4O8','Al16/3O8', 'Fe4Si2O8','Fe16/3O8','Mg4Si2O8',
-                    'Ca4Si2O8','Na2Al2Si2O8','K2Al2Si2O8','Ti4O8', 'Mn4Si2O8',
-                    'Cr16/3O8'], axis=1)
         if write_PT and self.PT is not None:
             output_df = pd.concat([output_df, self.PT], axis=1)
-        if write_suite_Tp:
+        if write_suite_Tp and self.suite_melt_fractions is not None:
             rename_dict = {
                 'F': 'F_suite_fit',
                 'P': 'P_suite_fit',
@@ -397,7 +380,7 @@ class Suite:
             suite_out['Tp_min_suite_fit'] = self.lower_potential_temperature * self.PT['Fit_Tp']
             suite_out = suite_out.replace(0, np.nan)
             output_df = pd.concat([output_df, suite_out], axis=1)
-        if write_individual_Tp:
+        if write_individual_Tp and self.individual_potential_temperatures is not None:
             rename_dict = {
                 'F': 'F_ind_fit',
                 'Tp': 'Tp_ind_fit'
