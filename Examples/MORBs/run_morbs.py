@@ -9,7 +9,7 @@ print("Make MORB Figure (a):")
 df = pd.read_csv("Gale_Dataset_No_Backarc.csv", sep=',')
 df1 = df.loc[df['Latitude']>70.]
 df = df.loc[df['Latitude']<60.]
-df = df.loc[df['FeO']>0.]
+df = df.loc[(df['FeO']>0.) & (df['Ce']>0.)]
 df = pd.concat([df, df1], ignore_index=True)
 df.to_csv("ridge_in.csv", sep=',')
 

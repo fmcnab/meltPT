@@ -89,6 +89,12 @@ class Suite:
         Backtrack compositions for entire suite.
     compute_pressure_temperature :
         Compute equilibration pressures and temperatures for entire suite.
+    compute_temperature :
+        Compute equilibration temperatures for entire suite assuming a
+        given pressure.
+    compute_pressure :
+        Compute equilibration pressures for entire suite assuming a given
+        temperature.        
     check_samples_for_fitting :
         Determine which samples should be fitted.
     find_individual_melt_fractions :
@@ -194,6 +200,20 @@ class Suite:
             result_type="expand",
             args=(method,P,)
             )    
+
+    def compute_pressure(self, method="PF16", T=1300.):
+        """
+        Compute equilibration pressures for entire suite at given temperature.
+        
+        Applies "compute_sample_pressure" to the "primary"
+        property. Result is saved in the "PT" property.
+        """
+        self.PT = self.primary.apply(
+            compute_sample_pressure, 
+            axis=1, 
+            result_type="expand",
+            args=(method,T,)
+            )  
         
     def check_samples_for_fitting(self, mantle, filters=(None,), args=((None,))):
         """

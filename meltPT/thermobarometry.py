@@ -462,7 +462,7 @@ class PF16:
             )
         return temperature
 
-    def compute_pressure(self, T):
+    def compute_pressure1(self, T):
         """
         Calculate equlibration pressure.
 
@@ -489,6 +489,38 @@ class PF16:
             )
         return pressure
 
+    def compute_pressure(self, T):
+        """
+        Calculate equlibration pressure.
+
+        Equation (2), Plank and Forsyth (2016, G-cubed).
+
+        Parameters
+        ----------
+        df : pandas dataframe
+            The sample compositions.
+            Should contain only one row. To use with a multi-row dataframe use
+            df.apply().
+        T : float
+            Temperature in oC.
+            
+        Returns
+        -------
+        pressure : pandas dataframe
+            The calculated pressure(s).
+        """
+        compute_components_species(self.df)
+        
+        P = (
+            np.log(self.df['Si4O8_dry']) -
+            4.045 +
+            0.0114*self.df['Fe4Si2O8_dry'] +
+            0.00052*self.df['Ca4Si2O8_dry']**2. +
+            0.0024*self.df['Mg4Si2O8_dry']) / (-336.3/(T+273.15) - 0.0007*np.sqrt(T+273.15)
+            )
+                                               
+        return {'P': P, 'T': T, 'P_err': self.P_err, 'T_err': T * self.P_err/P}
+
     def compute_pressure_temperature(self):
         """
         Compute equilibration pressure and temperature for a given sample.
@@ -511,10 +543,10 @@ class PF16:
         compute_components_species(self.df)
         water_correction = self.compute_water_correction()
         T = self.compute_temperature() - water_correction
-        P = self.compute_pressure(T)
+        P = self.compute_pressure1(T)
         if P > 2.:
             T -= self.compute_CO2_correction()
-            P = self.compute_pressure(T)
+            P = self.compute_pressure1(T)
         out = {'P': P, 'T': T - 273.15, 'P_err': self.P_err, 'T_err': self.T_err}
         return out
 
@@ -525,7 +557,7 @@ class L09:
         self.P_err = 0.2
         self.T_err = 40.
         
-    def compute_pressure(self, T):
+    def compute_pressure1(self, T):
         """
         Calculate equlibration temperature.
 
@@ -554,6 +586,36 @@ class L09:
             (-770*(T**(-1.)) + 0.0058*(T**0.5) - 0.003*self.df['H16O8'])
             )
         return pressure
+    
+    def compute_pressure(self, T):
+        """
+        Calculate equlibration temperature.
+
+        Equation (2), Lee et al (2009, G-cubed).
+        
+        Parameters
+        ----------
+        df : pandas dataframe
+            The sample compositions in species mol%.
+            Should contain only one row. To use with a multi-row dataframe use
+            df.apply().
+        T : float
+            temperature in oC
+            
+        Returns
+        -------
+        pressure : pandas dataframe
+            The calculated pressure(s).
+        """
+        compute_components_species(self.df)
+        P = (
+            (np.log(self.df['Si4O8']) - 
+                4.019 + 
+                0.0165*self.df['Fe4Si2O8'] + 
+                0.0005*(self.df['Ca4Si2O8']**2.)) /
+            (-770*((T+273.15)**(-1.)) + 0.0058*(T**0.5) - 0.003*self.df['H16O8'])
+            )  
+        return {'P': P, 'T': T, 'P_err': self.P_err, 'T_err': T * self.P_err/P}
     
     def compute_temperature(self):
         """
@@ -604,7 +666,7 @@ class L09:
         
         compute_components_species(self.df)
         T = self.compute_temperature()
-        P = self.compute_pressure((T+273.15))
+        P = self.compute_pressure1((T+273.15))
         return {'P': P, 'T': T, 'P_err': self.P_err, 'T_err': self.T_err}
 
 class TGK12_SPL:
@@ -613,6 +675,35 @@ class TGK12_SPL:
         self.df = df
         self.P_err = 0.15
         self.T_err = 10.78
+
+    def compute_temperature(self, P):
+        """
+        Compute equilibration pressure and temperature for a given sample.
+        Assumes spinel is stable mantle phase.
+        Lines (3) and (4) of Table (5), Till et al (2012, JGR).
+    
+        Parameters
+        ----------
+        df : pandas dataframe
+            Dataframe containing the sample primary composition.
+            Should contain only one row. To use with a multi-row dataframe use
+            df.apply().
+        P : 
+            Pressure in GPa.
+        Returns
+        -------
+        out : dict
+            The equilibration pressure and temperature result.
+            Temperature is in degrees celcius.
+            Pressure is in GPa.
+            Associated errors for pressure and temperature.
+        """
+        
+        compute_components_compound(self.df)       
+        MINS = compute_minerals(self.df)
+        T = compute_parameter_TGK12(self.df, MINS, P, [1212,0.,119.9,-97.33,-87.76,3.44,-4.58])  
+        return {'P': P, 'T': T, 'P_err': P * self.T_err/T, 'T_err': self.T_err}         
+        
 
     def compute_pressure_temperature(self):    
         """
@@ -648,6 +739,34 @@ class TGK12_PLG:
         self.df = df
         self.P_err = 0.08
         self.T_err = 11.7
+    
+    def compute_temperature(self, P):
+        """
+        Compute equilibration pressure and temperature for a given sample.
+        Assumes plagioclase is stable mantle phase.
+        Line (2) of Table (5), Till et al (2012, JGR).
+    
+        Parameters
+        ----------
+        df : pandas dataframe
+            Dataframe containing the sample primary composition.
+            Should contain only one row. To use with a multi-row dataframe use
+            df.apply().
+        P : float
+            Pressure in GPa.
+        Returns
+        -------
+        out : dict
+            The equilibration pressure and temperature result.
+            Temperature is in degrees celcius.
+            Pressure is in GPa.
+            Associated errors for pressure and temperature.
+        """
+        
+        compute_components_compound(self.df)
+        MINS = compute_minerals(self.df)
+        T = compute_parameter_TGK12(self.df, MINS, P, [1216,0.,104.4,-72.83,-194.9,24.08,-1.55])        
+        return {'P': P, 'T': T, 'P_err': P * self.T_err/T, 'T_err': self.T_err}        
 
     def compute_pressure_temperature(self):
         """
@@ -791,6 +910,31 @@ class BK21_GNT:
         self.df = df
         self.P_err = 1.26
         self.T_err = 18.72
+
+    def compute_temperature(self, P):
+        """
+        Calculate equlibration temperature.
+        Equation 1G-T of Table (1), Brown Krein et al (2021, JGR: Solid Earth).
+        
+        Parameters
+        ----------
+        df : pandas dataframe
+            Dataframe containing the sample primary composition.
+            Should contain only one row. To use with a multi-row dataframe use
+            df.apply().
+        P : float
+        Pressure in GPa
+            
+        Returns
+        -------
+        out : dict
+            The equilibration pressure and temperature result.
+            Temperature is in degrees celcius.
+            Pressure is in GPa.
+            Associated errors for pressure and temperature.
+        """                  
+        T = compute_parameter_BK21(self.df, 0., P/0.1, [1136.36052,0,8.73915,184.88412,-19.48245,29.00187,-23.41730,-22.48205])
+        return {'P': P, 'T': T, 'P_err': P * self.T_err/T, 'T_err': self.T_err} 
     
     def compute_pressure_temperature(self):
         """
@@ -826,6 +970,31 @@ class BK21_SPL:
         self.P_err = 1.53
         self.T_err = 14.28
 
+    def compute_temperature(self, P):
+        """
+        Calculate equlibration temperature.
+        Line (17) of Table (1), Brown Krein et al (2021, JGR: Solid Earth).
+        
+        Parameters
+        ----------
+        df : pandas dataframe
+            Dataframe containing the sample primary composition.
+            Should contain only one row. To use with a multi-row dataframe use
+            df.apply().
+        P : float
+        Pressure in GPa
+            
+        Returns
+        -------
+        out : dict
+            The equilibration pressure and temperature result.
+            Temperature is in degrees celcius.
+            Pressure is in GPa.
+            Associated errors for pressure and temperature.
+        """                  
+        T = compute_parameter_BK21(self.df, 0., P/0.1, [1049.24929,0,12.71243,63.47484,-3.32516,2.65802,-12.03128,117.75713])
+        return {'P': P, 'T': T, 'P_err': P * self.T_err/T, 'T_err': self.T_err} 
+
     def compute_pressure_temperature(self):
         """
         Same as TGK12_SPL but equations have been recalibrated with additional data.
@@ -859,6 +1028,31 @@ class BK21_PLG:
         self.df = df
         self.P_err = 0.79
         self.T_err = 11.5
+        
+    def compute_temperature(self, P):
+        """
+        Calculate equlibration temperature.
+        Line (6) of Table (1), Brown Krein et al (2021, JGR: Solid Earth).
+        
+        Parameters
+        ----------
+        df : pandas dataframe
+            Dataframe containing the sample primary composition.
+            Should contain only one row. To use with a multi-row dataframe use
+            df.apply().
+        P : float
+        Pressure in GPa
+            
+        Returns
+        -------
+        out : dict
+            The equilibration pressure and temperature result.
+            Temperature is in degrees celcius.
+            Pressure is in GPa.
+            Associated errors for pressure and temperature.
+        """                  
+        T = compute_parameter_BK21(self.df, 0., P/0.1, [1074.38633,0,11.86431,65.55420,-138.22714,20.55173,5.85532,79.01883])
+        return {'P': P, 'T': T, 'P_err': P * self.T_err/T, 'T_err': self.T_err} 
     
     def compute_pressure_temperature(self):
         """
@@ -921,7 +1115,7 @@ class BK21:
   
         return pressure
 
-    def compute_temperature(self, P):
+    def compute_temperature1(self, P):
         """
         Calculate equlibration temperature.
 
@@ -931,7 +1125,9 @@ class BK21:
         ----------
         df : pandas dataframe
             The sample compositions in wt%.
-            
+        P : float
+            Pressure in GPa
+                
         Returns
         -------
         temperature : array
@@ -947,6 +1143,40 @@ class BK21:
         temperature[2] = compute_parameter_BK21(self.df, 0., P[2]/0.1, [1136.36052,0,8.73915,184.88412,-19.48245,29.00187,-23.41730,-22.48205])           
                   
         return temperature
+    
+    def compute_temperature(self, P):
+        """
+        Calculate equlibration temperature assuming a known pressure.
+
+        Brown Krein et al (2021, JGR: Solid Earth).
+
+        Parameters
+        ----------
+        df : pandas dataframe
+            The sample compositions in wt%.
+        P : float
+            Pressure in GPa
+            
+        Returns
+        -------
+        temperature : array
+            The calculated pressure(s) in GPa 
+            in plg, spl and gnt stability fields.
+        """
+        compute_components_compound(self.df)
+        P = self.compute_pressure()
+        RMSD = self.compute_mins(P)
+        T = [0]*3
+        # Compute Temperature Plag
+        T[0] = compute_parameter_BK21(self.df, 0., P[0]/0.1, [1074.38633,0,11.86431,65.55420,-138.22714,20.55173,5.85532,79.01883])
+        # Compute Temperature Spl
+        T[1] = compute_parameter_BK21(self.df, 0., P[1]/0.1, [1049.24929,0,12.71243,63.47484,-3.32516,2.65802,-12.03128,117.75713])           
+        # Compute Temperature Gnt
+        T[2] = compute_parameter_BK21(self.df, 0., P[2]/0.1, [1136.36052,0,8.73915,184.88412,-19.48245,29.00187,-23.41730,-22.48205])           
+                  
+        return {'P': P[np.argmin(RMSD)], 'T': T[np.argmin(RMSD)],
+                'P_err': P[np.argmin(RMSD)] * self.T_err[np.argmin(RMSD)]/T[np.argmin(RMSD)], 
+                'T_err': self.T_err[np.argmin(RMSD)]}   
 
     def compute_mins(self, P):
         """
@@ -1033,7 +1263,7 @@ class BK21:
         """    
         compute_components_compound(self.df)
         P = self.compute_pressure()
-        T = self.compute_temperature(P)
+        T = self.compute_temperature1(P)
         RMSD = self.compute_mins(P)
         return {'P': P[np.argmin(RMSD)], 'T': T[np.argmin(RMSD)],
                 'P_err': self.P_err[np.argmin(RMSD)], 'T_err': self.T_err[np.argmin(RMSD)]} 
@@ -1097,7 +1327,7 @@ class HA15:
         #####
         T = Temp_1bar + 54.*P - 2.*P**2.
         
-        return {'P': P, 'T': T, 'P_err': self.P_err, 'T_err': self.T_err} 
+        return {'P': P, 'T': T, 'P_err': P * self.T_err/T, 'T_err': self.T_err} 
 
 class P07_P08:
     
@@ -1134,8 +1364,8 @@ class P07_P08:
         aSiO2 = (3*self.df["SiO2_primary_mol_dry"])**-2*(1-self.df["Al2O3_primary_mol_dry"])**(7/2)*(1-self.df["TiO2_primary_mol_dry"])**(7/2)
 
         P, T = sym.symbols('P, T')
-        eq1 = sym.Eq(1 / ((np.log(DMg) + 2.158 - 5.115*10**-2*(self.df["Na2O_primary_wt"]+self.df["K2O_primary_wt"]) + 6.213*10**-2*self.df["H2O_primary_wt"]) / (55.09*P + 4430)), T)
-        eq2 = sym.Eq((231.5+0.186*T+0.1244*T*(np.log(aSiO2))-528*(aSiO2)**0.5+103.3*self.df["TiO2_primary_mol_dry"]+69.9*(self.df["Na2O_primary_mol_dry"]+self.df["K2O_primary_mol_dry"])+77.3*(self.df["Al2O3_primary_mol_dry"]/(self.df["Al2O3_primary_mol_dry"]+self.df["SiO2_primary_mol_dry"])))/10, P)
+        eq1 = sym.Eq(1 / ((np.log(DMg) + 2.158 - 5.115*10**-2*(self.df["Na2O_primary_wt"]+self.df["K2O_primary_wt"]) + 6.213*10**-2*self.df["H2O_primary_wt"]) / (55.09*P + 4430.)), T)
+        eq2 = sym.Eq((231.5+0.186*T+0.1244*T*(np.log(aSiO2))-528.*(aSiO2)**0.5+103.3*self.df["TiO2_primary_mol_dry"]+69.9*(self.df["Na2O_primary_mol_dry"]+self.df["K2O_primary_mol_dry"])+77.3*(self.df["Al2O3_primary_mol_dry"]/(self.df["Al2O3_primary_mol_dry"]+self.df["SiO2_primary_mol_dry"])))/10., P)
         result = sym.solve([eq1,eq2],(P,T))
         T = result[T]
         P = result[P]
@@ -1147,7 +1377,50 @@ class SD20:
     def __init__(self, df):
         self.df = df
         self.P_err = 0.5
-        self.T_err = 49.        
+        self.T_err = 49.   
+    
+    def compute_temperature(self, P):
+        """
+        Sun & Dasgupta, (2020), EPSL.
+        Temperature calculated using equation 6.
+    
+        Parameters
+        ----------
+        df : pandas dataframe
+            Dataframe containing the sample primary composition.
+            Should contain only one row. To use with a multi-row dataframe use
+            df.apply().
+        P : float
+            pressure in GPa
+            
+        Returns
+        -------
+        out : dict
+            The equilibration pressure and temperature result.
+            Temperature is in degrees celcius.
+            Pressure is in GPa.
+            Associated errors for pressure and temperature.
+        """          
+
+        compute_components_per_oxygen(self.df)
+        
+        # Phi and Theta defined in Eq 3,
+        # Omega defined in Eq 5
+        phi = 2412. + 9.2 * (self.df['CO2_primary_wt']/self.df['SiO2_primary_mol_dry'])
+        phi += 11.19 * (self.df['H2O_primary_wt']/self.df['SiO2_primary_mol_dry'])
+        
+        theta = 4.7 + 3.91 * np.log(self.df['SiO2_primary_mol_dry']) 
+        theta += 1.19*((self.df['K2O_primary_mol_dry']+self.df['TiO2_primary_mol_dry'])/self.df['MgO_primary_mol_dry'])
+        
+        omega = 2.59 + 3.5*(self.df['CaO_primary_mol_dry'] - (2.*self.df['K2O_primary_mol_dry'])) 
+        omega += 4.85*self.df['TiO2_primary_mol_dry'] 
+        omega += 1.4*(self.df['MgO_primary_mol_dry']/(self.df['MgO_primary_mol_dry']+self.df['FeO_primary_mol_dry'])) 
+        omega += 0.5 * self.df['MgO_primary_mol_dry'] * sym.sqrt(self.df['CO2_primary_wt']) 
+        omega += 0.057 * self.df['H2O_primary_wt']      
+        
+        T = (10.**4. / (omega - 0.34*np.sqrt(P) - 1.26*np.log(self.df['MgO_primary_mol_dry']))) - 273.15
+
+        return {'P': P, 'T': float(T), 'P_err': float(P * self.T_err/T), 'T_err': self.T_err} 
     
     def compute_pressure_temperature(self):
         """
@@ -1324,6 +1597,43 @@ class P07_4:
             
         return {'P': P, 'T': T, 'P_err': P * self.T_err/T, 'T_err': self.T_err} 
 
+class P08:
+    
+    def __init__(self, df):
+        self.df = df
+        self.P_err = 0.29
+    
+    def compute_pressure(self, T):
+        """
+        Calculate temperate and pressure of melt
+        equilibration by simultaneously solving
+        Equation 4 of Putirka et al., (2007, Chemical Geology)
+        and Equation 42 of Putirka (2008).
+    
+        Parameters
+        ----------
+        df : pandas dataframe
+            Dataframe containing the sample primary composition.
+            Should contain only one row. To use with a multi-row dataframe use
+            df.apply().
+        T : float
+            Temperature in oC
+            
+        Returns
+        -------
+        out : dict
+            The equilibration pressure and temperature result.
+            Temperature is in degrees celcius.
+            Pressure is in GPa.
+            Associated errors for pressure and temperature.
+        """    
+        
+        compute_components_cation(self.df)
+        aSiO2 = (3*self.df["SiO2_primary_mol_dry"])**-2*(1-self.df["Al2O3_primary_mol_dry"])**(7/2)*(1-self.df["TiO2_primary_mol_dry"])**(7/2)
+        P = (231.5+0.186*T+0.1244*T*(np.log(aSiO2))-528.*(aSiO2)**0.5+103.3*self.df["TiO2_primary_mol_dry"]+69.9*(self.df["Na2O_primary_mol_dry"]+self.df["K2O_primary_mol_dry"])+77.3*(self.df["Al2O3_primary_mol_dry"]/(self.df["Al2O3_primary_mol_dry"]+self.df["SiO2_primary_mol_dry"])))/10.
+            
+        return {'P': P, 'T': T, 'P_err': self.P_err, 'T_err': T * self.P_err/P} 
+
 def compute_sample_pressure_temperature(df, method="PF16"):
     """
     Calculate temperate and pressure of melt equilibration
@@ -1335,7 +1645,8 @@ def compute_sample_pressure_temperature(df, method="PF16"):
         Should contain only one row. To use with a multi-row dataframe use
         df.apply().    
     
-    method: choice of thermobaric method
+    method: string
+        choice of thermobaric method
         PF16 = Plank & Forsyth (2016), G3
         L09 = Lee et al., (2009), G3
         TGK12_PLG = Till et al., (2012) in plagioclase stability field.
@@ -1394,11 +1705,19 @@ def compute_sample_temperature(df, method="HA15", P=1.):
         Should contain only one row. To use with a multi-row dataframe use
         df.apply().  
                                     
-    method: choice of thermobaric method
-        Herzberg & Asimow (2015)
+    method: sring
+        choice of thermobaric method
+        HA15 = Herzberg & Asimow (2015)
         P07_2 = Putirka et al., (2007) equation 2.
         P07_4 = Putirka et al., (2007) equation 4.
-        G13 = Grove et al., (2013) in garnet stability field.    
+        TGK12_PLG = Till et al., (2012) in plagioclase stability field.
+        TGK12_SPL = Till et al., (2012) in spinel stability field.        
+        G13 = Grove et al., (2013) in garnet stability field.  
+        BK21_PLG = Brown Krein et al., (2021) in plagioclase stability field.
+        BK21_SPL = Brown Krein et al., (2021) in spinel stability field.
+        BK21_GNT = Brown Krein et al., (2021) in garnet stability field.
+        BK21 = Brown Krein et al., (2021).
+        SD20 = Sun & Dasgupta (2020), EPSL low SiO2 thermobarometer.
         
     P  : float
         pressure in GPa  
@@ -1418,9 +1737,61 @@ def compute_sample_temperature(df, method="HA15", P=1.):
         out = P07_4(df).compute_temperature(P)
     elif method == "B93":
         out = B93(df).compute_temperature(P)        
+    elif method == "TGK12_PLG":
+        out = TGK12_PLG(df).compute_temperature(P)        
+    elif method == "TGK12_SPL":
+        out = TGK12_SPL(df).compute_temperature(P)  
     elif method == "G13":
-        out = G13(df).compute_temperature(P)            
+        out = G13(df).compute_temperature(P)      
+    elif method == "BK21_PLG":
+        out = BK21_PLG(df).compute_temperature(P)        
+    elif method == "BK21_SPL":
+        out = BK21_SPL(df).compute_temperature(P)  
+    elif method == "BK21_GNT":
+        out = BK21_GNT(df).compute_temperature(P)  
+    elif method == "BK21":
+        out = BK21(df).compute_temperature(P)        
+    elif method == "SD20":
+        out = SD20(df).compute_temperature(P)            
     else:
         out = thermobar(df).compute_temperature(P)
+        
+    return out
+
+def compute_sample_pressure(df, method="PF16", T=1300.):
+    """
+    Calculate temperate of melt equilibration
+    
+    Parameters
+    ----------
+    df : pandas dataframe.
+        Dataframe containing the sample primary composition.
+        Should contain only one row. To use with a multi-row dataframe use
+        df.apply().  
+                                    
+    method: sring
+        choice of thermobaric method
+        PF16 = Plank & Forsyth (2016), G3
+        L09 = Lee et al., (2009), G3
+        P08 = Putirka (2008) Eq 42.
+        
+    T  : float
+        Temperature in oC
+        
+    Returns
+    -------
+    PT  : pandas dataframe
+        The calculated temperature(s) in oC,
+        assumed pressures in GPa and associated errors.
+    """     
+    
+    if method == "PF16":
+        out = PF16(df).compute_pressure(T) 
+    elif method == "L09":
+        out = L09(df).compute_pressure(T)          
+    elif method == "P08":
+        out = P08(df).compute_pressure(T)        
+    else:
+        out = thermobar(df).compute_temperature(T)
         
     return out

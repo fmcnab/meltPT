@@ -50,9 +50,11 @@ def compute_sample_melt_fraction_misfit(F, df, path):
         Can be instance of any class containing arrays of melt fraction (F),
         pressure (P) and temperature (T).
     P_err : float, optional
-        Uncertainty in pressure observation(s).
+        Uncertainty in pressure observation(s). If NaN, P_err is assumed to 
+        be 10% of P.
     T_err : float, optional
-        Uncertainty in temperature observation(s).
+        Uncertainty in temperature observation(s). If NaN, T_err is assumed to 
+        be 10% of T.
 
     Returns
     -------
@@ -62,9 +64,16 @@ def compute_sample_melt_fraction_misfit(F, df, path):
         space. Pressure and temperature are normalised by their respective
         uncertainties.
     """
+    
+    if np.isnan(df['P_err']):
+        df['P_err'] = df['P'] * 0.1
+    if np.isnan(df['T_err']):
+        df['T_err'] = df['T'] * 0.1    
+        
     model_P, model_T = melt_fraction_to_pressure_temperature(F, path)
+
     misfit = np.sqrt( 
-        ((df['P']-model_P)/df['P_err'])**2. + ((df['T']-model_T)/df['T_err'])**2.
+        float(((df['P']-model_P)/df['P_err'])**2. + ((df['T']-model_T)/df['T_err'])**2.)
         )
     return misfit
     
