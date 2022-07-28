@@ -103,7 +103,7 @@ class Suite:
         Write results to csv.
     """
 
-    def __init__(self, input_csv, Ce_to_H2O=0., src_FeIII_totFe=0.2, min_SiO2=0., min_MgO=0., read_as_primary=False, param_co2=False, read_PT=False):
+    def __init__(self, input_csv, Ce_to_H2O=0., src_FeIII_totFe=0., min_SiO2=0., min_MgO=0., read_as_primary=False, param_co2=False, read_PT=False):
         self.data = parse_csv(
             input_csv,
             Ce_to_H2O=Ce_to_H2O,

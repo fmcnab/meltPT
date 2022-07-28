@@ -1,5 +1,4 @@
 import warnings
-
 import numpy as np
 import pandas as pd
 import sympy as sym
@@ -1173,7 +1172,7 @@ class SD20:
             Pressure is in GPa.
             Associated errors for pressure and temperature.
         """          
-        from sympy import sqrt
+
         compute_components_per_oxygen(self.df)
         
         # Phi and Theta defined in Eq 3,
@@ -1187,15 +1186,15 @@ class SD20:
         omega = 2.59 + 3.5*(self.df['CaO_primary_mol_dry'] - (2.*self.df['K2O_primary_mol_dry'])) 
         omega += 4.85*self.df['TiO2_primary_mol_dry'] 
         omega += 1.4*(self.df['MgO_primary_mol_dry']/(self.df['MgO_primary_mol_dry']+self.df['FeO_primary_mol_dry'])) 
-        omega += 0.5 * self.df['MgO_primary_mol_dry'] * sqrt(self.df['CO2_primary_wt']) 
+        omega += 0.5 * self.df['MgO_primary_mol_dry'] * sym.sqrt(self.df['CO2_primary_wt']) 
         omega += 0.057 * self.df['H2O_primary_wt']        
 
         # Pressure calculated using Eq 4.
         # Temperature calculated using Eq 6.
         # Must be solved simultaneously.       
         P, T = sym.symbols('P, T')
-        eq1 = sym.Eq(13. - sqrt((T/45.9) * (np.log(self.df['Al2O3_primary_mol_dry']/self.df['MgO_primary_mol_dry']) - theta) - (phi/45.9) + 169.), P)
-        eq2 = sym.Eq(10.**4. / (omega - 0.34*sqrt(P) - 1.26*np.log(self.df['MgO_primary_mol_dry'])), T)
+        eq1 = sym.Eq(13. - sym.sqrt((T/45.9) * (np.log(self.df['Al2O3_primary_mol_dry']/self.df['MgO_primary_mol_dry']) - theta) - (phi/45.9) + 169.), P)
+        eq2 = sym.Eq(10.**4. / (omega - 0.34*sym.sqrt(P) - 1.26*np.log(self.df['MgO_primary_mol_dry'])), T)
         result = sym.solve([eq1,eq2],(P,T))
         T = result[0][1] - 273.15
         P = result[0][0]

@@ -2,6 +2,15 @@ from meltPT import *
 import matplotlib.pyplot as plt
 import sys
 
+"""
+This script calculates an example thermobarometric estimate for each
+thermobarometric method. Results are compared to the calculations
+presented in each publication to ensure the thermobarometers are 
+correctly implemented. Small deviations, e.g., 1-2 oC, may result from 
+rounding differences between implementations.
+"""
+
+
 # ---- Beattie, 1993
 s1 = Suite("P07_Table_1.csv", read_as_primary=True)
 s1.compute_temperature(method="B93", P=0.8)
