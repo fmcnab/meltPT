@@ -22,7 +22,10 @@ s = Suite(
     Ce_to_H2O=params['backtrack']['Ce_to_H2O'],
     src_FeIII_totFe=params['backtrack']['src_FeIII_totFe'], 
     min_MgO=params['backtrack']['min_MgO'], 
-    min_SiO2=params['backtrack']['min_SiO2'])
+    min_SiO2=params['backtrack']['min_SiO2'],
+    read_as_primary=params['read_as_primary'],
+    read_PT=params['read_PT'],
+    param_co2=params['backtrack']['param_co2'])
 if params['backtrack']['apply']:
     print()
     print("Backtracking sample compositions.")
