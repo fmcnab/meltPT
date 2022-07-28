@@ -10,9 +10,9 @@ Script to make Hawaii Figure panels for Oahu
 ############################
 # Island options: Niihau / Kaula / Kauai / Oahu / Molokai / Maui
 #                 Kahoolawe / Lanai / Hawaii
-Island = "Niihau"
+Island = "Oahu"
 # Island2 = np.nan if only doing one island
-Island2 = "Kaula"
+Island2 = np.nan
 
 df = pd.read_csv("Hawaii.csv", sep=',')
 if Island2 is None:
@@ -24,13 +24,18 @@ else:
 # ---- Split into Shield, Post-Shield and Rejuvenated Phases
 # ---- Backtrack and Estimate PT
 ############################
+# Calculate water based on different H2O/Ce values
 df1.loc[(df1['Stage']=="Shield"), 'H2O'] = 144. * df1.loc[(df1['Stage']=="Shield"), 'Ce'] / 10000
 df1.loc[(df1['Stage']=="Post-Shield"), 'H2O'] = 136. * df1.loc[(df1['Stage']=="Post-Shield"), 'Ce'] / 10000
 df1.loc[(df1['Stage']=="Rejuvenated"), 'H2O'] = 211. * df1.loc[(df1['Stage']=="Rejuvenated"), 'Ce'] / 10000
+
+# Assign src_FeIII_totFe values
 df1.loc[(df1['Stage']=="Shield"), 'src_FeIII_totFe'] = 0.15
 df1.loc[(df1['Stage']=="Post-Shield"), 'src_FeIII_totFe'] = 0.15
 df1.loc[(df1['Stage']=="Rejuvenated"), 'src_FeIII_totFe'] = 0.17
-df = df1.loc[(df1['Ce']>0) & (df1['Sm']>0) & (df1['Yb']>0)]
+
+# Only include samples that have Ce
+df = df1.loc[(df1['Ce']>0)]
 df.to_csv("province.csv", sep=',')
 s = Suite("province.csv", min_MgO=8.5, min_SiO2=40.)
 s.backtrack_compositions()
@@ -49,62 +54,6 @@ T_sol = [lz.TSolidus(P) for P in P_sol]
 # ---- Fit Tp to Oahu Data
 ############################
 s.find_suite_potential_temperature(mantle, find_bounds=True)
-
-# # ---- Shield Data
-# df = df1.loc[(df1['Stage']=="Shield") & (df1['Sm']>0) & (df1['Yb']>0)]
-# df.to_csv("province.csv", sep=',')
-# s = Suite("province.csv", src_FeIII_totFe=0.15, Ce_to_H2O=144., min_MgO=8.5, min_SiO2=40.)
-# s.backtrack_compositions()
-# s.compute_pressure_temperature()
-
-# # ---- Post-Shield Data
-# df = df1.loc[(df1['Stage']=="Post-Shield") & (df1['Sm']>0) & (df1['Yb']>0)]
-# df.to_csv("province.csv", sep=',')
-# s2 = Suite("province.csv", src_FeIII_totFe=0.15, Ce_to_H2O=136., min_MgO=8.5, min_SiO2=40.)
-# s2.backtrack_compositions()
-# s2.compute_pressure_temperature()
-
-# # ---- Rejuvenated Data
-# df = df1.loc[(df1['Stage']=="Rejuvenated") & (df1['Sm']>0) & (df1['Yb']>0)]
-# df.to_csv("province.csv", sep=',')
-# s3 = Suite("province.csv", src_FeIII_totFe=0.17, Ce_to_H2O=211., min_MgO=8.5, min_SiO2=40.)
-# s3.backtrack_compositions()
-# s3.compute_pressure_temperature()
-
-# # ---- Combine Phases and Estimate PT
-# df_hawaii = pd.concat([s.primary,s2.primary,s3.primary])
-
-# hawaii_dict = {'SiO2' : df_hawaii['SiO2_primary_wt'],
-#                'TiO2' : df_hawaii['TiO2_primary_wt'],
-#                'Al2O3' : df_hawaii['Al2O3_primary_wt'],
-#                'FeO' : df_hawaii['FeO_primary_wt'],
-#                'Fe2O3' : df_hawaii['Fe2O3_primary_wt'],
-#                'MnO' : df_hawaii['MnO_primary_wt'],
-#                'MgO' : df_hawaii['MgO_primary_wt'],
-#                'CaO' : df_hawaii['CaO_primary_wt'],
-#                'Na2O' : df_hawaii['Na2O_primary_wt'],
-#                'K2O' : df_hawaii['K2O_primary_wt'],
-#                'P2O5' : df_hawaii['P2O5_primary_wt'],
-#                'H2O' : df_hawaii['H2O_primary_wt']}
-# df_hawaii = pd.DataFrame.from_dict(hawaii_dict)
-# df_hawaii.to_csv("Oahu.csv", sep=',')
-
-# s4 = Suite("Oahu.csv", read_as_primary=True)
-# s4.compute_pressure_temperature()
-
-# ############################
-# # ---- Set up mantle
-# ############################
-# lz = m.lithologies.katz.lherzolite()
-# mantle = m.mantle([lz], [1], ['Lz'])
-# max_P = -lz.parameters['A2'] / (2.*lz.parameters['A3'])
-# P_sol = np.arange(0., max_P, 0.1)
-# T_sol = [lz.TSolidus(P) for P in P_sol]
-
-# ############################
-# # ---- Fit Tp to Oahu Data
-# ############################
-# s4.find_suite_potential_temperature(mantle, find_bounds=True)
 
 ############################
 # ---- Plot Hawaii Figure For Oahu
