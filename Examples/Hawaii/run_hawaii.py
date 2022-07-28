@@ -17,10 +17,6 @@ s.compute_pressure_temperature()
 
 # ---- Set up mantle
 lz = m.lithologies.katz.lherzolite()
-# lz.parameters['Mcpx'] = 0.15 # shorttle
-# lz.CP = 1187. # shorttle
-# lz.alphas = 30. # shorttle
-# lz.DeltaS = 407. # shorttle
 mantle = m.mantle([lz], [1], ['Lz'])
 max_P = -lz.parameters['A2'] / (2.*lz.parameters['A3'])
 P_sol = np.arange(0., max_P, 0.1)
@@ -73,4 +69,5 @@ ax4.set_box_aspect(1)
 
 plt.tight_layout()
 plt.show()
+
 
