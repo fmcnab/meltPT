@@ -241,7 +241,7 @@ class Suite:
             return {'fit': df.to_numpy().all()}
 
         def above_solidus(df, mantle):
-            return {'fit': max([l.TSolidus(df['P']) for l in mantle.lithologies]) - df['T'] < 39.}
+            return {'fit': max([l.TSolidus(df['P']) for l in mantle.lithologies]) - df['T'] < df['T_err']}
 
         combined = pd.concat([self.data, self.PT], axis=1)
         to_fit = combined.apply(above_solidus, axis=1, result_type="expand", args=(mantle,))
