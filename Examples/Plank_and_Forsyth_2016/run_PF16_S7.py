@@ -3,7 +3,8 @@ import matplotlib.pyplot as plt
 import sys
 
 # ---- check against plank & forsyth supplementary
-s = Suite("UT09DV04.csv")
+# s = Suite("PF16_S7.csv")
+s = Suite("UT09DV04.csv", src_FeIII_totFe=0.17)
 s.backtrack_compositions(Kd=0.3, verbose=True)
 s.compute_pressure_temperature()
 print()

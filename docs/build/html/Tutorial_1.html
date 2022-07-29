@@ -1,0 +1,911 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+    <title>Tutorial 1: First steps &#8212; meltPT 0.0.1 documentation</title>
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="_static/alabaster.css" />
+    <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/doctools.js"></script>
+    <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    <script>window.MathJax = {"tex": {"inlineMath": [["$", "$"], ["\\(", "\\)"]], "processEscapes": true}, "options": {"ignoreHtmlClass": "tex2jax_ignore|mathjax_ignore|document", "processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <link rel="author" title="About these documents" href="about.html" />
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Code Documentation" href="codedoc.html" />
+    <link rel="prev" title="Getting Started" href="getstarted.html" />
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  
+<style>
+/* CSS for nbsphinx extension */
+
+/* remove conflicting styling from Sphinx themes */
+div.nbinput.container div.prompt *,
+div.nboutput.container div.prompt *,
+div.nbinput.container div.input_area pre,
+div.nboutput.container div.output_area pre,
+div.nbinput.container div.input_area .highlight,
+div.nboutput.container div.output_area .highlight {
+    border: none;
+    padding: 0;
+    margin: 0;
+    box-shadow: none;
+}
+
+div.nbinput.container > div[class*=highlight],
+div.nboutput.container > div[class*=highlight] {
+    margin: 0;
+}
+
+div.nbinput.container div.prompt *,
+div.nboutput.container div.prompt * {
+    background: none;
+}
+
+div.nboutput.container div.output_area .highlight,
+div.nboutput.container div.output_area pre {
+    background: unset;
+}
+
+div.nboutput.container div.output_area div.highlight {
+    color: unset;  /* override Pygments text color */
+}
+
+/* avoid gaps between output lines */
+div.nboutput.container div[class*=highlight] pre {
+    line-height: normal;
+}
+
+/* input/output containers */
+div.nbinput.container,
+div.nboutput.container {
+    display: -webkit-flex;
+    display: flex;
+    align-items: flex-start;
+    margin: 0;
+    width: 100%;
+}
+@media (max-width: 540px) {
+    div.nbinput.container,
+    div.nboutput.container {
+        flex-direction: column;
+    }
+}
+
+/* input container */
+div.nbinput.container {
+    padding-top: 5px;
+}
+
+/* last container */
+div.nblast.container {
+    padding-bottom: 5px;
+}
+
+/* input prompt */
+div.nbinput.container div.prompt pre {
+    color: #307FC1;
+}
+
+/* output prompt */
+div.nboutput.container div.prompt pre {
+    color: #BF5B3D;
+}
+
+/* all prompts */
+div.nbinput.container div.prompt,
+div.nboutput.container div.prompt {
+    width: 4.5ex;
+    padding-top: 5px;
+    position: relative;
+    user-select: none;
+}
+
+div.nbinput.container div.prompt > div,
+div.nboutput.container div.prompt > div {
+    position: absolute;
+    right: 0;
+    margin-right: 0.3ex;
+}
+
+@media (max-width: 540px) {
+    div.nbinput.container div.prompt,
+    div.nboutput.container div.prompt {
+        width: unset;
+        text-align: left;
+        padding: 0.4em;
+    }
+    div.nboutput.container div.prompt.empty {
+        padding: 0;
+    }
+
+    div.nbinput.container div.prompt > div,
+    div.nboutput.container div.prompt > div {
+        position: unset;
+    }
+}
+
+/* disable scrollbars on prompts */
+div.nbinput.container div.prompt pre,
+div.nboutput.container div.prompt pre {
+    overflow: hidden;
+}
+
+/* input/output area */
+div.nbinput.container div.input_area,
+div.nboutput.container div.output_area {
+    -webkit-flex: 1;
+    flex: 1;
+    overflow: auto;
+}
+@media (max-width: 540px) {
+    div.nbinput.container div.input_area,
+    div.nboutput.container div.output_area {
+        width: 100%;
+    }
+}
+
+/* input area */
+div.nbinput.container div.input_area {
+    border: 1px solid #e0e0e0;
+    border-radius: 2px;
+    /*background: #f5f5f5;*/
+}
+
+/* override MathJax center alignment in output cells */
+div.nboutput.container div[class*=MathJax] {
+    text-align: left !important;
+}
+
+/* override sphinx.ext.imgmath center alignment in output cells */
+div.nboutput.container div.math p {
+    text-align: left;
+}
+
+/* standard error */
+div.nboutput.container div.output_area.stderr {
+    background: #fdd;
+}
+
+/* ANSI colors */
+.ansi-black-fg { color: #3E424D; }
+.ansi-black-bg { background-color: #3E424D; }
+.ansi-black-intense-fg { color: #282C36; }
+.ansi-black-intense-bg { background-color: #282C36; }
+.ansi-red-fg { color: #E75C58; }
+.ansi-red-bg { background-color: #E75C58; }
+.ansi-red-intense-fg { color: #B22B31; }
+.ansi-red-intense-bg { background-color: #B22B31; }
+.ansi-green-fg { color: #00A250; }
+.ansi-green-bg { background-color: #00A250; }
+.ansi-green-intense-fg { color: #007427; }
+.ansi-green-intense-bg { background-color: #007427; }
+.ansi-yellow-fg { color: #DDB62B; }
+.ansi-yellow-bg { background-color: #DDB62B; }
+.ansi-yellow-intense-fg { color: #B27D12; }
+.ansi-yellow-intense-bg { background-color: #B27D12; }
+.ansi-blue-fg { color: #208FFB; }
+.ansi-blue-bg { background-color: #208FFB; }
+.ansi-blue-intense-fg { color: #0065CA; }
+.ansi-blue-intense-bg { background-color: #0065CA; }
+.ansi-magenta-fg { color: #D160C4; }
+.ansi-magenta-bg { background-color: #D160C4; }
+.ansi-magenta-intense-fg { color: #A03196; }
+.ansi-magenta-intense-bg { background-color: #A03196; }
+.ansi-cyan-fg { color: #60C6C8; }
+.ansi-cyan-bg { background-color: #60C6C8; }
+.ansi-cyan-intense-fg { color: #258F8F; }
+.ansi-cyan-intense-bg { background-color: #258F8F; }
+.ansi-white-fg { color: #C5C1B4; }
+.ansi-white-bg { background-color: #C5C1B4; }
+.ansi-white-intense-fg { color: #A1A6B2; }
+.ansi-white-intense-bg { background-color: #A1A6B2; }
+
+.ansi-default-inverse-fg { color: #FFFFFF; }
+.ansi-default-inverse-bg { background-color: #000000; }
+
+.ansi-bold { font-weight: bold; }
+.ansi-underline { text-decoration: underline; }
+
+
+div.nbinput.container div.input_area div[class*=highlight] > pre,
+div.nboutput.container div.output_area div[class*=highlight] > pre,
+div.nboutput.container div.output_area div[class*=highlight].math,
+div.nboutput.container div.output_area.rendered_html,
+div.nboutput.container div.output_area > div.output_javascript,
+div.nboutput.container div.output_area:not(.rendered_html) > img{
+    padding: 5px;
+    margin: 0;
+}
+
+/* fix copybtn overflow problem in chromium (needed for 'sphinx_copybutton') */
+div.nbinput.container div.input_area > div[class^='highlight'],
+div.nboutput.container div.output_area > div[class^='highlight']{
+    overflow-y: hidden;
+}
+
+/* hide copybtn icon on prompts (needed for 'sphinx_copybutton') */
+.prompt .copybtn {
+    display: none;
+}
+
+/* Some additional styling taken form the Jupyter notebook CSS */
+div.rendered_html table {
+  border: none;
+  border-collapse: collapse;
+  border-spacing: 0;
+  color: black;
+  font-size: 12px;
+  table-layout: fixed;
+}
+div.rendered_html thead {
+  border-bottom: 1px solid black;
+  vertical-align: bottom;
+}
+div.rendered_html tr,
+div.rendered_html th,
+div.rendered_html td {
+  text-align: right;
+  vertical-align: middle;
+  padding: 0.5em 0.5em;
+  line-height: normal;
+  white-space: normal;
+  max-width: none;
+  border: none;
+}
+div.rendered_html th {
+  font-weight: bold;
+}
+div.rendered_html tbody tr:nth-child(odd) {
+  background: #f5f5f5;
+}
+div.rendered_html tbody tr:hover {
+  background: rgba(66, 165, 245, 0.2);
+}
+</style>
+<section id="Tutorial-1:-First-steps">
+<h1>Tutorial 1: First steps<a class="headerlink" href="#Tutorial-1:-First-steps" title="Permalink to this headline">¶</a></h1>
+<p>Welcome to this tutorial.</p>
+<section id="Importing-libraries">
+<h2>Importing libraries<a class="headerlink" href="#Importing-libraries" title="Permalink to this headline">¶</a></h2>
+<p>Let’s start by importing some libraries. If you have installed meltPT correctly, this should work!</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[1]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">meltPT</span> <span class="kn">import</span> <span class="o">*</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+</pre></div>
+</div>
+</div>
+</section>
+<section id="Reading-data-and-initialising-the-Suite-object">
+<h2>Reading data and initialising the Suite object<a class="headerlink" href="#Reading-data-and-initialising-the-Suite-object" title="Permalink to this headline">¶</a></h2>
+<p>Start by importing data from your csv. In this case our data are stored in a file called “PF16_UT09DV04”. To keep this example simple, the input infile contains a single sample, UT09DV04, from Plank &amp; Forsyth (2016).</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[2]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">s</span> <span class="o">=</span> <span class="n">Suite</span><span class="p">(</span><span class="s2">&quot;PF16_UT09DV04.csv&quot;</span><span class="p">,</span> <span class="n">src_FeIII_totFe</span><span class="o">=</span><span class="mf">0.17</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<p>You have now created an instance of meltPT’s Suite class, containing the sample data. Data are stored in a pandas dataframe, which you can preview by typing:</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[3]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="n">s</span><span class="o">.</span><span class="n">data</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+  Volc Field       Vent tephra/lava/MI      Sample       IGSN  Latitude  \
+0       SCVF  Diamond V      tephra/MI  UT-09 DV04  TAP00001C   37.2571
+
+   Longitude       SiO2      TiO2      Al2O3  ...    U     Cr2O3  CO2  \
+0  -113.6243  47.859824  1.866207  15.354245  ...  1.6  0.030856  0.0
+
+      Fe2O3  src_FeIII_totFe       NiO  CoO  Co  FeO_tot  Total
+0  2.104445             0.17  0.021263  0.0   0    11.28  100.0
+
+[1 rows x 49 columns]
+</pre></div></div>
+</div>
+</section>
+<section id="Backtrack-compositions">
+<h2>Backtrack compositions<a class="headerlink" href="#Backtrack-compositions" title="Permalink to this headline">¶</a></h2>
+<p>The next step is backtracking the sample’s composition. The aim here is to account for the effects of fractional crystallisation of olivine and estimate the sample’s “primary” composition: i.e., its composition when it last equilibrated with the mantle. To do so, use the Suite’s backtrack_compositions method. Here we have set the verbose flag to True, so program will print updates at each interation.</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[4]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">s</span><span class="o">.</span><span class="n">backtrack_compositions</span><span class="p">(</span><span class="n">Kd</span><span class="o">=</span><span class="mf">0.3</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">target_Fo</span><span class="o">=</span><span class="mf">0.9</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+Backtracking sample UT-09 DV04 to primary composition:
+    - 0.05% olivine added, melt Fo = 0.8498.
+    - 0.10% olivine added, melt Fo = 0.8501.
+    - 0.15% olivine added, melt Fo = 0.8503.
+    - 0.20% olivine added, melt Fo = 0.8505.
+    - 0.25% olivine added, melt Fo = 0.8507.
+    - 0.30% olivine added, melt Fo = 0.8510.
+    - 0.35% olivine added, melt Fo = 0.8512.
+    - 0.40% olivine added, melt Fo = 0.8514.
+    - 0.45% olivine added, melt Fo = 0.8517.
+    - 0.50% olivine added, melt Fo = 0.8519.
+    - 0.55% olivine added, melt Fo = 0.8521.
+    - 0.60% olivine added, melt Fo = 0.8523.
+    - 0.65% olivine added, melt Fo = 0.8526.
+    - 0.70% olivine added, melt Fo = 0.8528.
+    - 0.74% olivine added, melt Fo = 0.8530.
+    - 0.79% olivine added, melt Fo = 0.8532.
+    - 0.84% olivine added, melt Fo = 0.8535.
+    - 0.89% olivine added, melt Fo = 0.8537.
+    - 0.94% olivine added, melt Fo = 0.8539.
+    - 0.99% olivine added, melt Fo = 0.8541.
+    - 1.04% olivine added, melt Fo = 0.8543.
+    - 1.09% olivine added, melt Fo = 0.8546.
+    - 1.14% olivine added, melt Fo = 0.8548.
+    - 1.19% olivine added, melt Fo = 0.8550.
+    - 1.23% olivine added, melt Fo = 0.8552.
+    - 1.28% olivine added, melt Fo = 0.8554.
+    - 1.33% olivine added, melt Fo = 0.8556.
+    - 1.38% olivine added, melt Fo = 0.8558.
+    - 1.43% olivine added, melt Fo = 0.8561.
+    - 1.48% olivine added, melt Fo = 0.8563.
+    - 1.53% olivine added, melt Fo = 0.8565.
+    - 1.57% olivine added, melt Fo = 0.8567.
+    - 1.62% olivine added, melt Fo = 0.8569.
+    - 1.67% olivine added, melt Fo = 0.8571.
+    - 1.72% olivine added, melt Fo = 0.8573.
+    - 1.77% olivine added, melt Fo = 0.8575.
+    - 1.82% olivine added, melt Fo = 0.8578.
+    - 1.86% olivine added, melt Fo = 0.8580.
+    - 1.91% olivine added, melt Fo = 0.8582.
+    - 1.96% olivine added, melt Fo = 0.8584.
+    - 2.01% olivine added, melt Fo = 0.8586.
+    - 2.06% olivine added, melt Fo = 0.8588.
+    - 2.10% olivine added, melt Fo = 0.8590.
+    - 2.15% olivine added, melt Fo = 0.8592.
+    - 2.20% olivine added, melt Fo = 0.8594.
+    - 2.25% olivine added, melt Fo = 0.8596.
+    - 2.30% olivine added, melt Fo = 0.8598.
+    - 2.34% olivine added, melt Fo = 0.8600.
+    - 2.39% olivine added, melt Fo = 0.8602.
+    - 2.44% olivine added, melt Fo = 0.8604.
+    - 2.49% olivine added, melt Fo = 0.8606.
+    - 2.53% olivine added, melt Fo = 0.8608.
+    - 2.58% olivine added, melt Fo = 0.8610.
+    - 2.63% olivine added, melt Fo = 0.8612.
+    - 2.68% olivine added, melt Fo = 0.8614.
+    - 2.72% olivine added, melt Fo = 0.8616.
+    - 2.77% olivine added, melt Fo = 0.8618.
+    - 2.82% olivine added, melt Fo = 0.8620.
+    - 2.87% olivine added, melt Fo = 0.8622.
+    - 2.91% olivine added, melt Fo = 0.8624.
+    - 2.96% olivine added, melt Fo = 0.8626.
+    - 3.01% olivine added, melt Fo = 0.8628.
+    - 3.05% olivine added, melt Fo = 0.8630.
+    - 3.10% olivine added, melt Fo = 0.8632.
+    - 3.15% olivine added, melt Fo = 0.8634.
+    - 3.19% olivine added, melt Fo = 0.8636.
+    - 3.24% olivine added, melt Fo = 0.8638.
+    - 3.29% olivine added, melt Fo = 0.8640.
+    - 3.33% olivine added, melt Fo = 0.8642.
+    - 3.38% olivine added, melt Fo = 0.8643.
+    - 3.43% olivine added, melt Fo = 0.8645.
+    - 3.47% olivine added, melt Fo = 0.8647.
+    - 3.52% olivine added, melt Fo = 0.8649.
+    - 3.57% olivine added, melt Fo = 0.8651.
+    - 3.61% olivine added, melt Fo = 0.8653.
+    - 3.66% olivine added, melt Fo = 0.8655.
+    - 3.71% olivine added, melt Fo = 0.8657.
+    - 3.75% olivine added, melt Fo = 0.8659.
+    - 3.80% olivine added, melt Fo = 0.8660.
+    - 3.85% olivine added, melt Fo = 0.8662.
+    - 3.89% olivine added, melt Fo = 0.8664.
+    - 3.94% olivine added, melt Fo = 0.8666.
+    - 3.98% olivine added, melt Fo = 0.8668.
+    - 4.03% olivine added, melt Fo = 0.8670.
+    - 4.08% olivine added, melt Fo = 0.8671.
+    - 4.12% olivine added, melt Fo = 0.8673.
+    - 4.17% olivine added, melt Fo = 0.8675.
+    - 4.21% olivine added, melt Fo = 0.8677.
+    - 4.26% olivine added, melt Fo = 0.8679.
+    - 4.31% olivine added, melt Fo = 0.8681.
+    - 4.35% olivine added, melt Fo = 0.8682.
+    - 4.40% olivine added, melt Fo = 0.8684.
+    - 4.44% olivine added, melt Fo = 0.8686.
+    - 4.49% olivine added, melt Fo = 0.8688.
+    - 4.53% olivine added, melt Fo = 0.8690.
+    - 4.58% olivine added, melt Fo = 0.8691.
+    - 4.63% olivine added, melt Fo = 0.8693.
+    - 4.67% olivine added, melt Fo = 0.8695.
+    - 4.72% olivine added, melt Fo = 0.8697.
+    - 4.76% olivine added, melt Fo = 0.8698.
+    - 4.81% olivine added, melt Fo = 0.8700.
+    - 4.85% olivine added, melt Fo = 0.8702.
+    - 4.90% olivine added, melt Fo = 0.8704.
+    - 4.94% olivine added, melt Fo = 0.8705.
+    - 4.99% olivine added, melt Fo = 0.8707.
+    - 5.03% olivine added, melt Fo = 0.8709.
+    - 5.08% olivine added, melt Fo = 0.8711.
+    - 5.12% olivine added, melt Fo = 0.8712.
+    - 5.17% olivine added, melt Fo = 0.8714.
+    - 5.21% olivine added, melt Fo = 0.8716.
+    - 5.26% olivine added, melt Fo = 0.8717.
+    - 5.30% olivine added, melt Fo = 0.8719.
+    - 5.35% olivine added, melt Fo = 0.8721.
+    - 5.39% olivine added, melt Fo = 0.8723.
+    - 5.44% olivine added, melt Fo = 0.8724.
+    - 5.48% olivine added, melt Fo = 0.8726.
+    - 5.53% olivine added, melt Fo = 0.8728.
+    - 5.57% olivine added, melt Fo = 0.8729.
+    - 5.62% olivine added, melt Fo = 0.8731.
+    - 5.66% olivine added, melt Fo = 0.8733.
+    - 5.70% olivine added, melt Fo = 0.8734.
+    - 5.75% olivine added, melt Fo = 0.8736.
+    - 5.79% olivine added, melt Fo = 0.8738.
+    - 5.84% olivine added, melt Fo = 0.8739.
+    - 5.88% olivine added, melt Fo = 0.8741.
+    - 5.93% olivine added, melt Fo = 0.8743.
+    - 5.97% olivine added, melt Fo = 0.8744.
+    - 6.02% olivine added, melt Fo = 0.8746.
+    - 6.06% olivine added, melt Fo = 0.8748.
+    - 6.10% olivine added, melt Fo = 0.8749.
+    - 6.15% olivine added, melt Fo = 0.8751.
+    - 6.19% olivine added, melt Fo = 0.8753.
+    - 6.24% olivine added, melt Fo = 0.8754.
+    - 6.28% olivine added, melt Fo = 0.8756.
+    - 6.32% olivine added, melt Fo = 0.8757.
+    - 6.37% olivine added, melt Fo = 0.8759.
+    - 6.41% olivine added, melt Fo = 0.8761.
+    - 6.45% olivine added, melt Fo = 0.8762.
+    - 6.50% olivine added, melt Fo = 0.8764.
+    - 6.54% olivine added, melt Fo = 0.8765.
+    - 6.59% olivine added, melt Fo = 0.8767.
+    - 6.63% olivine added, melt Fo = 0.8769.
+    - 6.67% olivine added, melt Fo = 0.8770.
+    - 6.72% olivine added, melt Fo = 0.8772.
+    - 6.76% olivine added, melt Fo = 0.8773.
+    - 6.80% olivine added, melt Fo = 0.8775.
+    - 6.85% olivine added, melt Fo = 0.8776.
+    - 6.89% olivine added, melt Fo = 0.8778.
+    - 6.93% olivine added, melt Fo = 0.8780.
+    - 6.98% olivine added, melt Fo = 0.8781.
+    - 7.02% olivine added, melt Fo = 0.8783.
+    - 7.06% olivine added, melt Fo = 0.8784.
+    - 7.11% olivine added, melt Fo = 0.8786.
+    - 7.15% olivine added, melt Fo = 0.8787.
+    - 7.19% olivine added, melt Fo = 0.8789.
+    - 7.24% olivine added, melt Fo = 0.8790.
+    - 7.28% olivine added, melt Fo = 0.8792.
+    - 7.32% olivine added, melt Fo = 0.8793.
+    - 7.36% olivine added, melt Fo = 0.8795.
+    - 7.41% olivine added, melt Fo = 0.8796.
+    - 7.45% olivine added, melt Fo = 0.8798.
+    - 7.49% olivine added, melt Fo = 0.8799.
+    - 7.54% olivine added, melt Fo = 0.8801.
+    - 7.58% olivine added, melt Fo = 0.8802.
+    - 7.62% olivine added, melt Fo = 0.8804.
+    - 7.66% olivine added, melt Fo = 0.8805.
+    - 7.71% olivine added, melt Fo = 0.8807.
+    - 7.75% olivine added, melt Fo = 0.8808.
+    - 7.79% olivine added, melt Fo = 0.8810.
+    - 7.83% olivine added, melt Fo = 0.8811.
+    - 7.88% olivine added, melt Fo = 0.8813.
+    - 7.92% olivine added, melt Fo = 0.8814.
+    - 7.96% olivine added, melt Fo = 0.8816.
+    - 8.00% olivine added, melt Fo = 0.8817.
+    - 8.05% olivine added, melt Fo = 0.8819.
+    - 8.09% olivine added, melt Fo = 0.8820.
+    - 8.13% olivine added, melt Fo = 0.8822.
+    - 8.17% olivine added, melt Fo = 0.8823.
+    - 8.21% olivine added, melt Fo = 0.8825.
+    - 8.26% olivine added, melt Fo = 0.8826.
+    - 8.30% olivine added, melt Fo = 0.8827.
+    - 8.34% olivine added, melt Fo = 0.8829.
+    - 8.38% olivine added, melt Fo = 0.8830.
+    - 8.42% olivine added, melt Fo = 0.8832.
+    - 8.47% olivine added, melt Fo = 0.8833.
+    - 8.51% olivine added, melt Fo = 0.8835.
+    - 8.55% olivine added, melt Fo = 0.8836.
+    - 8.59% olivine added, melt Fo = 0.8838.
+    - 8.63% olivine added, melt Fo = 0.8839.
+    - 8.68% olivine added, melt Fo = 0.8840.
+    - 8.72% olivine added, melt Fo = 0.8842.
+    - 8.76% olivine added, melt Fo = 0.8843.
+    - 8.80% olivine added, melt Fo = 0.8845.
+    - 8.84% olivine added, melt Fo = 0.8846.
+    - 8.88% olivine added, melt Fo = 0.8847.
+    - 8.93% olivine added, melt Fo = 0.8849.
+    - 8.97% olivine added, melt Fo = 0.8850.
+    - 9.01% olivine added, melt Fo = 0.8852.
+    - 9.05% olivine added, melt Fo = 0.8853.
+    - 9.09% olivine added, melt Fo = 0.8854.
+    - 9.13% olivine added, melt Fo = 0.8856.
+    - 9.17% olivine added, melt Fo = 0.8857.
+    - 9.21% olivine added, melt Fo = 0.8858.
+    - 9.26% olivine added, melt Fo = 0.8860.
+    - 9.30% olivine added, melt Fo = 0.8861.
+    - 9.34% olivine added, melt Fo = 0.8863.
+    - 9.38% olivine added, melt Fo = 0.8864.
+    - 9.42% olivine added, melt Fo = 0.8865.
+    - 9.46% olivine added, melt Fo = 0.8867.
+    - 9.50% olivine added, melt Fo = 0.8868.
+    - 9.54% olivine added, melt Fo = 0.8869.
+    - 9.58% olivine added, melt Fo = 0.8871.
+    - 9.62% olivine added, melt Fo = 0.8872.
+    - 9.67% olivine added, melt Fo = 0.8873.
+    - 9.71% olivine added, melt Fo = 0.8875.
+    - 9.75% olivine added, melt Fo = 0.8876.
+    - 9.79% olivine added, melt Fo = 0.8877.
+    - 9.83% olivine added, melt Fo = 0.8879.
+    - 9.87% olivine added, melt Fo = 0.8880.
+    - 9.91% olivine added, melt Fo = 0.8881.
+    - 9.95% olivine added, melt Fo = 0.8883.
+    - 9.99% olivine added, melt Fo = 0.8884.
+    - 10.03% olivine added, melt Fo = 0.8885.
+    - 10.07% olivine added, melt Fo = 0.8887.
+    - 10.11% olivine added, melt Fo = 0.8888.
+    - 10.15% olivine added, melt Fo = 0.8889.
+    - 10.19% olivine added, melt Fo = 0.8890.
+    - 10.23% olivine added, melt Fo = 0.8892.
+    - 10.27% olivine added, melt Fo = 0.8893.
+    - 10.31% olivine added, melt Fo = 0.8894.
+    - 10.35% olivine added, melt Fo = 0.8896.
+    - 10.39% olivine added, melt Fo = 0.8897.
+    - 10.43% olivine added, melt Fo = 0.8898.
+    - 10.47% olivine added, melt Fo = 0.8900.
+    - 10.51% olivine added, melt Fo = 0.8901.
+    - 10.55% olivine added, melt Fo = 0.8902.
+    - 10.59% olivine added, melt Fo = 0.8903.
+    - 10.63% olivine added, melt Fo = 0.8905.
+    - 10.67% olivine added, melt Fo = 0.8906.
+    - 10.71% olivine added, melt Fo = 0.8907.
+    - 10.75% olivine added, melt Fo = 0.8908.
+    - 10.79% olivine added, melt Fo = 0.8910.
+    - 10.83% olivine added, melt Fo = 0.8911.
+    - 10.87% olivine added, melt Fo = 0.8912.
+    - 10.91% olivine added, melt Fo = 0.8913.
+    - 10.95% olivine added, melt Fo = 0.8915.
+    - 10.99% olivine added, melt Fo = 0.8916.
+    - 11.03% olivine added, melt Fo = 0.8917.
+    - 11.07% olivine added, melt Fo = 0.8918.
+    - 11.11% olivine added, melt Fo = 0.8920.
+    - 11.15% olivine added, melt Fo = 0.8921.
+    - 11.19% olivine added, melt Fo = 0.8922.
+    - 11.23% olivine added, melt Fo = 0.8923.
+    - 11.27% olivine added, melt Fo = 0.8925.
+    - 11.31% olivine added, melt Fo = 0.8926.
+    - 11.35% olivine added, melt Fo = 0.8927.
+    - 11.39% olivine added, melt Fo = 0.8928.
+    - 11.43% olivine added, melt Fo = 0.8929.
+    - 11.47% olivine added, melt Fo = 0.8931.
+    - 11.50% olivine added, melt Fo = 0.8932.
+    - 11.54% olivine added, melt Fo = 0.8933.
+    - 11.58% olivine added, melt Fo = 0.8934.
+    - 11.62% olivine added, melt Fo = 0.8936.
+    - 11.66% olivine added, melt Fo = 0.8937.
+    - 11.70% olivine added, melt Fo = 0.8938.
+    - 11.74% olivine added, melt Fo = 0.8939.
+    - 11.78% olivine added, melt Fo = 0.8940.
+    - 11.82% olivine added, melt Fo = 0.8941.
+    - 11.86% olivine added, melt Fo = 0.8943.
+    - 11.89% olivine added, melt Fo = 0.8944.
+    - 11.93% olivine added, melt Fo = 0.8945.
+    - 11.97% olivine added, melt Fo = 0.8946.
+    - 12.01% olivine added, melt Fo = 0.8947.
+    - 12.05% olivine added, melt Fo = 0.8949.
+    - 12.09% olivine added, melt Fo = 0.8950.
+    - 12.13% olivine added, melt Fo = 0.8951.
+    - 12.17% olivine added, melt Fo = 0.8952.
+    - 12.20% olivine added, melt Fo = 0.8953.
+    - 12.24% olivine added, melt Fo = 0.8954.
+    - 12.28% olivine added, melt Fo = 0.8956.
+    - 12.32% olivine added, melt Fo = 0.8957.
+    - 12.36% olivine added, melt Fo = 0.8958.
+    - 12.40% olivine added, melt Fo = 0.8959.
+    - 12.43% olivine added, melt Fo = 0.8960.
+    - 12.47% olivine added, melt Fo = 0.8961.
+    - 12.51% olivine added, melt Fo = 0.8963.
+    - 12.55% olivine added, melt Fo = 0.8964.
+    - 12.59% olivine added, melt Fo = 0.8965.
+    - 12.63% olivine added, melt Fo = 0.8966.
+    - 12.66% olivine added, melt Fo = 0.8967.
+    - 12.70% olivine added, melt Fo = 0.8968.
+    - 12.74% olivine added, melt Fo = 0.8969.
+    - 12.78% olivine added, melt Fo = 0.8970.
+    - 12.82% olivine added, melt Fo = 0.8972.
+    - 12.85% olivine added, melt Fo = 0.8973.
+    - 12.89% olivine added, melt Fo = 0.8974.
+    - 12.93% olivine added, melt Fo = 0.8975.
+    - 12.97% olivine added, melt Fo = 0.8976.
+    - 13.01% olivine added, melt Fo = 0.8977.
+    - 13.04% olivine added, melt Fo = 0.8978.
+    - 13.08% olivine added, melt Fo = 0.8979.
+    - 13.12% olivine added, melt Fo = 0.8981.
+    - 13.16% olivine added, melt Fo = 0.8982.
+    - 13.19% olivine added, melt Fo = 0.8983.
+    - 13.23% olivine added, melt Fo = 0.8984.
+    - 13.27% olivine added, melt Fo = 0.8985.
+    - 13.31% olivine added, melt Fo = 0.8986.
+    - 13.34% olivine added, melt Fo = 0.8987.
+    - 13.38% olivine added, melt Fo = 0.8988.
+    - 13.42% olivine added, melt Fo = 0.8989.
+    - 13.46% olivine added, melt Fo = 0.8990.
+    - 13.49% olivine added, melt Fo = 0.8992.
+    - 13.53% olivine added, melt Fo = 0.8993.
+    - 13.57% olivine added, melt Fo = 0.8994.
+    - 13.61% olivine added, melt Fo = 0.8995.
+    - 13.64% olivine added, melt Fo = 0.8996.
+    - 13.68% olivine added, melt Fo = 0.8997.
+    - 13.72% olivine added, melt Fo = 0.8998.
+</pre></div></div>
+</div>
+<p>As you can see, the sample started with a Forsterite number of c. 0.85. The program then added olivine in equilibrium with the melt, until, after adding c. 14% olivine, it reached a Forsterite number of 90%, which we assumed for the mantle source.</p>
+<p>You have now created a new dataframe within the suite class containing the sample’s primary composition:</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[5]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="n">s</span><span class="o">.</span><span class="n">primary</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+   Al2O3_primary_wt  CO2_primary_wt  CaO_primary_wt  CoO_primary_wt  \
+0          13.04399             0.0        7.381808             0.0
+
+   Cr2O3_primary_wt  Fe2O3_primary_wt  FeO_primary_wt  H2O_primary_wt  \
+0          0.026213          1.787802        9.582235        1.174379
+
+   K2O_primary_wt  MgO_primary_wt  MnO_primary_wt  Na2O_primary_wt  \
+0        0.939503       14.481565        0.150992         2.885616
+
+   NiO_primary_wt  P2O5_primary_wt  SiO2_primary_wt  TiO2_primary_wt  ol_added
+0        0.018064         0.331319        46.611103         1.585411  0.137187
+</pre></div></div>
+</div>
+</section>
+<section id="Compute-pressures-&amp;-temperatures">
+<h2>Compute pressures &amp; temperatures<a class="headerlink" href="#Compute-pressures-&-temperatures" title="Permalink to this headline">¶</a></h2>
+<p>Now we can calculate pressures and temperatures at which the sample was last in equilibrium with the mantle. Use Suite’s compute_pressure_temperature method:</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[6]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">s</span><span class="o">.</span><span class="n">compute_pressure_temperature</span><span class="p">(</span><span class="n">method</span><span class="o">=</span><span class="s2">&quot;PF16&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<p>The results are stored in a new dataframe:</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[7]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="n">s</span><span class="o">.</span><span class="n">PT</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+          P  P_err            T  T_err
+0  2.069814   0.24  1370.081696   39.0
+</pre></div></div>
+</div>
+<p>The calculated pressure of 2.07 GPa and temperature of 1370 oC are the same as those from Plank &amp; Forsyth (2016, their Table S8), which is good!</p>
+</section>
+<section id="Fit-a-melting-path">
+<h2>Fit a melting path<a class="headerlink" href="#Fit-a-melting-path" title="Permalink to this headline">¶</a></h2>
+<p>Next we would like to link our estimate equilibration pressure and temperature to a model geotherm. In meltPT, we make use of the pyMelt package to compute adiabatic decompression melting paths. For this example we use pyMelt’s implientation of Katz et al.’s (2003) lherzolite melting model to set up the mantle object.</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[8]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">lz</span> <span class="o">=</span> <span class="n">m</span><span class="o">.</span><span class="n">lithologies</span><span class="o">.</span><span class="n">katz</span><span class="o">.</span><span class="n">lherzolite</span><span class="p">()</span>
+<span class="n">mantle</span> <span class="o">=</span> <span class="n">m</span><span class="o">.</span><span class="n">mantle</span><span class="p">([</span><span class="n">lz</span><span class="p">],</span> <span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="p">[</span><span class="s1">&#39;Lz&#39;</span><span class="p">])</span>
+</pre></div>
+</div>
+</div>
+<p>We can now pass our mantle object to Suite’s find_individual_potential_temperatures method. This will take a few seconds!</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[9]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">s</span><span class="o">.</span><span class="n">find_individual_potential_temperatures</span><span class="p">(</span><span class="n">mantle</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<p>This will create a new dataframe, called individual_potential_temperatures which contains information about the result and a copy of the best-fitting pyMelt path object:</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[10]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="n">s</span><span class="o">.</span><span class="n">individual_potential_temperatures</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+          F         P            T           Tp    misfit  \
+0  0.035586  2.069811  1370.081749  1346.617603  0.000011
+
+                                                path
+0  &lt;pyMelt.meltingcolumn_classes.meltingColumn ob...
+</pre></div></div>
+</div>
+</section>
+<section id="Plotting">
+<h2>Plotting<a class="headerlink" href="#Plotting" title="Permalink to this headline">¶</a></h2>
+<p>Now let’s make a nice plot of our result!</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[13]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Initialise</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span><span class="mi">6</span><span class="p">))</span>
+
+<span class="c1"># Set up pressure array.</span>
+<span class="n">P</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mf">1.</span><span class="p">,</span> <span class="mf">3.</span><span class="p">,</span> <span class="mf">0.01</span><span class="p">)</span>
+
+<span class="c1"># Plot the solidus.</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">lz</span><span class="o">.</span><span class="n">TSolidus</span><span class="p">(</span><span class="n">P</span><span class="p">),</span> <span class="n">P</span><span class="p">,</span> <span class="n">c</span><span class="o">=</span><span class="s2">&quot;0.75&quot;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;Solidus&quot;</span><span class="p">)</span>
+
+<span class="c1"># Plot an adiabat corresponding to the best-fitting potential temperature</span>
+<span class="n">adiabat_label</span> <span class="o">=</span> <span class="sa">r</span><span class="s2">&quot;Adiabat: $T_p$ = </span><span class="si">%i</span><span class="s2"> $^{\circ}$C&quot;</span> <span class="o">%</span> <span class="n">s</span><span class="o">.</span><span class="n">individual_potential_temperatures</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="s1">&#39;Tp&#39;</span><span class="p">]</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span>
+    <span class="n">mantle</span><span class="o">.</span><span class="n">adiabat</span><span class="p">(</span>
+        <span class="n">P</span><span class="p">,</span>
+        <span class="n">s</span><span class="o">.</span><span class="n">individual_potential_temperatures</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="s1">&#39;Tp&#39;</span><span class="p">]),</span>
+    <span class="n">P</span><span class="p">,</span> <span class="s2">&quot;:&quot;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="n">adiabat_label</span><span class="p">)</span>
+
+<span class="c1"># Plot melt path corresponding to best-fitting potential temperature</span>
+<span class="n">melt_label</span> <span class="o">=</span> <span class="sa">r</span><span class="s2">&quot;Melting path: $T_p$ = </span><span class="si">%i</span><span class="s2"> $^{\circ}$C&quot;</span> <span class="o">%</span> <span class="n">s</span><span class="o">.</span><span class="n">individual_potential_temperatures</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="s1">&#39;Tp&#39;</span><span class="p">]</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span>
+    <span class="n">s</span><span class="o">.</span><span class="n">individual_potential_temperatures</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">T</span><span class="p">,</span>
+    <span class="n">s</span><span class="o">.</span><span class="n">individual_potential_temperatures</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">P</span><span class="p">,</span>
+    <span class="n">label</span><span class="o">=</span><span class="n">melt_label</span><span class="p">)</span>
+
+<span class="c1"># Plot our sample!</span>
+<span class="n">sample_label</span> <span class="o">=</span> <span class="sa">r</span><span class="s2">&quot;UT09DV04, $F$ = </span><span class="si">%.2f%%</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">s</span><span class="o">.</span><span class="n">individual_potential_temperatures</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="s1">&#39;F&#39;</span><span class="p">]</span><span class="o">*</span><span class="mf">100.</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">s</span><span class="o">.</span><span class="n">PT</span><span class="p">[</span><span class="s1">&#39;T&#39;</span><span class="p">],</span> <span class="n">s</span><span class="o">.</span><span class="n">PT</span><span class="p">[</span><span class="s1">&#39;P&#39;</span><span class="p">],</span> <span class="s2">&quot;o&quot;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="n">sample_label</span><span class="p">)</span>
+
+<span class="c1"># Do some formatting and reveal</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;Temperature [$^{\circ}$C]&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;Pressure [GPa]&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlim</span><span class="p">(</span><span class="mf">1300.</span><span class="p">,</span> <span class="mf">1440.</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylim</span><span class="p">(</span><span class="mf">1.</span><span class="p">,</span> <span class="mf">3.</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">gca</span><span class="p">()</span><span class="o">.</span><span class="n">invert_yaxis</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="_images/Tutorial_1_23_0.png" src="_images/Tutorial_1_23_0.png" />
+</div>
+</div>
+</section>
+</section>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="index.html">meltPT</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="about.html">About</a></li>
+<li class="toctree-l1"><a class="reference internal" href="getstarted.html">Getting Started</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Tutorial 1: First steps</a></li>
+<li class="toctree-l1"><a class="reference internal" href="codedoc.html">Code Documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="license.html">License</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="index.html">Documentation overview</a><ul>
+      <li>Previous: <a href="getstarted.html" title="previous chapter">Getting Started</a></li>
+      <li>Next: <a href="codedoc.html" title="next chapter">Code Documentation</a></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2022, F. McNab & P.W. Ball.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 4.4.0</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
+      
+      |
+      <a href="_sources/Tutorial_1.ipynb.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

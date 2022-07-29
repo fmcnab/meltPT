@@ -7,12 +7,12 @@ Welcome to meltPT's documentation!
 ==================================
 
 .. toctree::
-   :maxdepth: 2
+   :maxdepth: 1
    :caption: Contents:
 
    about
    getstarted
-   Tutorial
+   Tutorial_1
    codedoc
    license
 

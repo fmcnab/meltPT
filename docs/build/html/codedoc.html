@@ -18,7 +18,6 @@
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
     <link rel="next" title="License" href="license.html" />
-    <link rel="prev" title="This is a tutorial" href="Tutorial.html" />
    
   <link rel="stylesheet" href="_static/custom.css" type="text/css" />
   
@@ -195,9 +194,274 @@ in mole percent.</p>
 </dl>
 </dd></dl>
 
-<span class="target" id="module-meltPT.thermobarometry"></span><span class="target" id="module-meltPT.fit_melting_paths"></span><dl class="py function">
+<span class="target" id="module-meltPT.thermobarometry"></span><dl class="py function">
+<dt class="sig sig-object py" id="meltPT.thermobarometry.Mg_num">
+<span class="sig-prename descclassname"><span class="pre">meltPT.thermobarometry.</span></span><span class="sig-name descname"><span class="pre">Mg_num</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">df</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#meltPT.thermobarometry.Mg_num" title="Permalink to this definition">¶</a></dt>
+<dd><p>Calculate Mg#</p>
+<dl class="simple">
+<dt>df<span class="classifier">pandas dataframe </span></dt><dd><p>sample compositions in anhydrous mol%.</p>
+</dd>
+</dl>
+<p>Mg#</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="meltPT.thermobarometry.NaK_num">
+<span class="sig-prename descclassname"><span class="pre">meltPT.thermobarometry.</span></span><span class="sig-name descname"><span class="pre">NaK_num</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">df</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#meltPT.thermobarometry.NaK_num" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="simple">
+<dt>Calculate NaK#</dt><dd><p>Must previously run compute_components_species(),
+compute_components_cation(), compute_components_compound()
+or compute components_per_ox().</p>
+</dd>
+</dl>
+<p>df : pandas dataframe with sample compositions in anhydrous mole%</p>
+<p>NaK# : float</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="meltPT.thermobarometry.compute_components_cation">
+<span class="sig-prename descclassname"><span class="pre">meltPT.thermobarometry.</span></span><span class="sig-name descname"><span class="pre">compute_components_cation</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">df</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#meltPT.thermobarometry.compute_components_cation" title="Permalink to this definition">¶</a></dt>
+<dd><p>Calculate proportions of cations in mol% assuming the sample is anhydrous.</p>
+<dl class="simple">
+<dt>df<span class="classifier">pandas dataframe</span></dt><dd><p>The sample compositions in wt%.
+Should contain only one row. To use with a multi-row dataframe use
+df.apply().</p>
+</dd>
+</dl>
+<dl class="simple">
+<dt>df<span class="classifier">pandas dataframe</span></dt><dd><p>with additional columns of anhydrous wt% with suffix ‘_primary_wt_dry’
+cation mol% with suffix ‘_primary_mol’
+and anhydrous cation mol% with suffix ‘_primary_mol_dry’.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="meltPT.thermobarometry.compute_components_compound">
+<span class="sig-prename descclassname"><span class="pre">meltPT.thermobarometry.</span></span><span class="sig-name descname"><span class="pre">compute_components_compound</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">df</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#meltPT.thermobarometry.compute_components_compound" title="Permalink to this definition">¶</a></dt>
+<dd><p>Calculate proportions of oxides in mol% assuming all Fe is in FeO
+and the sample is anhydrous.</p>
+<dl class="simple">
+<dt>df<span class="classifier">pandas dataframe</span></dt><dd><p>The sample compositions in wt%.
+Should contain only one row. To use with a multi-row dataframe use
+df.apply().</p>
+</dd>
+</dl>
+<dl class="simple">
+<dt>df<span class="classifier">pandas dataframe</span></dt><dd><p>with additional columns of anhydrous wt% with suffix ‘_primary_wt_dry’
+and anhydrous oxide mol% with suffix ‘_primary_mol_dry’.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="meltPT.thermobarometry.compute_components_per_oxygen">
+<span class="sig-prename descclassname"><span class="pre">meltPT.thermobarometry.</span></span><span class="sig-name descname"><span class="pre">compute_components_per_oxygen</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">df</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#meltPT.thermobarometry.compute_components_per_oxygen" title="Permalink to this definition">¶</a></dt>
+<dd><p>Calculate proportions of oxides in mol% assuming all Fe is in FeO
+and the sample is anhydrous.
+Normalise to each to one oxygen per compound.</p>
+<dl class="simple">
+<dt>df<span class="classifier">pandas dataframe</span></dt><dd><p>The sample compositions in wt%.
+Should contain only one row. To use with a multi-row dataframe use
+df.apply().</p>
+</dd>
+</dl>
+<dl class="simple">
+<dt>df<span class="classifier">pandas dataframe</span></dt><dd><p>with additional columns of anhydrous wt% with suffix ‘_primary_wt_dry’
+volatile free oxide mol content per unit oxygen with suffix
+‘_primary_mol_dry’.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="meltPT.thermobarometry.compute_components_species">
+<span class="sig-prename descclassname"><span class="pre">meltPT.thermobarometry.</span></span><span class="sig-name descname"><span class="pre">compute_components_species</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">df</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#meltPT.thermobarometry.compute_components_species" title="Permalink to this definition">¶</a></dt>
+<dd><p>Calculate species proportions using equations
+listed in Appendix A of Lee et al (2009) G-cubed</p>
+<dl class="simple">
+<dt>df<span class="classifier">pandas dataframe</span></dt><dd><p>The sample compositions in wt%.
+Should contain only one row. To use with a multi-row dataframe use
+df.apply().</p>
+</dd>
+</dl>
+<dl class="simple">
+<dt>df<span class="classifier">pandas dataframe</span></dt><dd><p>with additional columns of anhydrous wt% with suffix ‘_primary_wt_dry’
+oxide mol% with suffix ‘_primary_mol’
+species proportions in mol%, e.g., ‘Si4O8’
+anhydrous species proportions in mol%, e.g., ‘Si4O8_dry’.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="meltPT.thermobarometry.compute_minerals">
+<span class="sig-prename descclassname"><span class="pre">meltPT.thermobarometry.</span></span><span class="sig-name descname"><span class="pre">compute_minerals</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">df</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#meltPT.thermobarometry.compute_minerals" title="Permalink to this definition">¶</a></dt>
+<dd><p>Calculate mineral components using equations
+listed in Grove (1982) Contrib Mineral Petrol 80:160-182</p>
+<dl class="simple">
+<dt>df<span class="classifier">pandas dataframe </span></dt><dd><p>sample compositions need suffix ‘_primary_mol_dry’
+must be in mol% anhydrous.
+Should contain only one row. To use with a multi-row dataframe use
+df.apply().</p>
+</dd>
+</dl>
+<dl class="simple">
+<dt>MINS: array</dt><dd><p>predicted proportions of minerals.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="meltPT.thermobarometry.compute_parameter_BK21">
+<span class="sig-prename descclassname"><span class="pre">meltPT.thermobarometry.</span></span><span class="sig-name descname"><span class="pre">compute_parameter_BK21</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">df</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">OL</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">P</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">regression_params</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#meltPT.thermobarometry.compute_parameter_BK21" title="Permalink to this definition">¶</a></dt>
+<dd><p>Calculate parameter values using equation
+of Brown Krein et al., (2021)</p>
+<dl class="simple">
+<dt>df<span class="classifier">pandas dataframe</span></dt><dd><p>sample compositions in anhydrous wt% need suffix ‘_primary_wt_dry’
+sample compositions in anhydrous mol% need suffix ‘_primary_mol_dry’.
+Should contain only one row. To use with a multi-row dataframe use
+df.apply().</p>
+</dd>
+</dl>
+<p>OL : Olivine concentration.
+P: Pressure in GPa.
+regression_params: one row array of 8 calibrated prameter values.</p>
+<dl class="simple">
+<dt>result: float</dt><dd><p>either T or predicted mineral percentages.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="meltPT.thermobarometry.compute_parameter_TGK12">
+<span class="sig-prename descclassname"><span class="pre">meltPT.thermobarometry.</span></span><span class="sig-name descname"><span class="pre">compute_parameter_TGK12</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">df</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">MINS</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">P</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">regression_params</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#meltPT.thermobarometry.compute_parameter_TGK12" title="Permalink to this definition">¶</a></dt>
+<dd><p>Calculate parameter values using equation
+of Till et al., (2012)</p>
+<dl class="simple">
+<dt>df<span class="classifier">pandas dataframe</span></dt><dd><p>sample compositions in anhydrous wt% need suffix ‘_primary_wt_dry’
+sample compositions in anhydrous mol% need suffix ‘_primary_mol_dry’.
+Should contain only one row. To use with a multi-row dataframe use
+df.apply().</p>
+</dd>
+<dt>MINS<span class="classifier">array</span></dt><dd><p>Concentrations of each mineral.</p>
+</dd>
+<dt>P: float</dt><dd><p>Pressure in GPa.</p>
+</dd>
+<dt>regression_params: array</dt><dd><p>one row array of 8 calibrated prameter values.</p>
+</dd>
+</dl>
+<dl class="simple">
+<dt>result: float</dt><dd><p>either T or predicted mineral percentages</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="meltPT.thermobarometry.compute_sample_pressure">
+<span class="sig-prename descclassname"><span class="pre">meltPT.thermobarometry.</span></span><span class="sig-name descname"><span class="pre">compute_sample_pressure</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">df</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">method</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'PF16'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">T</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1300.0</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#meltPT.thermobarometry.compute_sample_pressure" title="Permalink to this definition">¶</a></dt>
+<dd><p>Calculate temperate of melt equilibration</p>
+<dl class="simple">
+<dt>df<span class="classifier">pandas dataframe.</span></dt><dd><p>Dataframe containing the sample primary composition.
+Should contain only one row. To use with a multi-row dataframe use
+df.apply().</p>
+</dd>
+<dt>method: sring</dt><dd><p>choice of thermobaric method
+PF16 = Plank &amp; Forsyth (2016), G3
+L09 = Lee et al., (2009), G3
+P08 = Putirka (2008) Eq 42.</p>
+</dd>
+<dt>T<span class="classifier">float</span></dt><dd><p>Temperature in oC</p>
+</dd>
+</dl>
+<dl class="simple">
+<dt>PT<span class="classifier">pandas dataframe</span></dt><dd><p>The calculated temperature(s) in oC,
+assumed pressures in GPa and associated errors.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="meltPT.thermobarometry.compute_sample_pressure_temperature">
+<span class="sig-prename descclassname"><span class="pre">meltPT.thermobarometry.</span></span><span class="sig-name descname"><span class="pre">compute_sample_pressure_temperature</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">df</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">method</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'PF16'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#meltPT.thermobarometry.compute_sample_pressure_temperature" title="Permalink to this definition">¶</a></dt>
+<dd><p>Calculate temperate and pressure of melt equilibration</p>
+<dl class="simple">
+<dt>df<span class="classifier">pandas dataframe.</span></dt><dd><p>Dataframe containing the sample primary composition.
+Should contain only one row. To use with a multi-row dataframe use
+df.apply().</p>
+</dd>
+<dt>method: string</dt><dd><p>choice of thermobaric method
+PF16 = Plank &amp; Forsyth (2016), G3
+L09 = Lee et al., (2009), G3
+TGK12_PLG = Till et al., (2012) in plagioclase stability field.
+TGK12_SPL = Till et al., (2012) in spinel stability field.
+G13 = Grove et al., (2013) in garnet stability field.
+BK21_PLG = Brown Krein et al., (2021) in plagioclase stability field.
+BK21_SPL = Brown Krein et al., (2021) in spinel stability field.
+BK21_GNT = Brown Krein et al., (2021) in garnet stability field.
+BK21 = Brown Krein et al., (2021)
+P07_P08 = Putirka et al., (2007) Eq 4. and Putirka (2008) combined.
+SD20 = Sun &amp; Dasgupta (2020), EPSL low SiO2 thermobarometer.</p>
+</dd>
+</dl>
+<dl class="simple">
+<dt>PT<span class="classifier">dict</span></dt><dd><p>The calculated temperature(s) in oC,
+pressures in GPa, and associated errors.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="meltPT.thermobarometry.compute_sample_temperature">
+<span class="sig-prename descclassname"><span class="pre">meltPT.thermobarometry.</span></span><span class="sig-name descname"><span class="pre">compute_sample_temperature</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">df</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">method</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'HA15'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">P</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1.0</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#meltPT.thermobarometry.compute_sample_temperature" title="Permalink to this definition">¶</a></dt>
+<dd><p>Calculate temperate of melt equilibration</p>
+<dl class="simple">
+<dt>df<span class="classifier">pandas dataframe.</span></dt><dd><p>Dataframe containing the sample primary composition.
+Should contain only one row. To use with a multi-row dataframe use
+df.apply().</p>
+</dd>
+<dt>method: sring</dt><dd><p>choice of thermobaric method
+HA15 = Herzberg &amp; Asimow (2015)
+P07_2 = Putirka et al., (2007) equation 2.
+P07_4 = Putirka et al., (2007) equation 4.
+TGK12_PLG = Till et al., (2012) in plagioclase stability field.
+TGK12_SPL = Till et al., (2012) in spinel stability field.        
+G13 = Grove et al., (2013) in garnet stability field.  
+BK21_PLG = Brown Krein et al., (2021) in plagioclase stability field.
+BK21_SPL = Brown Krein et al., (2021) in spinel stability field.
+BK21_GNT = Brown Krein et al., (2021) in garnet stability field.
+BK21 = Brown Krein et al., (2021).
+SD20 = Sun &amp; Dasgupta (2020), EPSL low SiO2 thermobarometer.</p>
+</dd>
+<dt>P<span class="classifier">float</span></dt><dd><p>pressure in GPa</p>
+</dd>
+</dl>
+<dl class="simple">
+<dt>PT<span class="classifier">pandas dataframe</span></dt><dd><p>The calculated temperature(s) in oC,
+assumed pressures in GPa and associated errors.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="meltPT.thermobarometry.normalize_v2">
+<span class="sig-prename descclassname"><span class="pre">meltPT.thermobarometry.</span></span><span class="sig-name descname"><span class="pre">normalize_v2</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">df</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">list_parameters</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">input_suffix</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output_suffix</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">end_sum</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#meltPT.thermobarometry.normalize_v2" title="Permalink to this definition">¶</a></dt>
+<dd><p>Normalize amounts in list_parameters to end_sum value
+New values assigned to df with list_parameter name appended
+by output_suffix.</p>
+<p>df : pandas datframe.
+Should contain only one row. To use with a multi-row dataframe use
+df.apply().
+list_parameters : list of columns in dataframe.
+input_suffix : original suffix for columns to use.
+output_suffix : add suffix to make a new column name.
+end_sum : amount to sum to.</p>
+<p>df : pandas datframe.</p>
+</dd></dl>
+
+<span class="target" id="module-meltPT.fit_melting_paths"></span><dl class="py function">
 <dt class="sig sig-object py" id="meltPT.fit_melting_paths.compute_sample_melt_fraction_misfit">
-<span class="sig-prename descclassname"><span class="pre">meltPT.fit_melting_paths.</span></span><span class="sig-name descname"><span class="pre">compute_sample_melt_fraction_misfit</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">F</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">df</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">P_err</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.24</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">T_err</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">39.0</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#meltPT.fit_melting_paths.compute_sample_melt_fraction_misfit" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">meltPT.fit_melting_paths.</span></span><span class="sig-name descname"><span class="pre">compute_sample_melt_fraction_misfit</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">F</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">df</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">path</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#meltPT.fit_melting_paths.compute_sample_melt_fraction_misfit" title="Permalink to this definition">¶</a></dt>
 <dd><p>Compute misfit between sample and point along given melting path,
 specified by melt path.</p>
 <dl class="simple">
@@ -210,9 +474,11 @@ point.</p>
 Can be instance of any class containing arrays of melt fraction (F),
 pressure (P) and temperature (T).</p>
 </dd>
-<dt>P_err<span class="classifier">float, optional</span></dt><dd><p>Uncertainty in pressure observation(s).</p>
+<dt>P_err<span class="classifier">float, optional</span></dt><dd><p>Uncertainty in pressure observation(s). If NaN, P_err is assumed to 
+be 10% of P.</p>
 </dd>
-<dt>T_err<span class="classifier">float, optional</span></dt><dd><p>Uncertainty in temperature observation(s).</p>
+<dt>T_err<span class="classifier">float, optional</span></dt><dd><p>Uncertainty in temperature observation(s). If NaN, T_err is assumed to 
+be 10% of T.</p>
 </dd>
 </dl>
 <dl class="simple">
@@ -417,7 +683,7 @@ pressure (P) and temperature (T).</p>
 
 <span class="target" id="module-meltPT.suite"></span><dl class="py class">
 <dt class="sig sig-object py" id="meltPT.suite.Suite">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">meltPT.suite.</span></span><span class="sig-name descname"><span class="pre">Suite</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input_csv</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">Ce_to_H2O</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">200.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">src_FeIII_totFe</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.19</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">min_SiO2</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">min_MgO</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#meltPT.suite.Suite" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">meltPT.suite.</span></span><span class="sig-name descname"><span class="pre">Suite</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input_csv</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">Ce_to_H2O</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">src_FeIII_totFe</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">min_SiO2</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">min_MgO</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">read_as_primary</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">param_co2</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">read_PT</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#meltPT.suite.Suite" title="Permalink to this definition">¶</a></dt>
 <dd><p>Store and process compositions of basaltic rocks.</p>
 <p>Includes methods to find primary compositions (i.e. correcting for the
 crystallisation of olivine; Lee et al., 2009, EPSL), compute equilibration
@@ -426,18 +692,28 @@ melting paths to those pressure-temperature estimates.</p>
 <dl class="simple">
 <dt>input_csv<span class="classifier">str</span></dt><dd><p>Path to a csv containing data to be read.</p>
 </dd>
+<dt>Ce_to_H2O<span class="classifier">float</span></dt><dd><p>Ratio of Ce to H2O in mantle source.</p>
+</dd>
 <dt>src_FeIII_totFe<span class="classifier">float</span></dt><dd><p>Ratio of Fe3+ to total Fe in the mantle source.</p>
 </dd>
 <dt>min_SiO2<span class="classifier">float, optional</span></dt><dd><p>Minimum amount of SiO2 in sample to be accepted.</p>
 </dd>
 <dt>min_MgO<span class="classifier">float, optional</span></dt><dd><p>Minimum amound of MgO in sample to be accepted.</p>
 </dd>
+<dt>read_as_primary<span class="classifier">bool</span></dt><dd><p>If true, data from input_csv is assumed to be primary
+and backtracking is avoided.</p>
+</dd>
+<dt>param_co2<span class="classifier">bool</span></dt><dd><p>If true, CO2 is calculated from SiO2 concentration.</p>
+</dd>
+<dt>read_PT<span class="classifier">bool</span></dt><dd><p>If true, pressures and temperatures are not calculated.</p>
+</dd>
 </dl>
 <dl class="simple">
 <dt>data<span class="classifier">pandas dataframe</span></dt><dd><p>The raw data from the provided csv.</p>
 </dd>
-<dt>primary<span class="classifier">pandas dataframe or NoneType</span></dt><dd><p>If backtrack_compositions has been run, will contain the estimated
-primary compositions in various forms.</p>
+<dt>primary<span class="classifier">pandas dataframe or NoneType</span></dt><dd><p>If backtrack_compositions has been run, or read_as_primary is set 
+to true, will contain the estimated primary compositions in 
+various forms.</p>
 </dd>
 <dt>PT<span class="classifier">pandas dataframe or NoneType</span></dt><dd><p>If compute_pressure_temperature has been run, will contain the
 esimated equilibration pressures and temperatures.</p>
@@ -482,6 +758,12 @@ will be the lower-bounding melting path.</p>
 <dt>backtrack_compositions :</dt><dd><p>Backtrack compositions for entire suite.</p>
 </dd>
 <dt>compute_pressure_temperature :</dt><dd><p>Compute equilibration pressures and temperatures for entire suite.</p>
+</dd>
+<dt>compute_temperature :</dt><dd><p>Compute equilibration temperatures for entire suite assuming a
+given pressure.</p>
+</dd>
+<dt>compute_pressure :</dt><dd><p>Compute equilibration pressures for entire suite assuming a given
+temperature.</p>
 </dd>
 <dt>check_samples_for_fitting :</dt><dd><p>Determine which samples should be fitted.</p>
 </dd>
@@ -542,10 +824,26 @@ dataframe and returns either true or force.</p>
 </dd></dl>
 
 <dl class="py method">
+<dt class="sig sig-object py" id="meltPT.suite.Suite.compute_pressure">
+<span class="sig-name descname"><span class="pre">compute_pressure</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">method</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'PF16'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">T</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1300.0</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#meltPT.suite.Suite.compute_pressure" title="Permalink to this definition">¶</a></dt>
+<dd><p>Compute equilibration pressures for entire suite at given temperature.</p>
+<p>Applies “compute_sample_pressure” to the “primary”
+property. Result is saved in the “PT” property.</p>
+</dd></dl>
+
+<dl class="py method">
 <dt class="sig sig-object py" id="meltPT.suite.Suite.compute_pressure_temperature">
-<span class="sig-name descname"><span class="pre">compute_pressure_temperature</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">thermobar</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'PF16'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#meltPT.suite.Suite.compute_pressure_temperature" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">compute_pressure_temperature</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">method</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'PF16'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#meltPT.suite.Suite.compute_pressure_temperature" title="Permalink to this definition">¶</a></dt>
 <dd><p>Compute equilibration pressures and temperatures for entire suite.</p>
 <p>Applies “compute_sample_pressure_temperature” to the “primary”
+property. Result is saved in the “PT” property.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="meltPT.suite.Suite.compute_temperature">
+<span class="sig-name descname"><span class="pre">compute_temperature</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">method</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'PF16'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">P</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1.0</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#meltPT.suite.Suite.compute_temperature" title="Permalink to this definition">¶</a></dt>
+<dd><p>Compute equilibration temperatures for entire suite at given pressure.</p>
+<p>Applies “compute_sample_temperature” to the “primary”
 property. Result is saved in the “PT” property.</p>
 </dd></dl>
 
@@ -650,7 +948,7 @@ fitting melting path for each sample.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="meltPT.suite.Suite.write_to_csv">
-<span class="sig-name descname"><span class="pre">write_to_csv</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">outfile</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">write_primary</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">write_primary_extended</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">write_PT</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">write_suite_Tp</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">write_individual_Tp</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#meltPT.suite.Suite.write_to_csv" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">write_to_csv</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">outfile</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">write_primary</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">write_PT</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">write_suite_Tp</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">write_individual_Tp</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#meltPT.suite.Suite.write_to_csv" title="Permalink to this definition">¶</a></dt>
 <dd><p>Write results to csv.</p>
 </dd></dl>
 
@@ -680,7 +978,6 @@ fitting melting path for each sample.</p>
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="about.html">About</a></li>
 <li class="toctree-l1"><a class="reference internal" href="getstarted.html">Getting Started</a></li>
-<li class="toctree-l1"><a class="reference internal" href="Tutorial.html">This is a tutorial</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Code Documentation</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#module-meltPT">Modules</a></li>
 </ul>
@@ -692,7 +989,6 @@ fitting melting path for each sample.</p>
 <h3>Related Topics</h3>
 <ul>
   <li><a href="index.html">Documentation overview</a><ul>
-      <li>Previous: <a href="Tutorial.html" title="previous chapter">This is a tutorial</a></li>
       <li>Next: <a href="license.html" title="next chapter">License</a></li>
   </ul></li>
 </ul>
