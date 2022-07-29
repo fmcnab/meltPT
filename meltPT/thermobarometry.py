@@ -1273,7 +1273,7 @@ class HA15:
     def __init__(self, df):
         self.df = df
         self.P_err = np.nan
-        self.T_err = np.nan
+        self.T_err = 31.
     
     def compute_temperature(self, P):
         """
