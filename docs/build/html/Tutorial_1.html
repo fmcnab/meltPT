@@ -1,42 +1,87 @@
-
 <!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
-<html>
-  <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
-
-    <title>Tutorial 1: First steps &#8212; meltPT 0.0.1 documentation</title>
-    <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
-    <link rel="stylesheet" type="text/css" href="_static/alabaster.css" />
-    <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
-    <script src="_static/jquery.js"></script>
-    <script src="_static/underscore.js"></script>
-    <script src="_static/doctools.js"></script>
-    <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
-    <script>window.MathJax = {"tex": {"inlineMath": [["$", "$"], ["\\(", "\\)"]], "processEscapes": true}, "options": {"ignoreHtmlClass": "tex2jax_ignore|mathjax_ignore|document", "processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
-    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Tutorial 1: First steps &mdash; meltPT 0.0.1 documentation</title>
+      <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/doctools.js"></script>
+        <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+        <script>window.MathJax = {"tex": {"inlineMath": [["$", "$"], ["\\(", "\\)"]], "processEscapes": true}, "options": {"ignoreHtmlClass": "tex2jax_ignore|mathjax_ignore|document", "processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+        <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script src="_static/js/theme.js"></script>
     <link rel="author" title="About these documents" href="about.html" />
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
     <link rel="next" title="Code Documentation" href="codedoc.html" />
-    <link rel="prev" title="Getting Started" href="getstarted.html" />
-   
-  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
-  
-  
-  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+    <link rel="prev" title="Getting Started" href="getstarted.html" /> 
+</head>
 
-  </head><body>
-  
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="index.html" class="icon icon-home"> meltPT
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="about.html">About</a></li>
+<li class="toctree-l1"><a class="reference internal" href="getstarted.html">Getting Started</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Tutorial 1: First steps</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#Importing-libraries">Importing libraries</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#Reading-data-and-initialising-the-Suite-object">Reading data and initialising the Suite object</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#Backtrack-compositions">Backtrack compositions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#Compute-pressures-&amp;-temperatures">Compute pressures &amp; temperatures</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#Fit-a-melting-path">Fit a melting path</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#Plotting">Plotting</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="codedoc.html">Code Documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="license.html">License</a></li>
+</ul>
 
-    <div class="document">
-      <div class="documentwrapper">
-        <div class="bodywrapper">
-          
+        </div>
+      </div>
+    </nav>
 
-          <div class="body" role="main">
-            
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">meltPT</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home"></a> &raquo;</li>
+      <li>Tutorial 1: First steps</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/Tutorial_1.ipynb.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
   
 <style>
 /* CSS for nbsphinx extension */
@@ -284,26 +329,49 @@ div.rendered_html tbody tr:nth-child(odd) {
 div.rendered_html tbody tr:hover {
   background: rgba(66, 165, 245, 0.2);
 }
+
+/* CSS overrides for sphinx_rtd_theme */
+
+/* 24px margin */
+.nbinput.nblast.container,
+.nboutput.nblast.container {
+    margin-bottom: 19px;  /* padding has already 5px */
+}
+
+/* ... except between code cells! */
+.nblast.container + .nbinput.container {
+    margin-top: -19px;
+}
+
+.admonition > p:before {
+    margin-right: 4px;  /* make room for the exclamation icon */
+}
+
+/* Fix math alignment, see https://github.com/rtfd/sphinx_rtd_theme/pull/686 */
+.math {
+    text-align: unset;
+}
 </style>
 <section id="Tutorial-1:-First-steps">
-<h1>Tutorial 1: First steps<a class="headerlink" href="#Tutorial-1:-First-steps" title="Permalink to this headline">¶</a></h1>
+<h1>Tutorial 1: First steps<a class="headerlink" href="#Tutorial-1:-First-steps" title="Permalink to this headline"></a></h1>
 <p>Welcome to this tutorial.</p>
 <section id="Importing-libraries">
-<h2>Importing libraries<a class="headerlink" href="#Importing-libraries" title="Permalink to this headline">¶</a></h2>
+<h2>Importing libraries<a class="headerlink" href="#Importing-libraries" title="Permalink to this headline"></a></h2>
 <p>Let’s start by importing some libraries. If you have installed meltPT correctly, this should work!</p>
 <div class="nbinput nblast docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[1]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">meltPT</span> <span class="kn">import</span> <span class="o">*</span>
+<span class="kn">import</span> <span class="nn">pyMelt</span> <span class="k">as</span> <span class="nn">m</span>
 <span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
 </pre></div>
 </div>
 </div>
 </section>
 <section id="Reading-data-and-initialising-the-Suite-object">
-<h2>Reading data and initialising the Suite object<a class="headerlink" href="#Reading-data-and-initialising-the-Suite-object" title="Permalink to this headline">¶</a></h2>
-<p>Start by importing data from your csv. In this case our data are stored in a file called “PF16_UT09DV04”. To keep this example simple, the input infile contains a single sample, UT09DV04, from Plank &amp; Forsyth (2016).</p>
+<h2>Reading data and initialising the Suite object<a class="headerlink" href="#Reading-data-and-initialising-the-Suite-object" title="Permalink to this headline"></a></h2>
+<p>Start by importing data from your csv. In this case our data are stored in a file called “PF16_UT09DV04.csv”. To keep this example simple, the input infile contains a single sample, UT09DV04, from Plank &amp; Forsyth (2016).</p>
 <div class="nbinput nblast docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[2]:
 </pre></div>
@@ -340,7 +408,7 @@ div.rendered_html tbody tr:hover {
 </div>
 </section>
 <section id="Backtrack-compositions">
-<h2>Backtrack compositions<a class="headerlink" href="#Backtrack-compositions" title="Permalink to this headline">¶</a></h2>
+<h2>Backtrack compositions<a class="headerlink" href="#Backtrack-compositions" title="Permalink to this headline"></a></h2>
 <p>The next step is backtracking the sample’s composition. The aim here is to account for the effects of fractional crystallisation of olivine and estimate the sample’s “primary” composition: i.e., its composition when it last equilibrated with the mantle. To do so, use the Suite’s backtrack_compositions method. Here we have set the verbose flag to True, so program will print updates at each interation.</p>
 <div class="nbinput docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[4]:
@@ -706,7 +774,7 @@ Backtracking sample UT-09 DV04 to primary composition:
 </div>
 </section>
 <section id="Compute-pressures-&amp;-temperatures">
-<h2>Compute pressures &amp; temperatures<a class="headerlink" href="#Compute-pressures-&-temperatures" title="Permalink to this headline">¶</a></h2>
+<h2>Compute pressures &amp; temperatures<a class="headerlink" href="#Compute-pressures-&-temperatures" title="Permalink to this headline"></a></h2>
 <p>Now we can calculate pressures and temperatures at which the sample was last in equilibrium with the mantle. Use Suite’s compute_pressure_temperature method:</p>
 <div class="nbinput nblast docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[6]:
@@ -737,7 +805,7 @@ Backtracking sample UT-09 DV04 to primary composition:
 <p>The calculated pressure of 2.07 GPa and temperature of 1370 oC are the same as those from Plank &amp; Forsyth (2016, their Table S8), which is good!</p>
 </section>
 <section id="Fit-a-melting-path">
-<h2>Fit a melting path<a class="headerlink" href="#Fit-a-melting-path" title="Permalink to this headline">¶</a></h2>
+<h2>Fit a melting path<a class="headerlink" href="#Fit-a-melting-path" title="Permalink to this headline"></a></h2>
 <p>Next we would like to link our estimate equilibration pressure and temperature to a model geotherm. In meltPT, we make use of the pyMelt package to compute adiabatic decompression melting paths. For this example we use pyMelt’s implientation of Katz et al.’s (2003) lherzolite melting model to set up the mantle object.</p>
 <div class="nbinput nblast docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[8]:
@@ -780,7 +848,7 @@ Backtracking sample UT-09 DV04 to primary composition:
 </div>
 </section>
 <section id="Plotting">
-<h2>Plotting<a class="headerlink" href="#Plotting" title="Permalink to this headline">¶</a></h2>
+<h2>Plotting<a class="headerlink" href="#Plotting" title="Permalink to this headline"></a></h2>
 <p>Now let’s make a nice plot of our result!</p>
 <div class="nbinput docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[13]:
@@ -836,76 +904,34 @@ Backtracking sample UT-09 DV04 to primary composition:
 </section>
 
 
+           </div>
           </div>
-          
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="getstarted.html" class="btn btn-neutral float-left" title="Getting Started" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="codedoc.html" class="btn btn-neutral float-right" title="Code Documentation" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2022, F. McNab &amp; P.W. Ball.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
         </div>
       </div>
-      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
-        <div class="sphinxsidebarwrapper">
-<h1 class="logo"><a href="index.html">meltPT</a></h1>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
 
-
-
-
-
-
-
-
-<h3>Navigation</h3>
-<p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
-<ul class="current">
-<li class="toctree-l1"><a class="reference internal" href="about.html">About</a></li>
-<li class="toctree-l1"><a class="reference internal" href="getstarted.html">Getting Started</a></li>
-<li class="toctree-l1 current"><a class="current reference internal" href="#">Tutorial 1: First steps</a></li>
-<li class="toctree-l1"><a class="reference internal" href="codedoc.html">Code Documentation</a></li>
-<li class="toctree-l1"><a class="reference internal" href="license.html">License</a></li>
-</ul>
-
-<div class="relations">
-<h3>Related Topics</h3>
-<ul>
-  <li><a href="index.html">Documentation overview</a><ul>
-      <li>Previous: <a href="getstarted.html" title="previous chapter">Getting Started</a></li>
-      <li>Next: <a href="codedoc.html" title="next chapter">Code Documentation</a></li>
-  </ul></li>
-</ul>
-</div>
-<div id="searchbox" style="display: none" role="search">
-  <h3 id="searchlabel">Quick search</h3>
-    <div class="searchformwrapper">
-    <form class="search" action="search.html" method="get">
-      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
-      <input type="submit" value="Go" />
-    </form>
-    </div>
-</div>
-<script>$('#searchbox').show(0);</script>
-
-
-
-
-
-
-
-
-        </div>
-      </div>
-      <div class="clearer"></div>
-    </div>
-    <div class="footer">
-      &copy;2022, F. McNab & P.W. Ball.
-      
-      |
-      Powered by <a href="http://sphinx-doc.org/">Sphinx 4.4.0</a>
-      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
-      
-      |
-      <a href="_sources/Tutorial_1.ipynb.txt"
-          rel="nofollow">Page source</a>
-    </div>
-
-    
-
-    
-  </body>
+</body>
 </html>
