@@ -15,7 +15,9 @@ setup(
         'pyMelt',
         'sphinx',
         'pyyaml',
-        'sympy'
+        'sympy',
+        'nbsphinx',
+        'sphinx-rtd-theme'
     ],
     scripts=['meltPT/meltPT'],
 )
