@@ -13,7 +13,7 @@ setup(
         'scipy',
         'shapely',
         'pyMelt',
-        'sphinx',
+        'sphinx==4.4.0',
         'pyyaml',
         'sympy',
         'nbsphinx',
