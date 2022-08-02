@@ -3,7 +3,7 @@ import warnings
 import numpy as np
 import pandas as pd
 
-def parse_csv(infile, Ce_to_H2O=0., src_FeIII_totFe=0., min_SiO2=0., min_MgO=0., read_as_primary=False, param_co2=False):
+def parse_csv(infile, Ce_to_H2O=0., src_FeIII_totFe=0., min_MgO=0., read_as_primary=False, param_co2=False):
 
     # Read in file
     df = pd.read_csv(infile, delimiter=",")
@@ -65,20 +65,11 @@ def parse_csv(infile, Ce_to_H2O=0., src_FeIII_totFe=0., min_SiO2=0., min_MgO=0.,
     df['Total'] = df[major_cols].sum(axis=1)
 
     # Filter dataset to only include usable samples
-    # Remove lines with SiO2 < 40 wt%
-    df = df.loc[(df['SiO2'] > min_SiO2)]
     # Remove lines with MgO < 8.5 wt%
     df = df.loc[(df['MgO'] > min_MgO)]
+    
+    # Create warning!
     # Remove lines with no water values
     #df = df.loc[(df['H2O'] > 0.)]
-
-    # df_wt_hydrous = df[major_cols]
-    # to_drop = np.hstack((major_cols, "Sample", "Total"))
-    # df_other_info = df.drop(to_drop, axis=1)
-    #
-    # samples = []
-    # for i in range(len(df)):
-    #     sample = Sample(df["Sample"][i], df_wt_hydrous.to_dict("records")[i], df_other_info.to_dict("records")[i])
-    #     samples.append(sample)
 
     return df
