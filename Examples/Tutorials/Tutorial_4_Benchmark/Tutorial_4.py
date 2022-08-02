@@ -74,11 +74,16 @@ print("-----------------------------------------------------------")
 # Lee et al., (2009).
 
 s4 = Suite("Data/L09_s190.csv", src_FeIII_totFe=0.05, Ce_to_H2O=200.)
-s4.backtrack_compositions(target_Fo=0.9, dm=0.005, verbose=False)
+s4.backtrack_compositions(target_Fo=0.9, dm=0.005, Kd=0.32166722315513757, verbose=False)
 s4.compute_pressure_temperature(method="L09")
+s4a = Suite("Data/L09_s190.csv", src_FeIII_totFe=0.05, Ce_to_H2O=200.)
+s4a.backtrack_compositions(target_Fo=0.9, dm=0.005, verbose=False)
+s4a.compute_pressure_temperature(method="L09")
 print("L09 Documented Result             P = 2.39 GPa, T = 1503 oC.")
-print("Our result:                       P = %.2f GPa, T = %i oC." % 
+print("Our result (Kd=0.32167):          P = %.2f GPa, T = %i oC." %
     (s4.PT['P'], s4.PT['T']))
+print("Our result (variable Kd):         P = %.2f GPa, T = %i oC." % 
+    (s4a.PT['P'], s4a.PT['T']))
 
 # Result using the primary composition outputted by the spreadsheet
 s5 = Suite("Data/L09_s190_primary.csv", read_as_primary=True)
