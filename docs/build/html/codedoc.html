@@ -45,7 +45,15 @@
 <li class="toctree-l1"><a class="reference internal" href="getstarted.html">Getting Started</a></li>
 <li class="toctree-l1"><a class="reference internal" href="Tutorial_1.html">Tutorial 1: First steps</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Code Documentation</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="#module-meltPT">Modules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-meltPT">Modules</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#meltpt">meltPT</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#parse">parse</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#backtrack-compositions">backtrack_compositions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#thermobarometry">thermobarometry</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#fit-melting-paths">fit_melting_paths</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#suite">suite</a></li>
+</ul>
+</li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="license.html">License</a></li>
@@ -106,14 +114,40 @@
 <ul class="simple">
 <li><p><a class="reference internal" href="#code-documentation" id="id1">Code Documentation</a></p>
 <ul>
-<li><p><a class="reference internal" href="#module-meltPT" id="id2">Modules</a></p></li>
+<li><p><a class="reference internal" href="#module-meltPT" id="id2">Modules</a></p>
+<ul>
+<li><p><a class="reference internal" href="#meltpt" id="id3">meltPT</a></p></li>
+<li><p><a class="reference internal" href="#parse" id="id4">parse</a></p></li>
+<li><p><a class="reference internal" href="#backtrack-compositions" id="id5">backtrack_compositions</a></p></li>
+<li><p><a class="reference internal" href="#thermobarometry" id="id6">thermobarometry</a></p></li>
+<li><p><a class="reference internal" href="#fit-melting-paths" id="id7">fit_melting_paths</a></p></li>
+<li><p><a class="reference internal" href="#suite" id="id8">suite</a></p></li>
+</ul>
+</li>
 </ul>
 </li>
 </ul>
 </div>
 <section id="module-meltPT">
 <span id="modules"></span><h2><a class="toc-backref" href="#id2">Modules</a><a class="headerlink" href="#module-meltPT" title="Permalink to this headline"></a></h2>
-<span class="target" id="module-meltPT.parse"></span><span class="target" id="module-meltPT.backtrack_compositions"></span><dl class="py function">
+<section id="meltpt">
+<h3><a class="toc-backref" href="#id3">meltPT</a><a class="headerlink" href="#meltpt" title="Permalink to this headline"></a></h3>
+<p>A Python package for whole-rock major-element themormobarometric analyses of basaltic (mafic) rocks.</p>
+</section>
+<span class="target" id="module-meltPT.parse"></span><section id="parse">
+<h3><a class="toc-backref" href="#id4">parse</a><a class="headerlink" href="#parse" title="Permalink to this headline"></a></h3>
+<p>Read data from a csv file.</p>
+<dl class="py function">
+<dt class="sig sig-object py" id="meltPT.parse.parse_csv">
+<span class="sig-prename descclassname"><span class="pre">meltPT.parse.</span></span><span class="sig-name descname"><span class="pre">parse_csv</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">infile</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">Ce_to_H2O</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">src_FeIII_totFe</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">min_MgO</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">read_as_primary</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">param_co2</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#meltPT.parse.parse_csv" title="Permalink to this definition"></a></dt>
+<dd><p>Parse csv.</p>
+</dd></dl>
+
+</section>
+<span class="target" id="module-meltPT.backtrack_compositions"></span><section id="backtrack-compositions">
+<h3><a class="toc-backref" href="#id5">backtrack_compositions</a><a class="headerlink" href="#backtrack-compositions" title="Permalink to this headline"></a></h3>
+<p>Backtrack sample compositions to ‘primary’ compositions.</p>
+<dl class="py function">
 <dt class="sig sig-object py" id="meltPT.backtrack_compositions.add_olivine">
 <span class="sig-prename descclassname"><span class="pre">meltPT.backtrack_compositions.</span></span><span class="sig-name descname"><span class="pre">add_olivine</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">in_comp</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">Kd</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dm</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0005</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#meltPT.backtrack_compositions.add_olivine" title="Permalink to this definition"></a></dt>
 <dd><p>Add olivine in equilibrium with given melt composition.</p>
@@ -261,7 +295,11 @@ in mole percent.</p>
 </dl>
 </dd></dl>
 
-<span class="target" id="module-meltPT.thermobarometry"></span><dl class="py function">
+</section>
+<span class="target" id="module-meltPT.thermobarometry"></span><section id="thermobarometry">
+<h3><a class="toc-backref" href="#id6">thermobarometry</a><a class="headerlink" href="#thermobarometry" title="Permalink to this headline"></a></h3>
+<p>Perform thermobarometric calculations.</p>
+<dl class="py function">
 <dt class="sig sig-object py" id="meltPT.thermobarometry.Mg_num">
 <span class="sig-prename descclassname"><span class="pre">meltPT.thermobarometry.</span></span><span class="sig-name descname"><span class="pre">Mg_num</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">df</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#meltPT.thermobarometry.Mg_num" title="Permalink to this definition"></a></dt>
 <dd><p>Calculate Mg#</p>
@@ -526,7 +564,11 @@ end_sum : amount to sum to.</p>
 <p>df : pandas datframe.</p>
 </dd></dl>
 
-<span class="target" id="module-meltPT.fit_melting_paths"></span><dl class="py function">
+</section>
+<span class="target" id="module-meltPT.fit_melting_paths"></span><section id="fit-melting-paths">
+<h3><a class="toc-backref" href="#id7">fit_melting_paths</a><a class="headerlink" href="#fit-melting-paths" title="Permalink to this headline"></a></h3>
+<p>Find best-fitting melting paths.</p>
+<dl class="py function">
 <dt class="sig sig-object py" id="meltPT.fit_melting_paths.compute_sample_melt_fraction_misfit">
 <span class="sig-prename descclassname"><span class="pre">meltPT.fit_melting_paths.</span></span><span class="sig-name descname"><span class="pre">compute_sample_melt_fraction_misfit</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">F</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">df</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">path</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#meltPT.fit_melting_paths.compute_sample_melt_fraction_misfit" title="Permalink to this definition"></a></dt>
 <dd><p>Compute misfit between sample and point along given melting path,
@@ -748,7 +790,11 @@ pressure (P) and temperature (T).</p>
 </dl>
 </dd></dl>
 
-<span class="target" id="module-meltPT.suite"></span><dl class="py class">
+</section>
+<span class="target" id="module-meltPT.suite"></span><section id="suite">
+<h3><a class="toc-backref" href="#id8">suite</a><a class="headerlink" href="#suite" title="Permalink to this headline"></a></h3>
+<p>Process suites of samples.</p>
+<dl class="py class">
 <dt class="sig sig-object py" id="meltPT.suite.Suite">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">meltPT.suite.</span></span><span class="sig-name descname"><span class="pre">Suite</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input_csv</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">Ce_to_H2O</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">src_FeIII_totFe</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">min_SiO2</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">min_MgO</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">read_as_primary</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">param_co2</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">read_PT</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#meltPT.suite.Suite" title="Permalink to this definition"></a></dt>
 <dd><p>Store and process compositions of basaltic rocks.</p>
@@ -1021,6 +1067,7 @@ fitting melting path for each sample.</p>
 
 </dd></dl>
 
+</section>
 </section>
 </section>
 

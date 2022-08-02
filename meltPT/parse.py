@@ -1,9 +1,22 @@
+"""
+=====
+parse
+=====
+
+Read data from a csv file.
+
+"""
+
 import warnings
 
 import numpy as np
 import pandas as pd
 
 def parse_csv(infile, Ce_to_H2O=0., src_FeIII_totFe=0., min_MgO=0., read_as_primary=False, param_co2=False):
+    """
+    Parse csv.
+    """
+
 
     # Read in file
     df = pd.read_csv(infile, delimiter=",")

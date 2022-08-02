@@ -1,3 +1,13 @@
+"""
+===============
+thermobarometry
+===============
+
+Perform thermobarometric calculations.
+
+"""
+
+
 import warnings
 import numpy as np
 import pandas as pd

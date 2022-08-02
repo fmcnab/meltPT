@@ -1,3 +1,12 @@
+"""
+======================
+backtrack_compositions
+======================
+
+Backtrack sample compositions to 'primary' compositions.
+
+"""
+
 import warnings
 
 import numpy as np

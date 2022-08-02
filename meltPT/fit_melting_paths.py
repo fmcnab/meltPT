@@ -1,3 +1,12 @@
+"""
+=================
+fit_melting_paths
+=================
+
+Find best-fitting melting paths.
+
+"""
+
 import warnings
 
 import numpy as np

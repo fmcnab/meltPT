@@ -1,3 +1,12 @@
+"""
+=====
+suite
+=====
+
+Process suites of samples.
+
+"""
+
 from .parse import *
 from .backtrack_compositions import *
 from .thermobarometry import *
