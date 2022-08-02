@@ -1595,7 +1595,7 @@ class P07_4:
         
         compute_components_cation(self.df)
         # Eq 20 of Putirka 2008 Rev in Min. & Geochem. 69:1
-        DMg = (0.666-(-0.049*self.df["MnO_primary_mol"]+0.027*self.df["FeO_primary_mol"]))/(self.df["MgO_primary_mol"]+0.259*self.df["MnO_primary_mol_dry"]+0.299*self.df["FeO_primary_mol"])
+        DMg = (0.666-(-0.049*self.df["MnO_primary_mol"]+0.027*self.df["FeO_primary_mol"]))/(self.df["MgO_primary_mol"]+0.259*self.df["MnO_primary_mol"]+0.299*self.df["FeO_primary_mol"])
  
         C_NM = self.df["MgO_primary_mol"] + self.df["FeO_primary_mol"] 
         C_NM += self.df["CaO_primary_mol"] + self.df["MnO_primary_mol"]
