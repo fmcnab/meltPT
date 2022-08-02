@@ -12,7 +12,7 @@ Welcome to meltPT's documentation!
 
    about
    getstarted
-   Tutorial_1
+   tutorials
    codedoc
    license
 
