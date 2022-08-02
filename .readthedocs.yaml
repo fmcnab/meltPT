@@ -8,8 +8,8 @@ version: 2
 # Set the version of Python and other tools you might need
 build:
   os: ubuntu-20.04
-  # tools:
-  #   python: "3.8.10"
+  tools:
+    python: "3.8.10"
     # You can also specify other tool versions:
     # nodejs: "16"
     # rust: "1.55"
@@ -21,6 +21,5 @@ sphinx:
    
 # Python
 python:
-  version: "3.8.10"
   install:
-    - requirements: requirements.txt
+  - requirements: requirements.txt
