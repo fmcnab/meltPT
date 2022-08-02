@@ -164,8 +164,11 @@ def oxide_mole_to_mole_species(in_comp):
 def compute_partition_coefficient(in_comp):
     """
     Compute the partition coefficient.
+    
+    Expression from Tamura et al. (2000, J. Pet), via Lee et al. (2009)
+    spreadsheet. Spreadsheet has more significant figures than paper...
     """
-    Kd = 0.25324 + 0.003363*(in_comp['Mg'] + 0.33*in_comp['FeII'])
+    Kd = 0.25324 + 0.0033663*(in_comp['Mg'] + 0.33*in_comp['FeII'])
     return Kd
 
 def compute_forsterite_number(in_comp, Kd=None):
@@ -291,6 +294,12 @@ def backtrack_sample_composition(
     for ox in MAJOR_OXIDES:
         oxide_wt_hydrous[ox] = df[ox]
     oxide_wt_hydrous = normalise(oxide_wt_hydrous)
+    
+    # Testing Lee et al. spreadsheet
+    # Seems to not update Kd during iteration
+    # if not Kd:
+    #     cation = oxide_wt_to_cation_mole(oxide_wt_hydrous)
+    #     Kd = compute_partition_coefficient(cation)
 
     # Check Fo is below mantle Fo
     Fo = compute_forsterite_number(oxide_wt_hydrous)
@@ -309,6 +318,7 @@ def backtrack_sample_composition(
         composition_through_addition = []
         # while abs(target_Fo - Fo) > 1.e-15:
         while target_Fo - Fo > 0.0002:
+            
             oxide_wt_hydrous = add_olivine(oxide_wt_hydrous, Kd=Kd, dm=dm)
             composition_through_addition.append(oxide_wt_hydrous)
             dm_tot += dm
