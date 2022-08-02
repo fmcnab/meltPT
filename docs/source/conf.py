@@ -22,7 +22,7 @@ copyright = '2022, F. McNab & P.W. Ball'
 author = 'F. McNab & P.W. Ball'
 
 # The full version, including alpha/beta/rc tags
-release = '0.0.1'
+release = 'v0.0.2-alpha'
 
 
 # -- General configuration ---------------------------------------------------
