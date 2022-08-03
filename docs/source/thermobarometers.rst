@@ -24,9 +24,9 @@ Currently Available Options
 * BK21_PLG  - `Brown Krien et al. (2021, JGR: Solid Earth) <https://doi.org/10.1029/2020JB021292>`_
               P and T(P) calculated using Equations 1P-P and 1P-T, respectively. Assumes plagioclase is stable mantle phase.
 * BK21_SPL  - `Brown Krien et al. (2021, JGR: Solid Earth) <https://doi.org/10.1029/2020JB021292>`_
-              P and T(P) calculated using Equations 1S-P and 1S-T, respectively. Assumes plagioclase is stable mantle phase.
+              P and T(P) calculated using Equations 1S-P and 1S-T, respectively. Assumes spinel is stable mantle phase.
 * BK21_GNT  - `Brown Krien et al. (2021, JGR: Solid Earth) <https://doi.org/10.1029/2020JB021292>`_
-              P and T(P) calculated using Equations 1G-P and 1G-T, respectively. Assumes plagioclase is stable mantle phase.
+              P and T(P) calculated using Equations 1G-P and 1G-T, respectively. Assumes garnet is stable mantle phase.
 
 **Thermometer Only**
 
@@ -41,4 +41,4 @@ Currently Available Options
 
 **Unfinished Thermobarometers**
 
-* G13       - Grove et al. (2013, Contrib. Min. and Pet.)  <https://doi.org/10.1007/s00410-013-0899-9>`_
+* G13       - `Grove et al. (2013, Contrib. Min. and Pet.)  <https://doi.org/10.1007/s00410-013-0899-9>`_
