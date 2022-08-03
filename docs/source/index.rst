@@ -12,8 +12,10 @@ Welcome to meltPT's documentation!
 
    about
    getstarted
+   thermobarometers
    tutorials
    codedoc
+   contributing
    license
 
 Indices and tables

@@ -1360,12 +1360,44 @@ class HA15:
         
         return {'P': P, 'T': T, 'P_err': P * self.T_err/T, 'T_err': self.T_err} 
 
-class P07_P08:
+class P08:
     
     def __init__(self, df):
         self.df = df
         self.P_err = 0.29
         self.T_err = 52.
+    
+    def compute_pressure(self, T):
+        """
+        Calculate temperate and pressure of melt
+        equilibration by simultaneously solving
+        Equation 4 of Putirka et al., (2007, Chemical Geology)
+        and Equation 42 of Putirka (2008).
+    
+        Parameters
+        ----------
+        df : pandas dataframe
+            Dataframe containing the sample primary composition.
+            Should contain only one row. To use with a multi-row dataframe use
+            df.apply().
+        T : float
+            Temperature in oC
+            
+        Returns
+        -------
+        out : dict
+            The equilibration pressure and temperature result.
+            Temperature is in degrees celcius.
+            Pressure is in GPa.
+            Associated errors for pressure and temperature.
+        """    
+        
+        compute_components_cation(self.df)
+        aSiO2 = (3*self.df["SiO2_primary_mol_dry"])**-2*(1-self.df["Al2O3_primary_mol_dry"])**(7/2)*(1-self.df["TiO2_primary_mol_dry"])**(7/2)
+        P = (231.5+0.186*T+0.1244*T*(np.log(aSiO2))-528.*(aSiO2)**0.5+103.3*self.df["TiO2_primary_mol_dry"]+69.9*(self.df["Na2O_primary_mol_dry"]+self.df["K2O_primary_mol_dry"])+77.3*(self.df["Al2O3_primary_mol_dry"]/(self.df["Al2O3_primary_mol_dry"]+self.df["SiO2_primary_mol_dry"])))/10.
+            
+        return {'P': P, 'T': T, 'P_err': self.P_err, 'T_err': T * self.P_err/P} 
+
     
     def compute_pressure_temperature(self):
         """
@@ -1630,43 +1662,6 @@ class P07_4:
             
         return {'P': P, 'T': T, 'P_err': P * self.T_err/T, 'T_err': self.T_err} 
 
-class P08:
-    
-    def __init__(self, df):
-        self.df = df
-        self.P_err = 0.29
-    
-    def compute_pressure(self, T):
-        """
-        Calculate temperate and pressure of melt
-        equilibration by simultaneously solving
-        Equation 4 of Putirka et al., (2007, Chemical Geology)
-        and Equation 42 of Putirka (2008).
-    
-        Parameters
-        ----------
-        df : pandas dataframe
-            Dataframe containing the sample primary composition.
-            Should contain only one row. To use with a multi-row dataframe use
-            df.apply().
-        T : float
-            Temperature in oC
-            
-        Returns
-        -------
-        out : dict
-            The equilibration pressure and temperature result.
-            Temperature is in degrees celcius.
-            Pressure is in GPa.
-            Associated errors for pressure and temperature.
-        """    
-        
-        compute_components_cation(self.df)
-        aSiO2 = (3*self.df["SiO2_primary_mol_dry"])**-2*(1-self.df["Al2O3_primary_mol_dry"])**(7/2)*(1-self.df["TiO2_primary_mol_dry"])**(7/2)
-        P = (231.5+0.186*T+0.1244*T*(np.log(aSiO2))-528.*(aSiO2)**0.5+103.3*self.df["TiO2_primary_mol_dry"]+69.9*(self.df["Na2O_primary_mol_dry"]+self.df["K2O_primary_mol_dry"])+77.3*(self.df["Al2O3_primary_mol_dry"]/(self.df["Al2O3_primary_mol_dry"]+self.df["SiO2_primary_mol_dry"])))/10.
-            
-        return {'P': P, 'T': T, 'P_err': self.P_err, 'T_err': T * self.P_err/P} 
-
 def compute_sample_pressure_temperature(df, method="PF16"):
     """
     Calculate temperate and pressure of melt equilibration
@@ -1717,8 +1712,8 @@ def compute_sample_pressure_temperature(df, method="PF16"):
         out = BK21_GNT(df).compute_pressure_temperature()
     elif method == "BK21":
         out = BK21(df).compute_pressure_temperature()        
-    elif method == "P07_P08":
-        out = P07_P08(df).compute_pressure_temperature()        
+    elif method == "P08":
+        out = P08(df).compute_pressure_temperature()        
     elif method == "SD20":
         out = SD20(df).compute_pressure_temperature()        
     else:
