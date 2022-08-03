@@ -80,6 +80,38 @@ def normalize_v2(df, list_parameters, input_suffix, output_suffix, end_sum):
         
     return df
 
+def compute_DMg(df):
+    """
+    Calculate DMg
+        Follows method outlined in Beattie, (1993), Contrib. Min. and Pet.
+        Must previously run compute_components_cation().
+    
+    Parameters
+    ----------
+    df : pandas dataframe with sample compositions in anhydrous mole%
+            
+    Returns
+    -------
+    DMg : float
+        
+    """ 
+    
+    Sum_A = (df["FeO_primary_mol_dry"]*0.279)
+    Sum_A += (df["MnO_primary_mol_dry"]*0.259)
+    Sum_A += (df["MgO_primary_mol_dry"]*1.)
+    Sum_A += (df["CaO_primary_mol_dry"]*0.0056)
+    Sum_A += (df["NiO_primary_mol_dry"]*3.346)
+    #####
+    Sum_B = (df["FeO_primary_mol_dry"]*0.031)
+    Sum_B -= (df["MnO_primary_mol_dry"]*0.049)
+    Sum_B += (df["CaO_primary_mol_dry"]*0.0135)
+    Sum_B += (df["NiO_primary_mol_dry"]*-3.665)
+    Sum_B += 0.0001*(df["TiO2_primary_mol_dry"]+df["Al2O3_primary_mol_dry"]+df["Cr2O3_primary_mol_dry"]+df["Fe2O3_primary_mol_dry"]+df["Na2O_primary_mol_dry"]+df["K2O_primary_mol_dry"]+df["P2O5_primary_mol_dry"])
+    #####
+    DMg = (2./3. - Sum_B) / Sum_A  
+
+    return DMg
+
 def compute_minerals(df):
     """
     Calculate mineral components using equations
@@ -1312,22 +1344,11 @@ class HA15:
             Associated errors for pressure and temperature.
         """    
         compute_components_cation(self.df)
-        Sum_A = (self.df["FeO_primary_mol_dry"]*0.279)
-        Sum_A += (self.df["MnO_primary_mol_dry"]*0.259)
-        Sum_A += (self.df["MgO_primary_mol_dry"]*1.)
-        Sum_A += (self.df["CaO_primary_mol_dry"]*0.0056)
-        Sum_A += (self.df["NiO_primary_mol_dry"]*3.346)
-        #####
-        Sum_B = (self.df["FeO_primary_mol_dry"]*0.031)
-        Sum_B -= (self.df["MnO_primary_mol_dry"]*0.049)
-        Sum_B += (self.df["CaO_primary_mol_dry"]*0.0135)
-        Sum_B += (self.df["NiO_primary_mol_dry"]*-3.665)
-        Sum_B += 0.0001*(self.df["TiO2_primary_mol_dry"]+self.df["Al2O3_primary_mol_dry"]+self.df["Cr2O3_primary_mol_dry"]+self.df["Fe2O3_primary_mol_dry"]+self.df["Na2O_primary_mol_dry"]+self.df["K2O_primary_mol_dry"]+self.df["P2O5_primary_mol_dry"])
-        #####
-        DMGO2 = (2./3. - Sum_B) / Sum_A
+        DMg = compute_DMg(self.df)   
+        
         #####
         Temp_Denom = 52.05/8.3143
-        Temp_Denom += 2.*np.log(DMGO2)
+        Temp_Denom += 2.*np.log(DMg)
         Temp_Denom += 2.*np.log(1.5*(self.df["FeO_primary_mol_dry"]+self.df["MnO_primary_mol_dry"]+self.df["MgO_primary_mol_dry"]+self.df["CaO_primary_mol_dry"]+self.df["NiO_primary_mol_dry"]))
         Temp_Denom += 2.*np.log(3.*self.df["SiO2_primary_mol_dry"])
         Temp_Denom -= 3.5*np.log(1-self.df["Al2O3_primary_mol_dry"]) + 7*np.log(1-self.df["TiO2_primary_mol_dry"])
@@ -1370,7 +1391,7 @@ class P07_P08:
         """    
         
         compute_components_cation(self.df)
-        DMg = (0.666-(-0.049*self.df["MnO_primary_mol_dry"]+0.027*self.df["FeO_primary_mol_dry"]))/(1*self.df["MgO_primary_mol_dry"]+0.259*self.df["MnO_primary_mol_dry"]+0.299*self.df["FeO_primary_mol_dry"])
+        DMg = compute_DMg(self.df)   
         aSiO2 = (3*self.df["SiO2_primary_mol_dry"])**-2*(1-self.df["Al2O3_primary_mol_dry"])**(7/2)*(1-self.df["TiO2_primary_mol_dry"])**(7/2)
 
         P, T = sym.symbols('P, T')
@@ -1429,7 +1450,7 @@ class SD20:
         omega += 0.057 * self.df['H2O_primary_wt']      
         
         T = (10.**4. / (omega - 0.34*np.sqrt(P) - 1.26*np.log(self.df['MgO_primary_mol_dry']))) - 273.15
-
+        
         return {'P': P, 'T': float(T), 'P_err': float(P * self.T_err/T), 'T_err': self.T_err} 
     
     def compute_pressure_temperature(self):
@@ -1482,7 +1503,7 @@ class SD20:
         T = result[0][1] - 273.15
         P = result[0][0]
         
-        return {'P': P, 'T': T, 'P_err': self.P_err, 'T_err': self.T_err} 
+        return {'P': float(P), 'T': float(T), 'P_err': self.P_err, 'T_err': self.T_err} 
 
 class B93:
 
@@ -1513,16 +1534,18 @@ class B93:
             Associated errors for pressure and temperature.
         """    
         compute_components_cation(self.df)
+        DMg = compute_DMg(self.df)       
+        
         # Eq 20 of Putirka 2008 Rev in Min. & Geochem. 69:1
-        DMg = (0.666-(-0.049*self.df["MnO_primary_mol"]+0.027*self.df["FeO_primary_mol"]))/(self.df["MgO_primary_mol"]+0.259*self.df["MnO_primary_mol_dry"]+0.299*self.df["FeO_primary_mol"])
+        # DMg = (0.666-(-0.049*self.df["MnO_primary_mol"]+0.027*self.df["FeO_primary_mol"]))/(self.df["MgO_primary_mol"]+0.259*self.df["MnO_primary_mol_dry"]+0.299*self.df["FeO_primary_mol"])
         C_NM = self.df["MgO_primary_mol"] + self.df["FeO_primary_mol"] 
         C_NM += self.df["CaO_primary_mol"] + self.df["MnO_primary_mol"]
         NF = 7/2*np.log(1.-self.df["Al2O3_primary_mol"]) 
         NF += 7.*np.log(1.-self.df["TiO2_primary_mol"])
 
         # Eq 19 of Putirka 2008 Rev in Min. & Geochem. 69:1
-        T = (13603. + ((P*10.**9.-10.**-5.)*4.943*10**-7.))
-        T /= (6.26 + 2.*np.log(DMg) + 2.*np.log(1.5*C_NM) + 2.*np.log(3.*self.df["SiO2_primary_mol"]) - NF)
+        T = ((113100./8.3144) + ((P*10.**9.-10.**-5.)*((4.11*10**-6)/8.3144)))
+        T /= ((52.05/8.3144) + 2.*np.log(DMg) + 2.*np.log(1.5*C_NM) + 2.*np.log(3.*self.df["SiO2_primary_mol"]) - NF)
         T -= 273.15
   
         return {'P': P, 'T': T, 'P_err': P * self.T_err/T, 'T_err': self.T_err} 
@@ -1557,8 +1580,8 @@ class P07_2:
             Associated errors for pressure and temperature.
         """
         compute_components_cation(self.df)
-        # Eq 20 of Putirka 2008 Rev in Min. & Geochem. 69:1
-        DMg = (0.666-(-0.049*self.df["MnO_primary_mol"]+0.027*self.df["FeO_primary_mol"]))/(self.df["MgO_primary_mol"]+0.259*self.df["MnO_primary_mol_dry"]+0.299*self.df["FeO_primary_mol"])
+        DMg = compute_DMg(self.df)   
+
         # Eq 21 of Putirka 2008 Rev in Min. & Geochem. 69:1
         T = 1 / ((np.log(DMg) + 2.158 - 5.115*10**-2*(self.df["Na2O_primary_wt"]+self.df["K2O_primary_wt"]) + 6.213*10**-2*self.df["H2O_primary_wt"]) / (55.09*P + 4430))
   
@@ -1594,11 +1617,11 @@ class P07_4:
         """
         
         compute_components_cation(self.df)
-        # Eq 20 of Putirka 2008 Rev in Min. & Geochem. 69:1
-        DMg = (0.666-(-0.049*self.df["MnO_primary_mol"]+0.027*self.df["FeO_primary_mol"]))/(self.df["MgO_primary_mol"]+0.259*self.df["MnO_primary_mol"]+0.299*self.df["FeO_primary_mol"])
- 
+        DMg = compute_DMg(self.df)   
+
         C_NM = self.df["MgO_primary_mol"] + self.df["FeO_primary_mol"] 
         C_NM += self.df["CaO_primary_mol"] + self.df["MnO_primary_mol"]
+        
         NF = 7/2*np.log(1.-self.df["Al2O3_primary_mol"]) 
         NF += 7.*np.log(1.-self.df["TiO2_primary_mol"])
 
@@ -1742,7 +1765,7 @@ def compute_sample_temperature(df, method="HA15", P=1.):
     if method == "HA15":
         out = HA15(df).compute_temperature(P) 
     elif method == "P07_2":
-        out = P07_4(df).compute_temperature(P)          
+        out = P07_2(df).compute_temperature(P)          
     elif method == "P07_4":
         out = P07_4(df).compute_temperature(P)
     elif method == "B93":
