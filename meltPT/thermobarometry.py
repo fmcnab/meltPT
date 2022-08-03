@@ -1324,7 +1324,7 @@ class HA15:
         Equations 10 and 12.
 
         Convert to desired pressure using Equation from 
-        Herzberg & O'Hara, (2008) G3 9:9  
+        Herzberg & O'Hara, (2002) G3 9:9  
         
         Parameters
         ----------
