@@ -309,7 +309,7 @@ def find_bounding_potential_temperature(points, starting_temperature, mantle, lo
     else:
         bounding_temperature = np.floor(starting_temperature)
         adjustment = -1.
-    
+
     # Initialise array specifying which points are inside (1) vs. outside (0)
     # the bounding melting paths.
     inside = np.zeros(len(points))
@@ -325,7 +325,7 @@ def find_bounding_potential_temperature(points, starting_temperature, mantle, lo
 
     # Start incrementally expanding bounds.
     while True:
-        
+             
         # Compute melting bath corresponding to bounding potential temperature.
         bounding_path = mantle.adiabaticMelt(
             bounding_temperature,
@@ -346,6 +346,10 @@ def find_bounding_potential_temperature(points, starting_temperature, mantle, lo
         
         # Stop if we have reached threshold, otherwise increment and continue.
         if sum(inside) / len(points) > threshold:
+            break
+        elif bounding_temperature > 1600.:
+            bounding_temperature = np.nan
+            bounding_path = None
             break
         else:
             bounding_temperature += adjustment

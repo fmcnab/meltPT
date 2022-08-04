@@ -1532,9 +1532,12 @@ class SD20:
         eq1 = sym.Eq(13. - sym.sqrt((T/45.9) * (np.log(self.df['Al2O3_primary_mol_dry']/self.df['MgO_primary_mol_dry']) - theta) - (phi/45.9) + 169.), P)
         eq2 = sym.Eq(10.**4. / (omega - 0.34*sym.sqrt(P) - 1.26*np.log(self.df['MgO_primary_mol_dry'])), T)
         result = sym.solve([eq1,eq2],(P,T))
-        T = result[0][1] - 273.15
-        P = result[0][0]
-        
+        if len(result) == 0:
+            T = np.nan
+            P = np.nan
+        else:
+            T = result[0][1] - 273.15
+            P = result[0][0]
         return {'P': float(P), 'T': float(T), 'P_err': self.P_err, 'T_err': self.T_err} 
 
 class B93:
