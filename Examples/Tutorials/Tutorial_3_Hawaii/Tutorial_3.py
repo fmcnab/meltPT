@@ -54,7 +54,7 @@ df = df1.loc[(df1['Ce']>0)]
 df.to_csv("province.csv", sep=',')
 
 # ---- Reading data and initialising the Suite object
-s = Suite("province.csv", min_MgO=8.5, min_SiO2=40.)
+s = Suite("province.csv", min_MgO=8.5)
 
 # ---- Backtrack and Estimate pressure and temperature
 # See Tutorial 1 for comprehensive explanation
