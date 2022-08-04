@@ -251,8 +251,12 @@ class Suite:
         def above_solidus(df, mantle):
             return {'fit': max([l.TSolidus(df['P']) for l in mantle.lithologies]) - df['T'] < df['T_err']}
 
+        def isnotnan(df):
+            return {'fit': ~np.isnan(np.array([df['P'], df['T'])).any()}
+
         combined = pd.concat([self.data, self.PT], axis=1)
         to_fit = combined.apply(above_solidus, axis=1, result_type="expand", args=(mantle,))
+        to_fit = pd.concat([to_fit, combined.apply(isnotnan, axis=1, args=a)], axis=1)
         if filters[0]:
             for f,a in zip(filters,args):
                 to_fit = pd.concat([to_fit, combined.apply(f, axis=1, args=a)], axis=1)
