@@ -59,7 +59,7 @@ s = Suite("province.csv", min_MgO=8.5)
 # ---- Backtrack and Estimate pressure and temperature
 # See Tutorial 1 for comprehensive explanation
 s.backtrack_compositions()
-s.compute_pressure_temperature()
+s.compute_pressure_temperature(min_SiO2=40.)
 
 # ---- Fit Tp to Oahu Data
 # See Tutorial 1 for comprehensive explanation
@@ -85,9 +85,9 @@ ax1.plot(T_sol, P_sol, "k")
 # Plot best fitting melt path
 ax1.plot(s.path.T, s.path.P, "-", color="k", zorder=1)
 
-# Plot bounding melt paths
-ax1.plot(s.upper_path.T, s.upper_path.P, "--", color="k", zorder=1)
-ax1.plot(s.lower_path.T, s.lower_path.P, "--", color="k", zorder=1)
+# # Plot bounding melt paths
+# ax1.plot(s.upper_path.T, s.upper_path.P, "--", color="k", zorder=1)
+# ax1.plot(s.lower_path.T, s.lower_path.P, "--", color="k", zorder=1)
 
 # Plot data
 ax1.scatter(s.PT['T'][s.data['Stage']=="Shield"], s.PT['P'][s.data['Stage']=="Shield"],

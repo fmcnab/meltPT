@@ -1665,9 +1665,9 @@ class P07_4:
             
         return {'P': P, 'T': T, 'P_err': P * self.T_err/T, 'T_err': self.T_err} 
 
-def compute_sample_pressure_temperature(df, method="PF16"):
+def compute_sample_pressure_temperature(df, method="PF16", min_SiO2=0.):
     """
-    Calculate temperate and pressure of melt equilibration
+    Calculate temperate and pressure of melt equilibration.
     
     Parameters
     ----------
@@ -1696,8 +1696,10 @@ def compute_sample_pressure_temperature(df, method="PF16"):
             The calculated temperature(s) in oC,
             pressures in GPa, and associated errors.  
     """     
-        
-    if method == "PF16":
+    
+    if df['SiO2_primary_wt'] < min_SiO2:
+        out = {'P': np.nan, 'P_err': np.nan, 'T': np.nan, 'T_err': np.nan}
+    elif method == "PF16":
         out = PF16(df).compute_pressure_temperature()
     elif method == "L09":
         out = L09(df).compute_pressure_temperature()
@@ -1725,7 +1727,7 @@ def compute_sample_pressure_temperature(df, method="PF16"):
     return out
 
 
-def compute_sample_temperature(df, method="HA15", P=1.):
+def compute_sample_temperature(df, method="HA15", P=1., min_SiO2=0.):
     """
     Calculate temperate of melt equilibration
     
@@ -1760,7 +1762,9 @@ def compute_sample_temperature(df, method="HA15", P=1.):
         assumed pressures in GPa and associated errors.
     """     
     
-    if method == "HA15":
+    if df['SiO2_primary_wt'] < min_SiO2:
+        out = {'P': np.nan, 'P_err': np.nan, 'T': np.nan, 'T_err': np.nan}
+    elif method == "HA15":
         out = HA15(df).compute_temperature(P) 
     elif method == "P07_2":
         out = P07_2(df).compute_temperature(P)          
@@ -1789,7 +1793,7 @@ def compute_sample_temperature(df, method="HA15", P=1.):
         
     return out
 
-def compute_sample_pressure(df, method="PF16", T=1300.):
+def compute_sample_pressure(df, method="PF16", T=1300., min_SiO2=0.):
     """
     Calculate temperate of melt equilibration
     
@@ -1816,7 +1820,9 @@ def compute_sample_pressure(df, method="PF16", T=1300.):
         assumed pressures in GPa and associated errors.
     """     
     
-    if method == "PF16":
+    if df['SiO2_primary_wt'] < min_SiO2:
+        out = {'P': np.nan, 'P_err': np.nan, 'T': np.nan, 'T_err': np.nan}
+    elif method == "PF16":
         out = PF16(df).compute_pressure(T) 
     elif method == "L09":
         out = L09(df).compute_pressure(T)          

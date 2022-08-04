@@ -1,3 +1,4 @@
+
 """
 =====
 suite
@@ -182,7 +183,7 @@ class Suite:
             args=(target_Fo,Kd,dm,verbose)
             )
 
-    def compute_pressure_temperature(self, method="PF16"):
+    def compute_pressure_temperature(self, method="PF16", min_SiO2=0.):
         """
         Compute equilibration pressures and temperatures for entire suite.
         
@@ -193,9 +194,9 @@ class Suite:
             compute_sample_pressure_temperature, 
             axis=1, 
             result_type="expand",
-            args=(method,))
+            args=(method,min_SiO2,))
     
-    def compute_temperature(self, method="PF16", P=1.):
+    def compute_temperature(self, method="PF16", P=1., min_SiO2=0.):
         """
         Compute equilibration temperatures for entire suite at given pressure.
         
@@ -206,10 +207,10 @@ class Suite:
             compute_sample_temperature, 
             axis=1, 
             result_type="expand",
-            args=(method,P,)
+            args=(method,P,min_SiO2,)
             )    
 
-    def compute_pressure(self, method="PF16", T=1300.):
+    def compute_pressure(self, method="PF16", T=1300., min_SiO2=0.):
         """
         Compute equilibration pressures for entire suite at given temperature.
         
@@ -220,7 +221,7 @@ class Suite:
             compute_sample_pressure, 
             axis=1, 
             result_type="expand",
-            args=(method,T,)
+            args=(method,T,min_SiO2,)
             )  
         
     def check_samples_for_fitting(self, mantle, filters=(None,), args=((None,))):
@@ -252,15 +253,15 @@ class Suite:
             return {'fit': max([l.TSolidus(df['P']) for l in mantle.lithologies]) - df['T'] < df['T_err']}
 
         def isnotnan(df):
-            return {'fit': ~np.isnan(np.array([df['P'], df['T'])).any()}
+            return {'fit': ~np.isnan(np.array([df['P'], df['T']])).any()}
 
         combined = pd.concat([self.data, self.PT], axis=1)
         to_fit = combined.apply(above_solidus, axis=1, result_type="expand", args=(mantle,))
-        to_fit = pd.concat([to_fit, combined.apply(isnotnan, axis=1, args=a)], axis=1)
+        to_fit = pd.concat([to_fit, combined.apply(isnotnan, axis=1, result_type="expand")], axis=1)
         if filters[0]:
             for f,a in zip(filters,args):
-                to_fit = pd.concat([to_fit, combined.apply(f, axis=1, args=a)], axis=1)
-            to_fit = to_fit.apply(combine, axis=1, result_type="expand")
+                to_fit = pd.concat([to_fit, combined.apply(f, axis=1, args=a, result_type="expand")], axis=1)
+        to_fit = to_fit.apply(combine, axis=1, result_type="expand")
         self.PT['Fit_Tp'] = to_fit.copy()
     
     def find_individual_melt_fractions(self, mantle, path, filters=(None,), filter_args=(None,)):
