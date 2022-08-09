@@ -34,8 +34,6 @@ class Suite:
         Ratio of Ce to H2O in mantle source.
     src_FeIII_totFe : float
         Ratio of Fe3+ to total Fe in the mantle source.
-    min_SiO2 : float, optional
-        Minimum amount of SiO2 in sample to be accepted.
     min_MgO : float, optional
         Minimum amound of MgO in sample to be accepted.
     read_as_primary : bool

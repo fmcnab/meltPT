@@ -14,7 +14,37 @@ import pandas as pd
 
 def parse_csv(infile, Ce_to_H2O=0., src_FeIII_totFe=0., min_MgO=0., param_co2=False):
     """
-    Parse csv.
+    Read a csv and return a dataframe after some processing.
+    
+    Processing steps are:
+      - check SiO2, MgO, and FexOx are specified; if not will crash.
+      - check other major elements are specified; if not will be set to zero.
+      - try to set some values via trace elements.
+      - redistribute Fe according to src_FeIII_totFe.
+      - if desired, estimate CO2 from SiO2.
+      - normalise major elements to 100%.
+      - reject samples with MgO less than some threshold.
+      
+    Parameters
+    ----------
+    infile : str
+        Path to a csv containing data to be read.
+    Ce_to_H2O : float
+        Ratio of Ce to H2O in mantle source.
+    src_FeIII_totFe : float
+        Ratio of Fe3+ to total Fe in the mantle source.
+    min_MgO : float, optional
+        Minimum amound of MgO in sample to be accepted.
+    read_as_primary : bool
+        If true, data from input_csv is assumed to be primary
+        and backtracking is avoided.
+    param_co2 : bool
+        If true, CO2 is calculated from SiO2 concentration.
+        
+    Returns
+    -------
+    df : pandas dataframe
+        Dataframe containing processed data.
     """
 
     # Read in file
@@ -34,10 +64,11 @@ def parse_csv(infile, Ce_to_H2O=0., src_FeIII_totFe=0., min_MgO=0., param_co2=Fa
     df = df.replace(r'^\s*$', 0., regex=True)
     df = df.replace(np.nan, 0., regex=True)
 
-    # If these columns do not exist in the input make them and
+    # If major element columns do not exist in the input make them and
     # give them zeros for every row.
-    major_columns = ['SiO2', 'TiO2', 'Al2O3', 'FeO', 'Fe2O3', 'MgO', 'CaO', 'Na2O',
-                     'K2O', 'MnO', 'Cr2O3', 'P2O5', 'NiO', 'CoO', 'H2O', 'CO2']
+    major_columns = ['SiO2', 'TiO2', 'Al2O3', 'FeO', 'Fe2O3', 'MgO', 'CaO', 
+                     'Na2O', 'K2O', 'MnO', 'Cr2O3', 'P2O5', 'NiO', 'CoO',
+                     'H2O', 'CO2']
     for col in major_columns + ["FeO_tot"]:
         if col not in df.columns:
             message = "Input csv does not contain a %s column: we will try to fill it for you, or set it to zero." % col
