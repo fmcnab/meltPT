@@ -125,7 +125,6 @@ class Suite:
             Ce_to_H2O=Ce_to_H2O,
             src_FeIII_totFe=src_FeIII_totFe,
             min_MgO=min_MgO,
-            read_as_primary=read_as_primary,
             param_co2=param_co2)
         self.PT_to_fit = None
         self.individual_melt_fractions = None
