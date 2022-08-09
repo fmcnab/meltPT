@@ -1,0 +1,34 @@
+{
+
+    "creators": [
+        {
+            "orcid": "0000-0002-8358-1466",
+            "affiliation": "GFZ Potsdam",
+            "name": "McNab, Fergus"
+        },
+        {
+            "orcid": "0000-0001-7054-807X",
+            "affiliation": "Colorado State University, Fort Collins",
+            "name": "Ball, Patrick William"
+        }
+    ],
+
+    "license": "MIT",
+
+    "title": "meltPT",
+    "upload_type": "software", 
+    
+    "related_identifiers": [
+      {
+          "scheme": "url", 
+          "identifier": "https://github.com/fmcnab/meltPT/tree/v0.0.2-alpha", 
+          "relation": "isSupplementTo"
+      }, 
+      {
+          "scheme": "doi", 
+          "identifier": "10.5281/zenodo.6948030", 
+          "relation": "isVersionOf"
+      }
+    ]
+
+}
