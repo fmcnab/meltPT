@@ -16,14 +16,12 @@ def parse_csv(infile, Ce_to_H2O=0., src_FeIII_totFe=0., min_MgO=0., param_co2=Fa
     """
     Read a csv and return a dataframe after some processing.
     
-    Processing steps are
-      - check SiO2, MgO, and FexOx are specified; if not will crash.
-      - check other major elements are specified; if not will be set to zero.
-      - try to set some values via trace elements.
-      - redistribute Fe according to src_FeIII_totFe.
-      - if desired, estimate CO2 from SiO2.
-      - normalise major elements to 100%.
-      - reject samples with MgO less than some threshold.
+    Processing steps are: (1) check SiO2, MgO, and FexOx are specified; if
+    not will crash; (2) check other major elements are specified; if not will 
+    be set to zero; (3) try to set some values via trace elements;
+    (4) redistribute Fe according to src_FeIII_totFe; (5) if desired, estimate
+    CO2 from SiO2; (6) normalise major elements to 100%; (7) reject samples
+    with MgO less than some threshold.
       
     Parameters
     ----------

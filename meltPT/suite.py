@@ -192,16 +192,16 @@ class Suite:
         method : str
             Code corresponding to desired thermobarometer.
             Current options are
-            - P08: Putirka et al. (2008, Revs. in Min. and Geo.)
-            - L09: Lee et al. (2009, EPSL)
-            - TGK12_PLG: Till et al. (2012, JGR: Solid Earth), plagioclase
-            - TGK12_SPL: Till et al. (2012, JGR: Solid Earth), spinel
-            - PF16: Plank and Forsyth (2016, G-cubed)
-            - SD20: Sun and Dasgupta (2020, EPSL)
-            - BK21: Brown Krien et al. (2021, JGR: Solid Earth), stable phase
-            - BK21_PLG: Brown Krien et al. (2021, JGR: Solid Earth), plagioclase
-            - BK21_SPL: Brown Krien et al. (2021, JGR: Solid Earth), spinel
-            - BK21_GNT: Brown Krien et al. (2021, JGR: Solid Earth), garnet
+              - P08: Putirka et al. (2008, Revs. in Min. and Geo.)
+              - L09: Lee et al. (2009, EPSL)
+              - TGK12_PLG: Till et al. (2012, JGR: Solid Earth), plagioclase
+              - TGK12_SPL: Till et al. (2012, JGR: Solid Earth), spinel
+              - PF16: Plank and Forsyth (2016, G-cubed)
+              - SD20: Sun and Dasgupta (2020, EPSL)
+              - BK21: Brown Krien et al. (2021, JGR: Solid Earth), stable phase
+              - BK21_PLG: Brown Krien et al. (2021, JGR: Solid Earth), plagioclase
+              - BK21_SPL: Brown Krien et al. (2021, JGR: Solid Earth), spinel
+              - BK21_GNT: Brown Krien et al. (2021, JGR: Solid Earth), garnet
         min_SiO2 : float
             Threshold SiO2 content below which samples will be ignored.
         """
