@@ -16,7 +16,7 @@ def parse_csv(infile, Ce_to_H2O=0., src_FeIII_totFe=0., min_MgO=0., param_co2=Fa
     """
     Read a csv and return a dataframe after some processing.
     
-    Processing steps are:
+    Processing steps are
       - check SiO2, MgO, and FexOx are specified; if not will crash.
       - check other major elements are specified; if not will be set to zero.
       - try to set some values via trace elements.
@@ -34,7 +34,7 @@ def parse_csv(infile, Ce_to_H2O=0., src_FeIII_totFe=0., min_MgO=0., param_co2=Fa
     src_FeIII_totFe : float
         Ratio of Fe3+ to total Fe in the mantle source.
     min_MgO : float, optional
-        Minimum amound of MgO in sample to be accepted.
+        Minimum amount of MgO in sample to be accepted.
     read_as_primary : bool
         If true, data from input_csv is assumed to be primary
         and backtracking is avoided.
