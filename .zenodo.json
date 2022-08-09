@@ -16,6 +16,7 @@
     "license": "MIT",
 
     "title": "meltPT",
+    "description": "Calculate pressures and temperatures of melting for basaltic rocks and fit with melting models.",
     "upload_type": "software"
 
 }
