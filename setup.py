@@ -13,12 +13,15 @@ setup(
         'scipy',
         'shapely',
         'pyMelt',
-        'sphinx==4.4.0',
         'pyyaml',
-        'sympy',
-        'nbsphinx',
-        'sphinx-rtd-theme',
-        'ipykernel'
+        'sympy'
     ],
+    extras_require={'docs': [
+            'sphinx==4.4.0',
+            'nbsphinx',
+            'sphinx-rtd-theme',
+            'ipykernel'
+        ]
+    },
     scripts=['meltPT/meltPT'],
 )
