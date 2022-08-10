@@ -1,7 +1,12 @@
 Thermobarometers
 ^^^^^
 
-This list documents the thermobarometers and thermometers currently implemented within **meltPT**. To use each option, the abbreviated name at the beginning of each option can be typed within the method flag of compute_pressure_temperature(), compute_temperature() and/or compute_pressure(). The associated equation names in the list below refer to the equations in the original papers. See the code documentation for more details.
+This list documents the thermobarometers and thermometers currently implemented
+within **meltPT**. To use each option, the abbreviated name at the beginning of
+each option can be typed within the method flag of
+compute_pressure_temperature(), compute_temperature() and/or compute_pressure().
+The associated equation names in the list below refer to the equations in the
+original papers. See the code documentation for more details.
 
 =============
 Currently Available Options

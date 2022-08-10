@@ -2,7 +2,7 @@
 The input file
 ==============
 
-All analyses in *meltPT* require an input file containing the compositions of
+All analyses in **meltPT** require an input file containing the compositions of
 samples to be analaysed in the form of a simple csv. In the source code you
 will find many examples -- here we briefly describe what the file must contain,
 what it may contain, and what will be done with different types of information.
@@ -11,7 +11,7 @@ what it may contain, and what will be done with different types of information.
 Major elements: Required
 ------------------------
 
-An important step in *meltPT* analyses is backtracking fractional crystallisation
+An important step in **meltPT** analyses is backtracking fractional crystallisation
 by olivine to estimate sample primary compositions (i.e., melt compositions
 when they were last in equilibrium with the mantle). We assume that
 crystallising olivine consists of SiO\ :sub:`2`\ , MgO and FeO. We need to
@@ -24,7 +24,7 @@ these columns are not present, the program will crash.
 Major elements: Optional
 ------------------------
 
-Each of the thermobarometers we inlude in *meltPT* parameterise pressure and
+Each of the thermobarometers we inlude in **meltPT** parameterise pressure and
 temperature as functions of different major elements. As such, we will look
 for the following input columns:
   - "Al2O3"
@@ -55,7 +55,7 @@ Trace elements and major-element parameterisation
 -------------------------------------------------
 
 Trace-element concentrations are not generally required for analyses in
-*meltPT* but will be used in some specific circumstances.
+**meltPT** but will be used in some specific circumstances.
 
 Concentrations of volatile phases such as H\ :sub:`2`\ O and CO\ :sub:`2` are
 notoriously difficult to measure and often not available. An alternative is to
