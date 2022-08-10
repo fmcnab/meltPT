@@ -33,6 +33,7 @@ release = 'v0.0.2-alpha'
 extensions = [
     "sphinx.ext.autodoc",
     "sphinx.ext.napoleon",
+    "sphinx.ext.viewcode",
     "nbsphinx",
 ]
 napoleon_google_docstring = False
