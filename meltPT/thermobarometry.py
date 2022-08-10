@@ -15,7 +15,7 @@ import sympy as sym
 
 def Mg_num(df):
     """
-    Calculate Mg#
+    Calculate Mg#.
         
     Parameters
     ----------
@@ -24,16 +24,20 @@ def Mg_num(df):
                 
     Returns
     -------
-    Mg#
-    """   
-    return df['MgO_primary_mol_dry'] / (df['MgO_primary_mol_dry'] + df['FeO_primary_mol_dry'])
+    Mg_num : float
+        The Mg#.
+    """
+    Mg_num = df['MgO_primary_mol_dry'] / (df['MgO_primary_mol_dry'] + 
+                                            df['FeO_primary_mol_dry'])
+    return Mg_num
 
 def NaK_num(df):
     """
-    Calculate NaK#
-        Must previously run compute_components_species(),
-        compute_components_cation(), compute_components_compound()
-        or compute components_per_ox().
+    Calculate NaK#.
+    
+    Must previously run compute_components_species(),
+    compute_components_cation(), compute_components_compound()
+    or compute components_per_ox().
     
     Parameters
     ----------
@@ -41,33 +45,42 @@ def NaK_num(df):
             
     Returns
     -------
-    NaK# : float
-        
+    NaK_num : float
+        The NaK#.        
     """            
-    return (
+    NaK_num = (
         (df['Na2O_primary_wt_dry'] + df['K2O_primary_wt_dry']) / 
-        (df['Na2O_primary_wt_dry'] + df['K2O_primary_wt_dry'] + df['CaO_primary_wt_dry'])
+        (df['Na2O_primary_wt_dry'] + df['K2O_primary_wt_dry'] + 
+            df['CaO_primary_wt_dry'])
         )
+    return NaK_num
 
 def normalize_v2(df, list_parameters, input_suffix, output_suffix, end_sum):
     """
-    Normalize amounts in list_parameters to end_sum value
-    New values assigned to df with list_parameter name appended
-    by output_suffix.
+    Normalise sample compositions so they sum to a given value.
+    
+    Concentrations in list_parameters are normalised so that they sum to 
+    value given by end_sum. New values added to df with list_parameter
+    name appended by output_suffix.
     
     Parameters
     ----------
-    df : pandas datframe.
-    Should contain only one row. To use with a multi-row dataframe use
-    df.apply().
-    list_parameters : list of columns in dataframe.
-    input_suffix : original suffix for columns to use.
-    output_suffix : add suffix to make a new column name.
-    end_sum : amount to sum to.
+    df : pandas dataframe
+        Should contain only one row. To use with a multi-row dataframe use
+        df.apply().
+    list_parameters : list 
+        Dataframe columns to be normalised.
+    input_suffix : str
+        Original suffix for columns to use.
+    output_suffix : str
+        Suffix to be added to create new column name.
+    end_sum : float
+        Value that columns should total after normalisation.
 
     Returns
     -------
-    df : pandas datframe.
+    df : pandas datframe
+        The updated dataframe containing normalised values.
     """
     SUM = 0.
     for i in range(0, len(list_parameters), 1):
@@ -82,18 +95,20 @@ def normalize_v2(df, list_parameters, input_suffix, output_suffix, end_sum):
 
 def compute_DMg(df):
     """
-    Calculate DMg
-        Follows method outlined in Beattie, (1993), Contrib. Min. and Pet.
-        Must previously run compute_components_cation().
+    Calculate DMg.
+
+    Follows method outlined in Beattie, (1993), Contrib. Min. and Pet.
+    Must previously run compute_components_cation().
     
     Parameters
     ----------
-    df : pandas dataframe with sample compositions in anhydrous mole%
+    df : pandas dataframe
+        Dataframe containing sample compositions in anhydrous mole%.
             
     Returns
     -------
     DMg : float
-        
+        Calculated DMg.
     """ 
     
     Sum_A = (df["FeO_primary_mol_dry"]*0.279)
@@ -106,7 +121,13 @@ def compute_DMg(df):
     Sum_B -= (df["MnO_primary_mol_dry"]*0.049)
     Sum_B += (df["CaO_primary_mol_dry"]*0.0135)
     Sum_B += (df["NiO_primary_mol_dry"]*-3.665)
-    Sum_B += 0.0001*(df["TiO2_primary_mol_dry"]+df["Al2O3_primary_mol_dry"]+df["Cr2O3_primary_mol_dry"]+df["Fe2O3_primary_mol_dry"]+df["Na2O_primary_mol_dry"]+df["K2O_primary_mol_dry"]+df["P2O5_primary_mol_dry"])
+    Sum_B += 0.0001*(df["TiO2_primary_mol_dry"] + 
+                     df["Al2O3_primary_mol_dry"] +
+                     df["Cr2O3_primary_mol_dry"] +
+                     df["Fe2O3_primary_mol_dry"] + 
+                     df["Na2O_primary_mol_dry"] + 
+                     df["K2O_primary_mol_dry"] + 
+                     df["P2O5_primary_mol_dry"])
     #####
     DMg = (2./3. - Sum_B) / Sum_A  
 
@@ -114,21 +135,24 @@ def compute_DMg(df):
 
 def compute_minerals(df):
     """
-    Calculate mineral components using equations
-    listed in Grove (1982) Contrib Mineral Petrol 80:160-182
+    Calculate proportions of mineral components.
+    
+    Using equations listed in Grove (1982, Contrib. Min. Pet., 80:160-182), 
+    compute stable mineral assemblage.
         
     Parameters
     ----------
     df : pandas dataframe 
-        sample compositions need suffix '_primary_mol_dry'
-        must be in mol% anhydrous.
+        Datframe containing sample compositions. Expects columns with suffix 
+        '_primary_mol_dry'; should be mol% anhydrous compositions.
         Should contain only one row. To use with a multi-row dataframe use
         df.apply().
                 
     Returns
     -------
-    MINS: array
-        predicted proportions of minerals.
+    MINS: numpy array
+        Predicted mineral proportions.
+        0: Olivine, 1: cpx, 2: plg, 3: qz, 4: opx, 5: spl, 6: ap.
     """      
     Sum = df["SiO2_primary_mol_dry"] + df["TiO2_primary_mol_dry"] + (df["Al2O3_primary_mol_dry"]*2.) 
     Sum += (df["Cr2O3_primary_mol_dry"]*2) + df["FeO_primary_mol_dry"]
@@ -181,9 +205,12 @@ def compute_parameter_BK21(df, OL, P, regression_params):
         sample compositions in anhydrous mol% need suffix '_primary_mol_dry'.
         Should contain only one row. To use with a multi-row dataframe use
         df.apply().
-    OL : Olivine concentration.
-    P: Pressure in GPa.
-    regression_params: one row array of 8 calibrated prameter values.
+    OL : flota
+        Olivine concentration.
+    P: float
+        Pressure in GPa.
+    regression_params: array
+        Array containing eight calibrated parameter values.
                 
     Returns
     -------
@@ -237,23 +264,26 @@ def compute_parameter_TGK12(df, MINS, P, regression_params):
 
 def compute_components_species(df):
     """
-    Calculate species proportions using equations
-    listed in Appendix A of Lee et al (2009) G-cubed
+    Calculate mole species proportions.
+    
+    Use equations listed in Appendix A of Lee et al (2009, G-cubed) to compute
+    proportions of each mole species.
         
     Parameters
     ----------
     df : pandas dataframe
-        The sample compositions in wt%.
+        Dataframe containing sample compositions in wt%.
         Should contain only one row. To use with a multi-row dataframe use
         df.apply().
                 
     Returns
     -------
     df : pandas dataframe
-         with additional columns of anhydrous wt% with suffix '_primary_wt_dry'
-         oxide mol% with suffix '_primary_mol'
-         species proportions in mol%, e.g., 'Si4O8'
-         anhydrous species proportions in mol%, e.g., 'Si4O8_dry'.
+        Original dataframe with additional columns:
+          - anhydrous wt% with suffix '_primary_wt_dry'
+          - oxide mol% with suffix '_primary_mol'
+          - species proportions in mol%, e.g., 'Si4O8'
+          - anhydrous species proportions in mol%, e.g., 'Si4O8_dry'.
     """   
     
     MAJOR_OXIDES = ['SiO2','Al2O3','FeO','Fe2O3','MgO','CaO','Na2O','K2O',
@@ -313,8 +343,9 @@ def compute_components_compound(df):
     Returns
     -------
     df : pandas dataframe
-         with additional columns of anhydrous wt% with suffix '_primary_wt_dry'
-         and anhydrous oxide mol% with suffix '_primary_mol_dry'.
+        Original dataframe with additional columns:
+          - anhydrous wt% with suffix '_primary_wt_dry'
+          - anhydrous oxide mol% with suffix '_primary_mol_dry'.
     """ 
         
     MAJOR_OXIDES = ['SiO2','Al2O3','FeO','MgO','CaO','Na2O','K2O','TiO2',
@@ -342,16 +373,17 @@ def compute_components_cation(df):
     Parameters
     ----------
     df : pandas dataframe
-        The sample compositions in wt%.
+        Dataframe containing sample compositions in wt%.
         Should contain only one row. To use with a multi-row dataframe use
         df.apply().
                 
     Returns
     -------
     df : pandas dataframe
-        with additional columns of anhydrous wt% with suffix '_primary_wt_dry'
-        cation mol% with suffix '_primary_mol'
-        and anhydrous cation mol% with suffix '_primary_mol_dry'.
+        Original dataframe with additional columns:
+          - anhydrous wt% with suffix '_primary_wt_dry'
+          - cation mol% with suffix '_primary_mol'
+          - anhydrous cation mol% with suffix '_primary_mol_dry'.
     """
         
     MAJOR_OXIDES = ['SiO2','Al2O3','FeO','Fe2O3','MgO','CaO','Na2O','K2O',
@@ -388,16 +420,16 @@ def compute_components_per_oxygen(df):
     Parameters
     ----------
     df : pandas dataframe
-        The sample compositions in wt%.
+        Dataframe containing sample compositions in wt%.
         Should contain only one row. To use with a multi-row dataframe use
         df.apply().
                 
     Returns
     -------
     df : pandas dataframe
-        with additional columns of anhydrous wt% with suffix '_primary_wt_dry'
-        volatile free oxide mol content per unit oxygen with suffix
-        '_primary_mol_dry'.
+        Original dataframe with additional columns:
+          - anhydrous wt% with suffix '_primary_wt_dry'
+          - volatile free oxide mol content per unit oxygen with suffix '_primary_mol_dry'.
     """ 
     MAJOR_OXIDES = ['SiO2','Al2O3','FeO','MgO','CaO','Na2O','K2O',
         'TiO2','MnO','Cr2O3', 'P2O5', 'NiO', 'H2O', 'CO2'] 
@@ -721,6 +753,7 @@ class TGK12_SPL:
     def compute_temperature(self, P):
         """
         Compute equilibration pressure and temperature for a given sample.
+        
         Assumes spinel is stable mantle phase.
         Lines (3) and (4) of Table (5), Till et al (2012, JGR).
     
@@ -750,6 +783,7 @@ class TGK12_SPL:
     def compute_pressure_temperature(self):    
         """
         Compute equilibration pressure and temperature for a given sample.
+        
         Assumes spinel is stable mantle phase.
         Lines (3) and (4) of Table (5), Till et al (2012, JGR).
     
@@ -785,6 +819,7 @@ class TGK12_PLG:
     def compute_temperature(self, P):
         """
         Compute equilibration pressure and temperature for a given sample.
+        
         Assumes plagioclase is stable mantle phase.
         Line (2) of Table (5), Till et al (2012, JGR).
     
@@ -813,6 +848,7 @@ class TGK12_PLG:
     def compute_pressure_temperature(self):
         """
         Compute equilibration pressure and temperature for a given sample.
+        
         Assumes plagioclase is stable mantle phase.
         Line (1 and 2) of Table (5), Till et al (2012, JGR).
     
@@ -923,6 +959,7 @@ class G13:
     def compute_pressure_temperature(self):
         """
         Compute equilibration pressure and temperature for a given sample.
+        
         Assumes garnet is stable mantle phase.
         Line (1) and (6) of Table (4), Grove et al (2013, Contrib Min Pet).
     
@@ -956,6 +993,7 @@ class BK21_GNT:
     def compute_temperature(self, P):
         """
         Calculate equlibration temperature.
+        
         Equation 1G-T of Table (1), Brown Krein et al (2021, JGR: Solid Earth).
         
         Parameters
@@ -1015,6 +1053,7 @@ class BK21_SPL:
     def compute_temperature(self, P):
         """
         Calculate equlibration temperature.
+        
         Line (17) of Table (1), Brown Krein et al (2021, JGR: Solid Earth).
         
         Parameters
@@ -1074,6 +1113,7 @@ class BK21_PLG:
     def compute_temperature(self, P):
         """
         Calculate equlibration temperature.
+        
         Line (6) of Table (1), Brown Krein et al (2021, JGR: Solid Earth).
         
         Parameters
@@ -1099,6 +1139,7 @@ class BK21_PLG:
     def compute_pressure_temperature(self):
         """
         Calculate equlibration conditions.
+        
         Line (1 and 7) of Table (1), Brown Krein et al (2021, JGR: Solid Earth).
         
         Parameters
@@ -1233,6 +1274,7 @@ class BK21:
             The sample compositions in wt%.
         P: float
             pressure in GPa
+        
         Returns
         -------
         RMSD : array
@@ -1286,6 +1328,7 @@ class BK21:
     def compute_pressure_temperature(self):
         """
         Calculate equlibration conditions.
+        
         Brown Krein et al (2021, JGR: Solid Earth).
         
         Parameters
@@ -1729,7 +1772,7 @@ def compute_sample_pressure_temperature(df, method="PF16", min_SiO2=0.):
 
 def compute_sample_temperature(df, method="HA15", P=1., min_SiO2=0.):
     """
-    Calculate temperate of melt equilibration
+    Calculate temperate of melt equilibration.
     
     Parameters
     ----------

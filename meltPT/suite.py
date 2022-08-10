@@ -191,7 +191,7 @@ class Suite:
         ----------
         method : str
             Code corresponding to desired thermobarometer.
-            Current options are
+            Current options are:
               - P08: Putirka et al. (2008, Revs. in Min. and Geo.)
               - L09: Lee et al. (2009, EPSL)
               - TGK12_PLG: Till et al. (2012, JGR: Solid Earth), plagioclase
@@ -217,6 +217,30 @@ class Suite:
         
         Applies "compute_sample_temperature" to the "primary"
         property. Result is saved in the "PT" property.
+        
+        Parameters
+        ----------
+        method : str
+            Code corresponding to desired thermometer.
+            Current options are:
+              - P08: Putirka et al. (2008, Revs. in Min. and Geo.)
+              - L09: Lee et al. (2009, EPSL)
+              - TGK12_PLG: Till et al. (2012, JGR: Solid Earth), plagioclase
+              - TGK12_SPL: Till et al. (2012, JGR: Solid Earth), spinel
+              - PF16: Plank and Forsyth (2016, G-cubed)
+              - SD20: Sun and Dasgupta (2020, EPSL)
+              - BK21: Brown Krien et al. (2021, JGR: Solid Earth), stable phase
+              - BK21_PLG: Brown Krien et al. (2021, JGR: Solid Earth), plagioclase
+              - BK21_SPL: Brown Krien et al. (2021, JGR: Solid Earth), spinel
+              - BK21_GNT: Brown Krien et al. (2021, JGR: Solid Earth), garnet
+              - B93: Beattie (1993, Contrib. to Min. and Pet.)
+              - P07_2: Putirka et al. (2007, Chem. Geol.), Equation 2
+              - P07_4: Putirka et al. (2007, Chem. Geol.), Equation 4
+              - HA15: Herzberg and Asimow (2015, G-cubed)
+        P : float
+            Pressure at which temperature whould be calculated.
+        min_SiO2 : float
+            Threshold SiO2 content below which samples will be ignored.
         """
         self.PT = self.primary.apply(
             compute_sample_temperature, 
@@ -231,6 +255,26 @@ class Suite:
         
         Applies "compute_sample_pressure" to the "primary"
         property. Result is saved in the "PT" property.
+        
+        Parameters
+        ----------
+        method : str
+            Code corresponding to desired barometer.
+            Current options are:
+              - P08: Putirka et al. (2008, Revs. in Min. and Geo.)
+              - L09: Lee et al. (2009, EPSL)
+              - TGK12_PLG: Till et al. (2012, JGR: Solid Earth), plagioclase
+              - TGK12_SPL: Till et al. (2012, JGR: Solid Earth), spinel
+              - PF16: Plank and Forsyth (2016, G-cubed)
+              - SD20: Sun and Dasgupta (2020, EPSL)
+              - BK21: Brown Krien et al. (2021, JGR: Solid Earth), stable phase
+              - BK21_PLG: Brown Krien et al. (2021, JGR: Solid Earth), plagioclase
+              - BK21_SPL: Brown Krien et al. (2021, JGR: Solid Earth), spinel
+              - BK21_GNT: Brown Krien et al. (2021, JGR: Solid Earth), garnet
+        T : float
+            Temperature at which pressure should be calculated.
+        min_SiO2 : float
+            Threshold SiO2 content below which samples will be ignored.
         """
         self.PT = self.primary.apply(
             compute_sample_pressure, 
@@ -406,9 +450,12 @@ class Suite:
             self.upper_potential_temperature, self.upper_path = find_bounding_potential_temperature(upper_points, self.potential_temperature, mantle, threshold=bounds_threshold)
             self.lower_potential_temperature, self.lower_path = find_bounding_potential_temperature(lower_points, self.potential_temperature, mantle, lower=True, threshold=bounds_threshold)
 
-    def write_to_csv(self, outfile, write_primary=True, write_PT=True, write_suite_Tp=False, write_individual_Tp=False):
+    def write_to_csv(self, outfile, write_primary=True, write_PT=True, 
+                        write_suite_Tp=False, write_individual_Tp=False):
         """
         Write results to csv.
+        
+        
         """
         output_df = self.data.copy()
         if write_primary and self.primary is not None:
