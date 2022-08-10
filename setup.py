@@ -17,7 +17,8 @@ setup(
         'pyyaml',
         'sympy',
         'nbsphinx',
-        'sphinx-rtd-theme'
+        'sphinx-rtd-theme',
+        'ipykernel'
     ],
     scripts=['meltPT/meltPT'],
 )

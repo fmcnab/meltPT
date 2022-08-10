@@ -291,11 +291,16 @@ def backtrack_sample_composition(
         If True, will print messages with information at each iteration.
     max_olivine_addition : float, optional
         Maximum fraction of olivine to add before backtracking is abandoned.
+    return_all : bool
+        Return intermediate backtracking compositions.
     
     Returns
     -------
     primary_oxide : df
         The backtracked compositions.
+    composition_through_addition : list
+        If return_all is True, returns list of dictionaries containing
+        intermediate backtracking compositions.
     """
 
     # Get major oxides from data frame

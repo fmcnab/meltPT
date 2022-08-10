@@ -1,8 +1,8 @@
 
 """
-=====
-suite
-=====
+===============
+The Suite class
+===============
 
 Process suites of samples.
 
@@ -455,7 +455,24 @@ class Suite:
         """
         Write results to csv.
         
+        Combine desired outputs, give appropriate column names, and save as
+        csv to a specified location.
         
+        Parameters
+        ----------
+        outfile : str
+            Path to location where csv should be saved.
+        write_primary : bool
+            Whether hydrous wt% concentrations should be saved.
+        write_PT : bool
+            Whether equilibration pressure/temperature estimates should be
+            saved.
+        write_suite_Tp : bool
+            Whether results of fitting melting paths through suite of pressure/
+            temperature estimates should be saved.
+        write_individual_Tp : bool
+            Whether results of fitting melting paths through individual
+            pressure/temperature points should be saved.
         """
         output_df = self.data.copy()
         if write_primary and self.primary is not None:
