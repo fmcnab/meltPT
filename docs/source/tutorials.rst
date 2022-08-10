@@ -19,6 +19,6 @@ Python code.
    :maxdepth: 2
    :caption: Contents:
    
-   input
+   input_file
    Tutorial_1
    Tutorial_5
