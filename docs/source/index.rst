@@ -11,7 +11,7 @@ Welcome to meltPT's documentation!
    :caption: Contents:
 
    about
-   getstarted
+   installation
    thermobarometers
    tutorials
    codedoc
