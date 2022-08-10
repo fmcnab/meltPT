@@ -321,6 +321,7 @@ def backtrack_sample_composition(
     else:
 
         if verbose:
+
             print("Backtracking sample %s to primary composition:" % df.Sample)
 
         dm_tot = 0.
@@ -333,9 +334,12 @@ def backtrack_sample_composition(
             dm_tot += dm
             Fo = compute_forsterite_number(oxide_wt_hydrous, Kd=Kd)
             if verbose:
+                cation = oxide_wt_to_cation_mole(oxide_wt_hydrous)
+                if not Kd:
+                    Kd_i = compute_partition_coefficient(cation)
                 print(
-                    "    - %.2f%% olivine added, melt Fo = %.4f." %
-                    (dm_tot/(1.+dm_tot)*100., Fo)
+                    "    - %.2f%% olivine added, melt Fo = %.4f, Kd = %.4f." %
+                    (dm_tot/(1.+dm_tot)*100., Fo, Kd_i)
                     )
             if dm_tot/(1. + dm_tot) > max_olivine_addition:
                 oxide_wt_hydrous = fill_dict_with_nans(oxide_wt_hydrous)
