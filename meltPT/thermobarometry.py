@@ -12,6 +12,7 @@ import warnings
 import numpy as np
 import pandas as pd
 import sympy as sym
+import inspect
 
 def Mg_num(df):
     """
@@ -1742,6 +1743,8 @@ def compute_sample_pressure_temperature(df, method="PF16", min_SiO2=0.):
     
     if df['SiO2_primary_wt'] < min_SiO2:
         out = {'P': np.nan, 'P_err': np.nan, 'T': np.nan, 'T_err': np.nan}
+    elif inspect.isclass(method):
+        out = method(df).compute_pressure_temperature()
     elif method == "PF16":
         out = PF16(df).compute_pressure_temperature()
     elif method == "L09":
@@ -1807,6 +1810,8 @@ def compute_sample_temperature(df, method="HA15", P=1., min_SiO2=0.):
     
     if df['SiO2_primary_wt'] < min_SiO2:
         out = {'P': np.nan, 'P_err': np.nan, 'T': np.nan, 'T_err': np.nan}
+    elif inspect.isclass(method):
+        out = method(df).compute_temperature(P)
     elif method == "HA15":
         out = HA15(df).compute_temperature(P) 
     elif method == "P07_2":
@@ -1865,6 +1870,8 @@ def compute_sample_pressure(df, method="PF16", T=1300., min_SiO2=0.):
     
     if df['SiO2_primary_wt'] < min_SiO2:
         out = {'P': np.nan, 'P_err': np.nan, 'T': np.nan, 'T_err': np.nan}
+    elif inspect.isclass(method):
+        out = method(df).compute_pressure(T)
     elif method == "PF16":
         out = PF16(df).compute_pressure(T) 
     elif method == "L09":
