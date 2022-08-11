@@ -5,11 +5,14 @@ About
 Background
 ==========
 
-**meltPT** is a Python package for whole-rock major-element themormobarometric analyses of basaltic (mafic) rocks. It contains modules for:
+**meltPT** is a Python package for whole-rock major-element themormobarometric
+analyses of basaltic (mafic) rocks. It contains modules for:
 
-* Correcting sample compositions for effects of olivine crystallisation
-* Estimating pressures and temperatures at which samples were last in equilibrium with the mantle
-* Estimating melt fractions and potential temperatures on an individual basis or for a suite of samples
+*  Correcting sample compositions for effects of olivine crystallisation
+*  Estimating pressures and temperatures at which samples were last in
+   equilibrium with the mantle
+*  Estimating melt fractions and potential temperatures on an individual basis
+   or for a suite of samples
 
 
 =============
@@ -19,8 +22,8 @@ Citing meltPT
 If you use our code, please cite us. Currently each **meltPT** is archived in
 our Zenodo repository:
 
-* M\ :sup:`c`\ Nab, F. and Ball, P. W. (2022), meltPT, version 0.0.7-alpha, 
-*Zenodo*, `doi:10.5281/zenodo.6948030 <https://doi.org/10.5281/zenodo.6948030>`_.
+*  M\ :sup:`c`\ Nab, F. and Ball, P. W. (2022), meltPT, version 0.0.7-alpha,
+   *Zenodo*, `doi:10.5281/zenodo.6948030 <https://doi.org/10.5281/zenodo.6948030>`_.
 
 Please be sure to include the version number of the code you used, so that
 others can reproduce your results. We are also working on an accompanying
@@ -34,5 +37,6 @@ a list of themormobarometric schemes available in **meltPT**, see the
 
 If you use our melt-path fitting routines you should also cite:
 
-* pyMelt: `Matthews et al. (in rev., Volcanica) <https://doi.org/10.31223/X5JP7X>`_
-* melting model for our examples: `Katz et al. (2003, G-cubed) <https://doi.org/10.1029/2002GC000433>`_
+*  pyMelt: `Matthews et al. (in rev., Volcanica) <https://doi.org/10.31223/X5JP7X>`_
+*  melting model for our examples:
+   `Katz et al. (2003, G-cubed) <https://doi.org/10.1029/2002GC000433>`_
