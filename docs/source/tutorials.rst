@@ -22,3 +22,4 @@ Python code.
    input_file
    Tutorial_1
    Tutorial_5
+   Tutorial_6
