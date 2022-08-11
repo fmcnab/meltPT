@@ -12,7 +12,7 @@ import matplotlib.pyplot as plt
 
 # ---- Isolate Island Data
 # Read in compilation dataset of Hawaiian samples from McNab & Ball, (2022)
-df = pd.read_csv("Hawaii.csv", sep=',')
+df = pd.read_csv("Dataset_S1.csv", sep=',')
 
 # We want take only samples from our Hawaii database that correspond to
 # the Mauna Kea Trend: Moloka`i, Maui and the Hawai`ian volcanoes Kohala, 
@@ -51,7 +51,7 @@ s = Suite("province.csv", min_MgO=8.5)
 # ---- Backtrack and Estimate pressure and temperature
 # See Tutorial 1 for comprehensive explanation
 s.backtrack_compositions()
-s.compute_pressure_temperature()
+s.compute_pressure_temperature(min_SiO2=40.)
 
 # ---- Fit Tp to Oahu Data
 # See Tutorial 1 for comprehensive explanation
@@ -78,8 +78,8 @@ ax1.plot(T_sol, P_sol, "k")
 ax1.plot(s.path.T, s.path.P, "-", color="k", zorder=1)
 
 # Plot bounding melt paths
-ax1.plot(s.upper_path.T, s.upper_path.P, "--", color="k", zorder=1)
-ax1.plot(s.lower_path.T, s.lower_path.P, "--", color="k", zorder=1)
+#ax1.plot(s.upper_path.T, s.upper_path.P, "--", color="k", zorder=1)
+#ax1.plot(s.lower_path.T, s.lower_path.P, "--", color="k", zorder=1)
 
 # Plot data
 
@@ -91,11 +91,11 @@ ax1.scatter(s.PT['T'][s.data['Stage']=="Shield"], s.PT['P'][s.data['Stage']=="Sh
             marker="^", facecolors="orange", edgecolor="k", zorder=2)
 
 # Organise axes
-ax1.text(0.95, 0.95, "$T_p$ = $%i^{+%i}_{-%i}$ $^\circ$C" % (
-    s.potential_temperature, 
-    s.upper_potential_temperature - s.potential_temperature,
-    s.potential_temperature - s.lower_potential_temperature), verticalalignment='top', 
-          horizontalalignment='right', transform=ax1.transAxes, fontsize=12)
+#ax1.text(0.95, 0.95, "$T_p$ = $%i^{+%i}_{-%i}$ $^\circ$C" % (
+#    s.potential_temperature, 
+#    s.upper_potential_temperature - s.potential_temperature,
+ #   s.potential_temperature - s.lower_potential_temperature), verticalalignment='top', 
+ #         horizontalalignment='right', transform=ax1.transAxes, fontsize=12)
 ax1.text(0.05, 0.05, 'a', verticalalignment='bottom', 
           horizontalalignment='left', transform=ax1.transAxes, fontsize=12)
 ax1.set_xlabel("Temperature [$^\circ$C]")

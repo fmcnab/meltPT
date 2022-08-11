@@ -20,11 +20,9 @@ df = pd.read_csv("Gale_2013_MOR_Sample_Data.csv", sep=',')
 # This database does not include H2O estimates and some samples have
 # incomplete major element compositional records. We therefore only
 # want samples with recorded Ce concentrations (that we can convert 
-# into H2O estimates) and FeO concentrations (which is only present 
-# in samples with complete major element profiles). We also filter 
-# the database to remove samples that are close to the Iceland
-# hotspot.
-df = df.loc[(df['FeO']>0.) & (df['Ce']>0.)]
+# into H2O estimates). We also filter the database to remove samples 
+# that are close to the Iceland hotspot.
+df = df.loc[df['Ce']>0.]
 df = df.loc[(df['Latitude']>70.) | (df['Latitude']<60.)]
 
 # We then save this filtered database as ridge_in.csv
@@ -41,14 +39,15 @@ df.to_csv("ridge_in.csv", sep=',')
 # Chemical Geology, 479. Ce_to_H2O sets how we estimate H2O from Ce 
 # concentrations and we use the value of 200 from Yang et al., (2021),
 # Nature Communications, 12.
-s = Suite("ridge_in.csv", src_FeIII_totFe=0.14, Ce_to_H2O=200.,
-          min_SiO2=40., min_MgO=8.5)
-
+s = Suite("ridge_in.csv", src_FeIII_totFe=0.14, Ce_to_H2O=200., min_MgO=8.5)
 
 # ---- Backtrack Compositions and Calculate PT
 # See Tutorial 1 for complete explanation
 s.backtrack_compositions()
-s.compute_pressure_temperature()
+s.compute_pressure_temperature(min_SiO2=40.)
+
+# ---- 
+s.write_to_csv("Ridge_output.csv")
 
 # ---- Create Figure 2a of McNab & Ball (2022)
 # Make a multi-panelled figure (2x2)
@@ -77,6 +76,8 @@ ax1.xaxis.set_label_position('top')
 # estimate of primary composition (e.g., Na90) and ridge depth
 # (Gale_2014_MOR_Segment_Data.csv)
 df = pd.read_csv("Gale_2013_MOR_Sample_Data.csv", sep=',')
+df = df.loc[df['Ce']>0.]
+df = df.loc[(df['Latitude']>70.) | (df['Latitude']<60.)]
 seg_data = pd.read_csv('Gale_2014_MOR_Segment_Data.csv', sep=',')
 
 # ---- Set up output pandas dataframe for writing results
@@ -108,15 +109,14 @@ for i in range(0, (len(ridges) - 1), 1):
     ridge_df.to_csv('ridge.csv', index=False)
 
     # Parse ridge segment data to s and filter for key criteria
-    s2 = Suite("ridge.csv", Ce_to_H2O=200., src_FeIII_totFe=0.14, 
-              min_SiO2=40., min_MgO=8.5)
+    s2 = Suite("ridge.csv", Ce_to_H2O=200., src_FeIII_totFe=0.14, min_MgO=8.5)
     
     # Make sure ridge segment >5 data points
     if len(s2.data['Province']) > 5:
 
         # Find pressure and temperature of each sample
         s2.backtrack_compositions()
-        s2.compute_pressure_temperature()  
+        s2.compute_pressure_temperature(min_SiO2=40.)  
 
         # make sure ridge has >5 Tp estimates
         if len(s2.PT['T']) > 5:
@@ -175,7 +175,6 @@ ax2.xaxis.set_label_position('top')
 ax2.xaxis.set_tick_params(top=True, labeltop=True, bottom=False, labelbottom=False)
 ax2.yaxis.set_label_position('right')
 ax2.yaxis.set_tick_params(right=True, labelright=True, left=False, labelleft=False)
-plt.show()
 
 # ---------------------
 # ---- Create Figure 2c - Na90 as function of Tp
@@ -210,4 +209,8 @@ ax4.yaxis.set_tick_params(right=True, labelright=True, left=False, labelleft=Fal
 # ---------------------
 plt.show()
 
+# ---------------------
+# Print df_out to output file
+# ---------------------
+df_out.to_csv('ridges_Tp.csv')
 

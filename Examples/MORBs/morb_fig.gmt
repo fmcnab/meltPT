@@ -1,0 +1,130 @@
+#!/bin/bash
+
+gmt gmtset PS_MEDIA a2
+gmt gmtset FONT_ANNOT_PRIMARY 8p
+gmt gmtset MAP_ANNOT_OFFSET_PRIMARY 3p
+gmt gmtset MAP_LABEL_OFFSET 5p
+gmt gmtset FONT_LABEL 10p
+gmt gmtset MAP_FRAME_TYPE plain
+gmt gmtset PS_LINE_JOIN round
+
+infile="Ridge_output.csv"
+infile2="ridges_Tp.csv"
+outfile="morb_fig.ps"
+
+gmt makecpt -T1300/1600/20 -Chot -D > tp.cpt
+
+#######################################
+# Plot PT of all MORB data
+proj="-JX3.2/-3.2"
+R1="-R1250/1590/0/157"
+R2="-R1250/1590/0/3.75"
+
+Tp="1450"
+Tp_max="34"
+Tp_min="28"
+
+#python3 melt_path_gmt.py $Tp $Tp_max $Tp_min
+
+#Plot box 1
+gmt psbasemap $proj $R2 -Ba100f50:"Temperature (@+o@+C)":/a1f0.5:"Pressure (GPa)":WeNs -Y10 -X0.9 -K > $outfile
+
+#Plot Katz Melt Curves
+#awk 'BEGIN {FS=" "} ; {print $2,$1}' Tp_ar_max.temp | gmt psxy $R2 $proj -W0.8,dimgrey,- -K -O >> $outfile
+#awk 'BEGIN {FS=" "} ; {print $2,$1}' Tp_ar.temp | gmt psxy $R2 $proj -W0.8,dimgrey -K -O >> $outfile
+#awk 'BEGIN {FS=" "} ; {print $2,$1}' Tp_ar_min.temp | gmt psxy $R2 $proj -W0.8,dimgrey,- -K -O >> $outfile
+
+#plot solidi
+#awk 'BEGIN {FS=" "} ; {print $2,$1}' sol.temp | gmt psxy $proj $R2 -W1,black -K -O >> $outfile
+
+#Plot Samples
+awk 'BEGIN { FS = "," }{if (NR>1 && $96>0) print $97, $96}' $infile | gmt psxy $proj $R2 -Sc0.1 -W0.4 -O -K -N >> $outfile
+
+#echo "3.1 3.1 T@-p@- = $Tp@++$Tp_max@+@--$Tp_min@- @+o@+C" | gmt pstext -JX4.5/4.5 -R0/4.5/0/4.5 -F+f8p,Helvetica,black+jRT -Gwhite -N -O -K >> $outfile
+
+echo "0.15 0.15 a" | gmt pstext -JX8/8 -R0/8/0/8 -F+f10p,Helvetica,black+jLB -C20% -W0.8 -N -O -K >> $outfile
+
+#######################################
+
+gmt gmtset MAP_LABEL_OFFSET 5p
+
+# Plot Histogram of PT estimates
+
+proj="-JX3.2/3.2"
+rgn="-R1300/1590/0/10"
+
+gmt psbasemap $proj $rgn -Ba100f50:"T@-p@- (@+o@+C)":/a5f1:"Number of Ridges":swNE -X3.7 -K -O >> $outfile
+
+echo "3.1 3.1 T@-p@- = 1450@++34@+@--28@- @+o@+C" | gmt pstext -JX4.5/4.5 -R0/4.5/0/4.5 -F+f10p,Helvetica,black+jRT -Gwhite -N -O -K >> $outfile
+
+awk '{FS=","}{ if (NR>1) print $6}' $infile2 | gmt pshistogram -W25 $rgn $proj -Ctp.cpt -L0.8 -K -O >> $outfile
+
+echo "0.15 3.05 b" | gmt pstext -JX8/8 -R0/8/0/8 -F+f10p,Helvetica,black+jLT -C20% -W0.8 -N -O -K >> $outfile
+
+gmt psbasemap $proj $rgn -Ba100f50:"T@-p@- (@+o@+C)":/a5f1:"Number of Ridges":swne -K -O >> $outfile
+
+#######################################
+
+# Plot Na90 MORB data
+proj="-JX3.2/3.2"
+R1="-R1300/1590/1.25/3.25"
+
+echo "1300 2.594
+1300 1.82
+1650 1.82
+1650 2.594
+1300 2.594" | gmt psxy $proj $R1 -Glightgray -X-3.7 -Y-3.7 -K -O >> $outfile
+echo "1300 2.207
+1650 2.207" | gmt psxy $proj $R1 -W0.8,- -K -O >> $outfile
+awk '{FS=","}{if (NR>1 && $9>0) print $6, $9, $6, ($6-$8), ($7-$6)}' $infile2 | gmt psxy $proj $R1 -W0.8 -Ex+/0.8 -Sc0.18 -Ctp.cpt -K -O >> $outfile
+awk '{FS=","}{if (NR>1 && $9>0) print $6, $9, $6}' $infile2 | gmt psxy $proj $R1 -W0.8 -Sc0.18 -Ctp.cpt -K -O >> $outfile
+echo "0.15 0.15 c" | gmt pstext -JX8/8 -R0/8/0/8 -F+f10p,Helvetica,black+jLB -C20% -W0.8 -N -K -O >> $outfile
+gmt psbasemap $proj $R1 -Ba100f50:"T@-p@- (@+o@+C)":/a1f0.5:"Na@-90@- (wt%)":enSW -K -O >> $outfile
+
+#######################################
+
+# Plot ridge-depth MORB data
+proj="-JX3.2/3.2"
+R1="-R1300/1590/1/5"
+
+echo "1300 3.927
+1300 1.99
+1650 1.99
+1650 3.927
+1300 3.927" | gmt psxy $proj $R1 -Glightgray -X3.7 -K -O >> $outfile
+echo "1300 2.96
+1650 2.96" | gmt psxy $proj $R1 -W0.8,- -K -O >> $outfile
+awk '{FS=","}{if (NR>1 && $9>0) print $6, ($10*-1)/1000, ($6-$8), ($7-$6), ($11/1000)}' $infile2 | gmt psxy $proj $R1 -W0.8 -Sc0.14 -Ex+y/0.8 -K -O >> $outfile
+awk '{FS=","}{if (NR>1 && $9>0) print $6, ($10*-1)/1000, $6}' $infile2 | gmt psxy $proj $R1 -W0.8 -Sc0.18 -Ctp.cpt -K -O >> $outfile
+echo "0.15 0.15 d" | gmt pstext -JX8/8 -R0/8/0/8 -F+f10p,Helvetica,black+jLB -C20% -W0.8 -N -K -O >> $outfile
+gmt psbasemap $proj $R1 -Ba100f50:"T@-p@- (@+o@+C)":/a1f0.5:"Ridge Depth (km)":EnSw -K -O >> $outfile
+
+#######################################
+
+proj="-JN7.1c"
+rgn="-R-180/180/-90/90"
+
+gmt pscoast $proj $rgn -A30000 -W0.5 -Ggray -Y-4.8 -X-4.4 -K -O >> $outfile
+gmt psxy MOR_Boundaries.dat $rgn $proj -W0.5 -K -O >> $outfile
+
+awk '{FS=","}{if (NR>1) print $3, $4, $6}' $infile2 | gmt psxy $proj $rgn -W0.5 -Sc0.14 -Ctp.cpt -K -O >> $outfile
+awk '{FS=","}{if (NR>1) print $3, $4, $6}' $infile2 | gmt psxy $proj $rgn -Sc0.12 -Ctp.cpt -K -O >> $outfile
+
+gmt psbasemap $proj $rgn -Ba0 -K -O >> $outfile
+
+gmt gmtset MAP_LABEL_OFFSET -5p
+gmt gmtset MAP_ANNOT_ORTHO z
+gmt psscale -Dx7.4/1.8+w2.5/0.2+jMC+mc+e -Ba100f50:"T@-p@- (@+o@+C)": -Ctp.cpt -K -O >> $outfile
+gmt gmtset MAP_ANNOT_ORTHO ew
+gmt gmtset MAP_LABEL_OFFSET 3p
+
+echo "0.15 3.55 e" | gmt pstext -JX8/8 -R0/8/0/8 -F+f10p,Helvetica,black+jLT -C20% -W0.8 -N -O >> $outfile
+
+############################
+
+gmt gmtset MAP_LABEL_OFFSET 3p
+
+#########
+rm *.temp
+gmt psconvert $outfile -A -P -E500 -Tj
+rm $outfile

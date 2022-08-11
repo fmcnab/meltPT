@@ -1,0 +1,10 @@
+# GMT 6 Session common arguments shelf
+BEGIN GMT 6.0.0
+B	a100f20:Temperature (@+o@+C):/a50f10:Depth (km):E
+J	X
+JX	X3.4/-2.9
+R	1250/1750/15.7/172.7
+X	3.9
+Y	-3.4
+@L	67
+END
