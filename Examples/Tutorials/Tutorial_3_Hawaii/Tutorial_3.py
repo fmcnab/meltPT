@@ -21,7 +21,7 @@ df = pd.read_csv("Hawaii.csv", sep=',')
 Island = "Oahu"
 
 # Island2 = np.nan if only doing one island
-# Change to another island name tperform calculation on multiple islands 
+# Change to another island name to perform calculation on multiple islands 
 # at once.
 Island2 = np.nan
 
