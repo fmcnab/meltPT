@@ -1,5 +1,5 @@
 ==============
-The input file
+The Input File
 ==============
 
 All analyses in **meltPT** require an input file containing the compositions of

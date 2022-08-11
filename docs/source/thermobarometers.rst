@@ -47,3 +47,13 @@ Currently Available Options
 **Unfinished Thermobarometers**
 
 * G13       - `Grove et al. (2013, Contrib. Min. and Pet.)  <https://doi.org/10.1007/s00410-013-0899-9>`_
+
+
+=======================
+Custom Thermobarometers
+=======================
+
+We have designed **meltPT** so that additional thermobarometers can be easily
+included. If **meltPT** does not include a thermobarometer you would like to
+use, see our :doc:`Tutorial_6` for instructions on how to do so. If you are not
+comfortable writing your own Python code, then just get in touch with us.
