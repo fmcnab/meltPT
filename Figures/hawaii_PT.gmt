@@ -91,9 +91,9 @@ gmt psbasemap $proj $R6 -Ba100f20:"":/a50f10:"Depth (km)":e -K -O >> $outfile
 echo "0 0" | gmt psxy $proj $R1 -Y30 -X20 -K > $outfile
 province="Kauai"
 province_written="Kaua@~\242@~i"
-Tp=1554
-Tp_max=67
-Tp_min=58
+Tp=1550
+Tp_max=49
+Tp_min=71
 
 Plot_Box_1
 echo "3.2 2.7 a" | gmt pstext -R0/4.5/0/4.5 -JX4.5/4.5 -F+f10p,Helvetica,black+jRT -C25%/25% -W0.8 -Gwhite -K -O -N >> $outfile
@@ -112,9 +112,9 @@ gmt psbasemap $proj $R6 -Ba0.0002f0.0001:"@+143@+Nd/@+144@+Nd":/a50f10:"Depth (k
 
 province="Oahu"
 province_written="O@~\242@~ahu"
-Tp=1530
-Tp_max=39
-Tp_min=27
+Tp=1534
+Tp_max=38
+Tp_min=32
 
 Plot_Box_1
 echo "3.2 2.7 e" | gmt pstext -R0/4.5/0/4.5 -JX4.5/4.5 -F+f10p,Helvetica,black+jRT -C25%/25% -W0.8 -Gwhite -K -O -N >> $outfile

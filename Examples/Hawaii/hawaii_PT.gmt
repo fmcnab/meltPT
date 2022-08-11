@@ -131,9 +131,9 @@ gmt psbasemap $proj $R6 -Ba0.0002f0.0001:"@+143@+Nd/@+144@+Nd":/a50f10:"Depth (k
 
 province="Kauai"
 province_written="Kaua\140i"
-Tp=1550
-Tp_max=49
-Tp_min=71
+Tp=1551
+Tp_max=47
+Tp_min=72
 
 Plot_Box_1
 echo "3.2 2.7 b" | gmt pstext -R0/4.5/0/4.5 -JX4.5/4.5 -F+f10p,Helvetica,black+jRT -C25%/25% -W0.8 -Gwhite -K -O -N >> $outfile
@@ -149,9 +149,9 @@ gmt psbasemap $proj $R6 -Ba0.0004f0.0002:"@+143@+Nd/@+144@+Nd":/a50f10:"Depth (k
 
 province="Oahu"
 province_written="O\140ahu"
-Tp=1534
-Tp_max=38
-Tp_min=32
+Tp=1533
+Tp_max=40
+Tp_min=31
 
 Plot_Box_1
 echo "3.2 2.7 c" | gmt pstext -R0/4.5/0/4.5 -JX4.5/4.5 -F+f10p,Helvetica,black+jRT -C25%/25% -W0.8 -Gwhite -K -O -N >> $outfile
@@ -167,9 +167,9 @@ gmt psbasemap $proj $R6 -Ba0.0004f0.0002:"@+143@+Nd/@+144@+Nd":/a50f10:"Depth (k
 
 province="Molokai"
 province_written="Moloka\140i + Maui"
-Tp=1558
-Tp_max=32
-Tp_min=26
+Tp=1557
+Tp_max=43
+Tp_min=25
 
 Plot_Box_1
 #awk 'BEGIN { FS = "," }{if (NR>1 && $2=="Maui" && $6==0 && $95>0) print $97, $95}' $infile | gmt psxy $proj $R2 -Sd0.15 -Ggrey -W -O -K -N >> $outfile
