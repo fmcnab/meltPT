@@ -10,7 +10,7 @@ import matplotlib.pyplot as plt
 # Start by importing data from your csv. In this case our data are stored in
 # a file called "PF16_UT09DV04.csv". To keep this example simple, the input infile
 # contains a single sample, UT09DV04, from Plank & Forsyth (2016).
-s = Suite("PF16_UT09DV04.csv", src_FeIII_totFe=0.17)
+s = Suite("./Data/PF16_UT09DV04.csv", src_FeIII_totFe=0.17)
 
 # You have now created an instance of meltPT's Suite class, containing the
 # sample data. Data are stored in a pandas dataframe, which you can preview by
@@ -25,7 +25,7 @@ print(s.data)
 # equilibrated with the mantle. To do so, use the Suite's backtrack_compositions
 # method. Here we have set the verbose flag to True, so program will print
 # updates at each interation.
-s.backtrack_compositions(Kd=0.3, verbose=True, target_Fo=0.9)
+s.backtrack_compositions(verbose=True, target_Fo=0.9)
 
 # As you can see, the sample started with a Forsterite number of c. 0.85. The
 # program then added olivine in equilibrium with the melt, until, after adding
