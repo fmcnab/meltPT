@@ -11,10 +11,10 @@
 # ---- Input / output filenames and options ---------------------------------- #
 
 # Path to input data file.
-data_file: "PF16_UT09DV04.csv"
+data_file: "./Data/PF16_UT09DV04.csv"
 
 # Path to output data file.
-output_file: "PF16_UT09DV04_out.csv"
+output_file: "./Data/PF16_UT09DV04_out.csv"
 
 # How to read input CSV.
 read_as_primary: False

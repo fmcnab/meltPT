@@ -30,7 +30,7 @@ import sys
 # accessed 02 Aug 2022.
 # Result for Experiment H195 (Kinzler and Grove, 1992) - Column AW
 
-s1 = Suite("Data/KG92.csv", read_as_primary=True)
+s1 = Suite("./Data/KG92.csv", read_as_primary=True)
 s1.compute_temperature(method="B93", P=1.3)
 
 print("B93 Documented Result:            P = 1.30 GPa, T = 1469 oC.")
@@ -49,7 +49,7 @@ print("-----------------------------------------------------------")
 # Instead, we substitute DMg from Beattie, (1993) (Column DK).
 # We also normalise columns G-R to 100 wt% prior to calculation.
 
-s2 = Suite("Data/KG92.csv", read_as_primary=True)
+s2 = Suite("./Data/KG92.csv", read_as_primary=True)
 s2.compute_temperature(method="P07_2", P=1.3)
 print("P07_2 Documented Result:          P = 1.30 GPa, T = 1490 oC.")
 print("Our result at 1.30 GPa:           P = %.2f GPa, T = %i oC." % 
@@ -67,7 +67,7 @@ print("-----------------------------------------------------------")
 # Instead, we substitute DMg from Beattie, (1993) (Column AU).
 
 
-s3 = Suite("Data/KG92.csv", read_as_primary=True)
+s3 = Suite("./Data/KG92.csv", read_as_primary=True)
 s3.compute_temperature(method="P07_4", P=1.3)
 print("P07_4 Documented Result:          P = 1.30 GPa, T = 1444 oC.")
 print("Our result at 1.30 GPa:           P = %.2f GPa, T = %i oC." % 
@@ -90,10 +90,10 @@ print("-----------------------------------------------------------")
 # fixed, or use the output primary composition from the spreadsheet, 
 # we can replicate their results.
 
-s4 = Suite("Data/L09_s190.csv", src_FeIII_totFe=0.05, Ce_to_H2O=200.)
+s4 = Suite("./Data/L09_s190.csv", src_FeIII_totFe=0.05, Ce_to_H2O=200.)
 s4.backtrack_compositions(target_Fo=0.9, dm=0.005, Kd=0.32166722315513757, verbose=False)
 s4.compute_pressure_temperature(method="L09")
-s4a = Suite("Data/L09_s190.csv", src_FeIII_totFe=0.05, Ce_to_H2O=200.)
+s4a = Suite("./Data/L09_s190.csv", src_FeIII_totFe=0.05, Ce_to_H2O=200.)
 s4a.backtrack_compositions(target_Fo=0.9, dm=0.005, verbose=False)
 s4a.compute_pressure_temperature(method="L09")
 print("L09 Documented Result             P = 2.39 GPa, T = 1503 oC.")
@@ -109,7 +109,7 @@ print("-----------------------------------------------------------")
 
 # Till et al, 2012 
 # Comparing to result for Reykjanes in Table 6 of Till et al., (2012).
-s8 = Suite("Data/TGK12_T6.csv", read_as_primary=True)
+s8 = Suite("./Data/TGK12_T6.csv", read_as_primary=True)
 s8.compute_pressure_temperature(method="TGK12_SPL")
 print("TGK12 Documented Result:          P = 1.16 GPa, T = 1316 oC.")
 print("Our result:                       P = %.2f GPa, T = %i oC." % 
@@ -121,7 +121,7 @@ print("-----------------------------------------------------------")
 # Comparing to result in Supplementary Iformation 1 of Herzberg &
 # Asimow, (2015) for Mkea in MEGAPRIMELT3
 # Again, this result only tests the thermometer.
-s10 = Suite("Data/HA15_MEGAPRIMELT3.csv", read_as_primary=True)
+s10 = Suite("./Data/HA15_MEGAPRIMELT3.csv", read_as_primary=True)
 s10.compute_temperature(method="HA15", P=0.)
 print("HA15 Documented Result:           P = 0.00 GPa, T = 1431 oC.")
 print("Our result at 0 GPa:              P = %.2f GPa, T = %i oC." % 
@@ -132,7 +132,7 @@ print("-----------------------------------------------------------")
 # Plank and Forsyth, 2016
 # Comparing to result in Supplementary S7 in Plank & Forsyth, (2016)
 # Also provides an opportunity to test backtracking method.
-s11 = Suite("Data/PF16_S7.csv", src_FeIII_totFe=0.19, Ce_to_H2O=200.)
+s11 = Suite("./Data/PF16_S7.csv", src_FeIII_totFe=0.19, Ce_to_H2O=200.)
 s11.backtrack_compositions(Kd=0.3, verbose=False)
 s11.compute_pressure_temperature()
 print("PF16 Documented Result:           P = 2.09 GPa, T = 1347 oC.")
@@ -144,7 +144,7 @@ print("-----------------------------------------------------------")
 # Sun & Dasgupta, 2020 (SD20)
 # Comparing to result in Supplementary 1 of Sun & Dasgupta, (2020)
 # for Longhi (1995) sample.
-s13 = Suite("Data/SD20_S1.csv", read_as_primary=True)
+s13 = Suite("./Data/SD20_S1.csv", read_as_primary=True)
 s13.compute_pressure_temperature(method="SD20")
 print("SD20 Documented Result:           P = 2.90 GPa, T = 1529 oC.")
 print("Our result:                       P = %.2f GPa, T = %i oC." % 
@@ -156,7 +156,7 @@ print("-----------------------------------------------------------")
 # Comparing to result in Supplementary Table S1 of Sun & Dasgupta (2020)
 # for KLB-1 experiment 18 (Hirose & Kushiro, 1993). This sample is in 
 # the spinel stability field.
-s14 = Suite("Data/K21_KLB2.csv", read_as_primary=True)
+s14 = Suite("./Data/K21_KLB2.csv", read_as_primary=True)
 s14.compute_pressure_temperature(method="BK21")
 print("BK21 Documented Result:           P = 1.51 GPa, T = 1326 oC.")
 print("Our result :                      P = %.2f GPa, T = %i oC." % 
@@ -166,7 +166,7 @@ print()
 # Comparing to result in Supplementary Table S1 of Sun & Dasgupta (2020)
 # for KR4003 experiment 40.06 (Walter, 1998). This sample is in the 
 # garnet stability field.
-s15 = Suite("Data/K21_KR4003.csv", read_as_primary=True)
+s15 = Suite("./Data/K21_KR4003.csv", read_as_primary=True)
 s15.compute_pressure_temperature(method="BK21")
 print("BK21 Documented Result:           P = 3.56 GPa, T = 1584 oC.")
 print("Our result :                      P = %.2f GPa, T = %i oC." % 
@@ -179,7 +179,7 @@ print("-----------------------------------------------------------")
 # Note that this example only tests the thermometer and is not
 # yet working correctly. We are working to add G13 to the list 
 # of available thermobarometers.
-s9 = Suite("Data/G13_Table_5.csv", read_as_primary=True)
+s9 = Suite("./Data/G13_Table_5.csv", read_as_primary=True)
 s9.compute_temperature(method="G13", P=4.)
 print("WARNING: G13 does not yet work correctly")
 print("G13 Documented Result:            P = 4.00 GPa, T = 1624 oC.")
