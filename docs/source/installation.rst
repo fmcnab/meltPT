@@ -24,12 +24,23 @@ Next, download the code. Navigate to your desired location and type:
   $ git clone git@github.com:fmcnab/meltPT.git
 
 You should now have a directory called "meltPT". To install the package, enter
-this directory and run the setup script:
+this directory and run the setup script. Depending on how you plan to use
+**meltPT**, you have some options.
 
 .. code-block:: console
 
   $ cd meltPT
-  $ python3 setup.py install
+  $
+  $ # Basic install - recommended for those who want to use meltPT as it is.
+  $ pip install .
+  $
+  $ # "Editable" mode - recommended for those actively developing meltPT.
+  $ pip install -e .
+  $
+  $ # Including extra dependencies - 
+  $ # required for those who wish to compile documentation locally.
+  $ pip install .[docs]
+  $ pip install -e .[docs] # (editable)
 
 This will take a minute or two and print lots of stuff. If it completes
 successfully, you are now ready to use **meltPT**!
