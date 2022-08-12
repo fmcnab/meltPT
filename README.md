@@ -37,6 +37,8 @@ pip install .
 
 This will take a minute or two and print lots of stuff. If it completes successfully, you are now ready to use **meltPT**!
 
+For more information and a list of dependencies visit our [ReadtheDocs]{https://meltpt.readthedocs.io/en/latest/installation.html} page.
+
 ### Running meltPT
 
 We provide a command-line tool that will allow you start running the code without needing to write your own scripts. All you need to do is edit a parameter file that contains paths to your chosen input and output files, values for certain variables, and the analyses you would like to run.
@@ -55,13 +57,17 @@ The program should produce a file called "PF16_S7_out.csv", containing the sampl
 
 Elsewhere in the "Examples" directory you will find lots of scripts that utilise all the different functionalities of meltPT, and will hopefully help you write your own.
 
+## Using meltPT
+
+For more information, the **meltPT** readthedocs page has full documentation for the [codebase](https://meltpt.readthedocs.io/en/latest/codedoc.html), a series of informative [tutorials](https://meltpt.readthedocs.io/en/latest/tutorials.html), information about [contributing](https://meltpt.readthedocs.io/en/latest/contributing.html) and our [liscence](https://meltpt.readthedocs.io/en/latest/license.html).
+
 ## Citing meltPT
 
 If you use our code, please cite us. We are currently preparing an accompnaying manuscript for publication. In the meantime, you can cite the package with its Zenodo doi.
 
 We also urge you to cite the original literature on which our code is based:
 - Sample backtracking and thermobarometry: [Lee et al. (2009, *EPSL*)](https://doi.org/10.1016/j.epsl.2008.12.020)
-- Thermobarometry: please cite the appropriate thermobarometer.
+- Thermobarometry: please cite the appropriate thermobarometer [(see list)](https://meltpt.readthedocs.io/en/latest/thermobarometers.html).
 
 If you use our melt-path fitting routines you should also cite:
 - pyMelt: [Matthews et al. (in rev., *Volcanica*)](https://doi.org/10.31223/X5JP7X)
