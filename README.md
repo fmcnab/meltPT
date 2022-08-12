@@ -61,7 +61,7 @@ If you use our code, please cite us. We are currently preparing an accompnaying 
 
 We also urge you to cite the original literature on which our code is based:
 - Sample backtracking and thermobarometry: [Lee et al. (2009, *EPSL*)](https://doi.org/10.1016/j.epsl.2008.12.020)
-- Thermobarometry: [Plank and Forsyth (2016, *G<sup>3</sup>*)](https://doi.org/10.1002/2015GC006205)
+- Thermobarometry: please cite the appropriate thermobarometer.
 
 If you use our melt-path fitting routines you should also cite:
 - pyMelt: [Matthews et al. (in rev., *Volcanica*)](https://doi.org/10.31223/X5JP7X)
