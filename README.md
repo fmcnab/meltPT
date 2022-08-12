@@ -37,7 +37,7 @@ pip install .
 
 This will take a minute or two and print lots of stuff. If it completes successfully, you are now ready to use **meltPT**!
 
-For more information and a list of dependencies visit our [ReadtheDocs]{https://meltpt.readthedocs.io/en/latest/installation.html} page.
+For more information and a list of dependencies visit our [ReadtheDocs](https://meltpt.readthedocs.io/en/latest/installation.html) page.
 
 ### Running meltPT
 
@@ -59,7 +59,7 @@ Elsewhere in the "Examples" directory you will find lots of scripts that utilise
 
 ## Using meltPT
 
-For more information, the **meltPT** readthedocs page has full documentation for the [codebase](https://meltpt.readthedocs.io/en/latest/codedoc.html), a series of informative [tutorials](https://meltpt.readthedocs.io/en/latest/tutorials.html), information about [contributing](https://meltpt.readthedocs.io/en/latest/contributing.html) and our [liscence](https://meltpt.readthedocs.io/en/latest/license.html).
+For more information, the **meltPT** [ReadtheDocs](https://meltpt.readthedocs.io) page has full documentation for the [codebase](https://meltpt.readthedocs.io/en/latest/codedoc.html), a series of informative [tutorials](https://meltpt.readthedocs.io/en/latest/tutorials.html), information about [contributing](https://meltpt.readthedocs.io/en/latest/contributing.html) and our [liscence](https://meltpt.readthedocs.io/en/latest/license.html).
 
 ## Citing meltPT
 
