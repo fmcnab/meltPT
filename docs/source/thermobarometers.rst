@@ -55,5 +55,5 @@ Custom Thermobarometers
 
 We have designed **meltPT** so that additional thermobarometers can be easily
 included. If **meltPT** does not include a thermobarometer you would like to
-use, see our :doc:`Tutorial_6` for instructions on how to do so. If you are not
+use, see :doc:`Tutorial_6` for instructions on how to do so. If you are not
 comfortable writing your own Python code, then just get in touch with us.
