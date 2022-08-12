@@ -25,7 +25,7 @@ Next, download the code. Navigate to your desired location and type:
 
 You should now have a directory called "meltPT". To install the package, enter
 this directory and run the setup script. Depending on how you plan to use
-**meltPT**, you have some options.
+**meltPT**, you have some different options.
 
 .. code-block:: console
 

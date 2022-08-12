@@ -9,8 +9,8 @@ values for certain variables, and the analyses you would like to run.
 
 As an example, we repeat the analysis shown in Tutorial 1
 `Plank and Forsyth (2016-cubed) <https://doi.org/10.1002/2015GC006205>`_.
-Under "./Examples/Tutorials/Tutorial_5_Command_Line" you should find an example
-parameter file, which contains:
+Under "./Examples/Tutorials" you should find an example
+parameter file called "Tutorial_5.yaml" which contains:
 
 .. code-block:: python
 
@@ -19,7 +19,7 @@ parameter file, which contains:
   #                                                                              #
   # To run, at the command line type:                                            #
   #                                                                              #
-  # $ meltPT parameters.yaml                                                     #
+  # $ meltPT <parameter_file_name>.yaml                                          #
   #                                                                              #
   # ---------------------------------------------------------------------------- #
 
@@ -27,10 +27,10 @@ parameter file, which contains:
   # ---- Input / output filenames and options ---------------------------------- #
 
   # Path to input data file.
-  data_file: "PF16_UT09DV04.csv"
+  data_file: "Data/PF16_UT09DV04.csv"
 
   # Path to output data file.
-  output_file: "PF16_UT09DV04_out.csv"
+  output_file: "Data/PF16_UT09DV04_out.csv"
 
   # How to read input CSV.
   read_as_primary: False
@@ -102,7 +102,7 @@ To run the program, simply type:
 
 .. code-block:: console
 
-  $ meltPT parameters.yaml
+  $ meltPT Tutorial_5.yaml
 
 The program should produce a file called "PF16_UT09DV04_out.csv", containing
 the sample's backtracked composition, estimated equilibration pressure and

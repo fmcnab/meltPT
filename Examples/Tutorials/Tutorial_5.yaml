@@ -3,7 +3,7 @@
 #                                                                              #
 # To run, at the command line type:                                            #
 #                                                                              #
-# $ meltPT parameters.yaml                                                     #
+# $ meltPT <parameter_file_name>.yaml                                          #
 #                                                                              #
 # ---------------------------------------------------------------------------- #
 

@@ -27,19 +27,19 @@ Major elements: Optional
 Each of the thermobarometers we inlude in **meltPT** parameterise pressure and
 temperature as functions of different major elements. As such, we will look
 for the following input columns:
-  - "Al2O3"
-  - "Fe2O3" & "FeO_tot" (i.e., combined FeO and Fe2O3)
-  - "CaO"
-  - "Na2O"
-  - "K2O"
-  - "TiO2"
-  - "MnO"
-  - "Cr2O3"
-  - "P2O5"
-  - "NiO"
-  - "CoO"
-  - "H2O"
-  - "CO2"
+  - Al2O3
+  - Fe2O3 & FeO_tot (i.e., combined FeO and Fe2O3)
+  - CaO
+  - Na2O
+  - K2O
+  - TiO2
+  - MnO
+  - Cr2O3
+  - P2O5
+  - NiO
+  - CoO
+  - H2O
+  - CO2
 Though none of these are required.
 
 If any of these columns are not present, they will generally be assigned zero
@@ -63,7 +63,7 @@ use a calibrated proxy to estimate their concentrations. In meltPT, if
 H\ :sub:`2`\ O concentrations are set to zero, we search for a Ce column, 
 expected in ppm, and estimate water content using a specified
 H\ :sub:`2`\ O\ /Ce value. For CO\ :sub:`2` we optionally use a parameterisation
-based on SiO\  :sub:`2` content 
+based on SiO\ :sub:`2` content 
 `(Sun and Dasgupta, 2020, EPSL) <https://doi.org/10.1016/j.epsl.2020.116549>`_.
 
 Finally, since NiO, CoO, and Cr\ :sub:`2`\ O\ :sub:`3` are not always treated
@@ -79,13 +79,14 @@ We acknowledge that alternative methods exist to correct sample
 compositions for the effects of fractionaly crystallisation of olivine (and
 other phases). We therefore include an option to read the contents of the 
 input file as primary compositions. Column headings should be as above, but
-they will be treated by meltPT as primary compositions.
+they will be treated by meltPT as primary compositions. See
+:doc:`Tutorial_4` for examples.
 
 -----------------
 Other information
 -----------------
 
 Any other information (e.g. sample metadata, other elemental or isotopic
-concentrations), will be read in and stored, mainting the given column 
+concentrations), will be read in and stored, maintaining the given column 
 headings. These data will not be used by meltPT's functions but will be
 readily available to facilitate easy comparision with thermobarometric results.
