@@ -1,3 +1,5 @@
+.. highlight:: console
+
 Contributing
 ^^^^^^^^^^^^
 
@@ -36,19 +38,20 @@ a new **meltPT** release.
     * README.md (citation)
     * docs/source/conf.py
     * docs/source/about.rst (citation)
-    
+
+
 #.  *Create GitHub release*
 
     Create a new release on GitHub and check it worked properly on
     `Zenodo <https://doi.org/10.5281/zenodo.6948030>`_.
-    
+
+
 #.  *Build*
 
     First clean up old builds and make sure build is up to date. Then run build.
 
-    From the base directory:
-
-    .. code-block:: console
-      $ rm -r build
-      $ python3 -m pip install --upgrade build
-      $ python3 -m build
+    From the base directory::
+    
+        $ rm -r build
+        $ python3 -m pip install --upgrade build
+        $ python3 -m build
