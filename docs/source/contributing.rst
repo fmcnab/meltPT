@@ -55,3 +55,24 @@ a new **meltPT** release.
         $ rm -r build
         $ python3 -m pip install --upgrade build
         $ python3 -m build
+        
+#.  *Upload to TestPyPI*
+
+    Upgrade twine, then upload::
+
+        $ python3 -m pip install --upgrade twine
+        $ python3 -m twine upload --repository testpypi dist/*
+
+    
+#.  *Try out release on TestPyPI*
+
+    Create new virtual environment, try installing::
+
+        $ python3 -m venv test
+        $ source test/bin/activate
+        (test) $ python3 -m pip install \
+                    --index-url https://test.pypi.org/simple/ \
+                    --extra-index-url https://pypi.org/simple \
+                    meltPT
+    
+    Make sure everything works (e.g., run the tutorials).
