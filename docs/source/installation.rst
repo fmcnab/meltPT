@@ -5,7 +5,8 @@ Installation
 Linux/Mac
 =========
 
-We recommend running **meltPT** in a virtual environment. Start a terminal and
+To avoid incompatibility issues with other packages you may have installed, 
+we recommend running **meltPT** in a virtual environment. Start a terminal and
 enter:
 
 .. code-block:: console
@@ -57,22 +58,27 @@ Dependencies
 ============
 
 **meltPT** requires various other packages to be installed in order to work
-correctly. They are:
+correctly. We have tested meltPT with the following versions. They are:
 
-* pandas
-* numpy
-* scipy
-* matplotlib
-* shapely
-* pyMelt
-* pyyaml
-* sympy
+* pandas, v1.4
+* numpy, v1.23
+* matplotlib, v3.5
+* scipy, v1.8
+* shapely, v1.8
+* pyMelt, v1.96
+* pyyaml, v6.0
+* sympy, v1.10
+
+The additional packages required to compile documentation locally are:
+
+* sphinx, v5.1
+* nbsphinx, v0.8
+* sphinx-rtd-theme, v1.0
+* ipykernel, v6.15
 
 If you follow the steps above, these dependencies will automatically be
-installed alongside **meltPT**. The additional packages required to compile
-documentation locally are:
-
-* sphinx, version 4.4.0
-* nbsphinx
-* sphinx-rtd-theme
-* ipykernel
+installed alongside **meltPT**, with approximately these versions. Note that,
+if you don't use a virtual environment as described above, this might mean
+that versions of common packages you have already installed may change, and
+other packages you have installed may no longer work; this is why we
+recommend virtual environments.
