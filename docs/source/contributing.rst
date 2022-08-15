@@ -1,5 +1,9 @@
 Contributing
-^^^^^
+^^^^^^^^^^^^
+
+================
+Getting involved
+================
 
 Contributions to **meltPT** are encouraged! The library has be designed to
 support additional thermobarometers, melting models and fractional
@@ -14,3 +18,21 @@ not be included without an accompanying benchmarking test.
 
 We are always open to discussions about adding additional functionality to
 **meltPT** -- just get in touch!
+
+
+======================
+Creating a new release
+======================
+
+Here are some notes for developers outlining the various steps in creating
+a new **meltPT** release.
+
+#.  *Update version numbers*
+
+    At the moment version nnumbers are hard coded into the following files;
+    remember to update them!
+    
+    * setup.py
+    * README.md (citation)
+    * docs/source/conf.py
+    * docs/source/about.rst (citation)
