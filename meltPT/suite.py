@@ -44,7 +44,7 @@ class Suite:
     read_PT : bool
         If true, pressures and temperatures are not calculated.
         
-    Properties
+    Attributes
     ----------
     data : pandas dataframe
         The raw data from the provided csv.
@@ -90,31 +90,6 @@ class Suite:
     lower_path : instance of pyMelt.meltingcolumn_classes.meltingColumn
         If find_suite_potential_temperature has been run, with find_bounds,
         will be the lower-bounding melting path.
-    
-    Methods
-    -------
-    backtrack_compositions :
-        Backtrack compositions for entire suite.
-    compute_pressure_temperature :
-        Compute equilibration pressures and temperatures for entire suite.
-    compute_temperature :
-        Compute equilibration temperatures for entire suite assuming a
-        given pressure.
-    compute_pressure :
-        Compute equilibration pressures for entire suite assuming a given
-        temperature.        
-    check_samples_for_fitting :
-        Determine which samples should be fitted.
-    find_individual_melt_fractions :
-        Find best-fitting melt fractions for each sample relative to given melt
-        path.
-    find_individual_potential_temperatures :
-        Find best-fitting potential temperatures and corresponding melt
-        fractions for each sample.
-    find_suite_potential_temperature :
-        Find best-fitting potential temperature for entire suite.
-    write_to_csv :
-        Write results to csv.
     """
 
     def __init__(self, input_csv, Ce_to_H2O=0., src_FeIII_totFe=0., min_MgO=0., read_as_primary=False, param_co2=False, read_PT=False):
