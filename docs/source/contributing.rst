@@ -31,48 +31,62 @@ a new **meltPT** release.
 
 #.  *Update version numbers*
 
-    At the moment version nnumbers are hard coded into the following files;
-    remember to update them!
+    At the moment version nnumbers are hard coded into the following files:
     
     * setup.py
     * README.md (citation)
     * docs/source/conf.py
     * docs/source/about.rst (citation)
-
+    
+    Please remember to update them!
 
 #.  *Create GitHub release*
 
     Create a new release on GitHub and check it worked properly on
     `Zenodo <https://doi.org/10.5281/zenodo.6948030>`_.
 
-
 #.  *Build*
 
-    First clean up old builds and make sure build is up to date. Then run build.
+    Make sure build is up to date. Then run build.
 
     From the base directory::
     
-        $ rm -r build
         $ python3 -m pip install --upgrade build
         $ python3 -m build
         
 #.  *Upload to TestPyPI*
 
-    Upgrade twine, then upload::
+    You will need an account on TestPyPI for this. Upgrade twine, then upload::
 
         $ python3 -m pip install --upgrade twine
         $ python3 -m twine upload --repository testpypi dist/*
 
     
-#.  *Try out release on TestPyPI*
+#.  *Try out TestPyPI release*
 
-    Create new virtual environment, try installing::
+    Create a new virtual environment, try installing::
 
-        $ python3 -m venv test
+        $ python3 -m venv test_env
         $ source test/bin/activate
         (test) $ python3 -m pip install \
                     --index-url https://test.pypi.org/simple/ \
                     --extra-index-url https://pypi.org/simple \
                     meltPT
     
-    Make sure everything works (e.g., run the tutorials).
+    Make sure the expected version was installed and everything works
+    (e.g., run the tutorials).
+    
+#.  *Upload to the real PyPI*
+
+    As before::
+    
+        $ python3 -m twine upload dist/*
+        
+#.  *Test out PyPI release*
+
+    As before::
+
+    $ python3 -m venv test_env
+    $ source test/bin/activate
+    (test) $ python3 -m pip install meltPT
+        
