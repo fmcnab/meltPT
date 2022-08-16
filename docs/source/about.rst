@@ -22,7 +22,7 @@ Citing meltPT
 If you use our code, please cite us. Currently each **meltPT** release is
 archived in our Zenodo repository:
 
-*  M\ :sup:`c`\ Nab, F. and Ball, P. W. (2022), meltPT, version 0.0.9-alpha,
+*  M\ :sup:`c`\ Nab, F. and Ball, P. W. (2022), meltPT, version 1.0.0,
    *Zenodo*, `doi: 10.5281/zenodo.6948030 <https://doi.org/10.5281/zenodo.6948030>`_.
 
 Please be sure to include the version number of the code you used, so that

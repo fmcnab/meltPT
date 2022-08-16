@@ -27,7 +27,9 @@ Creating a new release
 ======================
 
 Here are some notes for developers outlining the various steps in creating
-a new **meltPT** release.
+a new **meltPT** release. To complete all of these steps, you will need the
+right permissions on GitHub, TestPyPI, and PyPI; get in touch with F.
+M\ :sup:`c`\ Nab (mcnab@gfz-potsdam.de) if you have any problems.
 
 #.  *Update version numbers*
 
