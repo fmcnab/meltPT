@@ -75,7 +75,7 @@ and our [liscence](https://meltpt.readthedocs.io/en/latest/license.html).
 If you use our code, please cite us. Currently each **meltPT** release is
 archived in our Zenodo repository:
 
-*  M<sup>c</sup>Nab, F. and Ball, P. W. (2022), meltPT, version 0.0.7-alpha,
+*  M<sup>c</sup>Nab, F. and Ball, P. W. (2022), meltPT, version 0.0.9-alpha,
    *Zenodo*, [doi: 10.5281/zenodo.6948030](https://doi.org/10.5281/zenodo.6948030).
 
 Please be sure to include the version number of the code you used, so that
@@ -94,4 +94,4 @@ If you use our melt-path fitting routines you should also cite:
 
 *  pyMelt: [Matthews et al. (in rev., Volcanica)](https://doi.org/10.31223/X5JP7X)
 *  melting model for our examples:
-   [Katz et al. (2003, G-cubed)](<https://doi.org/10.1029/2002GC000433)
+   [Katz et al. (2003, G-cubed)](https://doi.org/10.1029/2002GC000433)
