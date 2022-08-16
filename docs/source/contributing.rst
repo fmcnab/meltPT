@@ -60,7 +60,7 @@ a new **meltPT** release.
     being sure to include the right version number, upload::
 
         $ python3 -m pip install --upgrade twine
-        $ python3 -m twine upload --repository testpypi dist/meltpt-VERSION_NUMBER*
+        $ python3 -m twine upload --repository testpypi dist/meltPT-VERSION_NUMBER*
 
 #.  *Try out TestPyPI release*
 
@@ -80,7 +80,7 @@ a new **meltPT** release.
 
     As before::
     
-        $ python3 -m twine upload dist/meltpt-VERSION_NUMBER*
+        $ python3 -m twine upload dist/meltPT-VERSION_NUMBER*
 
 #.  *Test out PyPI release*
 

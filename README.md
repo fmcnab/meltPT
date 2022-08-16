@@ -24,23 +24,38 @@ $ # Activate new virtual environment.
 $ source /path/to/virtual/environment/bin/activate
 ```
 
-Next, download the code. Navigate to your desired location and type:
+What you do next depends on whether you just want to use meltPT as is or if
+you want to edit the source code.
+
+#### Basic Usage
+
+If you just want to use **meltPT** as it is you can now simply type:
+
+```
+(meltpt) $ pip install meltPT
+```
+  
+This will take a minute or two and print lots of stuff. If it completes
+successfully, you are now ready to use **meltPT**!
+
+#### Development usage
+
+If you want to edit **meltPT**'s source code, you first need to download it.
+Navigate to your desired location and type:
 
 ```
 git clone git@github.com:fmcnab/meltPT.git
 ```
 
 You should now have a directory called "meltPT". To install the package, enter
-this directory and run the setup script. Depending on how you plan to use
-**meltPT**, you have some different options.
+this directory and run the setup script. Using the -e flag means that the code
+will be installed in "editable" mode, and changes you make locally will be
+incorporated without the need for a fresh install.
 
 ```
 $ cd meltPT
 $
-$ # Basic install - recommended for those who want to use meltPT as it is.
-$ pip install .
-$
-$ # "Editable" mode - recommended for those actively developing meltPT.
+$ # Standard install
 $ pip install -e .
 $
 $ # Including extra dependencies - 
