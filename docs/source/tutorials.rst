@@ -22,6 +22,13 @@ All scripts and data corresponding to these Tutorials can be found on our
 `GitHub page <https://github.com/fmcnab/meltPT/tree/master/Examples/Tutorials>`_
 or in the `Zenodo archive <https://doi.org/10.5281/zenodo.6948030>`_.
 
+Note that, if you installed **meltPT** in a virtual environment, you might have
+some problems displaying images created with matplotlib: the default matplotlib
+backend is sometimes "agg", which cannot show figures. There does not seem to
+be a universal solution to this issue, so please see
+`here <https://matplotlib.org/3.1.3/faq/virtualenv_faq.html>`_ for some options
+on how to proceed. 
+
 .. toctree::
    :maxdepth: 2
    :caption: Contents:

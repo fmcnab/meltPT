@@ -18,6 +18,13 @@ environment called "meltpt", start a terminal and enter:
   $ # Activate new virtual environment.
   $ source /path/to/virtual/environment/meltpt/bin/activate
 
+Note that, when using a virtual environment, some users may experience issues
+trying to display images created with matplotlib (e.g., in our tutorials): the
+default matplotlib backend is sometimes "agg", which cannot show figures. There
+does not seem to be a universal solution to this issue, so please see
+`here <https://matplotlib.org/3.1.3/faq/virtualenv_faq.html>`_ for some options
+on how to proceed. 
+
 What you do next depends on whether you just want to use meltPT as is or if
 you want to edit the source code.
 
