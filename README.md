@@ -51,7 +51,7 @@ If you want to edit **meltPT**'s source code, you first need to download it.
 Navigate to your desired location and type:
 
 ```
-git clone git@github.com:fmcnab/meltPT.git
+(meltpt) $ git clone git@github.com:fmcnab/meltPT.git
 ```
 
 You should now have a directory called "meltPT". To install the package, enter
@@ -60,15 +60,15 @@ will be installed in "editable" mode, and changes you make locally will be
 incorporated without the need for a fresh install.
 
 ```
-$ cd meltPT
-$
-$ # Standard install
-$ pip install -e .
-$
-$ # Including extra dependencies - 
-$ # required for those who wish to compile documentation locally.
-$ pip install .[docs]
-$ pip install -e .[docs] # (editable)
+(meltpt) $ cd meltPT
+(meltpt) $
+(meltpt) $ # Standard install
+(meltpt) $ pip install -e .
+(meltpt) $
+(meltpt) $ # Including extra dependencies - 
+(meltpt) $ # required for those who wish to compile documentation locally.
+(meltpt) $ pip install .[docs]
+(meltpt) $ pip install -e .[docs] # (editable)
 ```
 
 This will take a minute or two and print lots of stuff. If it completes

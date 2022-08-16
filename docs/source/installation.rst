@@ -50,7 +50,7 @@ Navigate to your desired location and type:
 
 .. code-block:: console
 
-  $ git clone git@github.com:fmcnab/meltPT.git
+  (meltpt) $ git clone git@github.com:fmcnab/meltPT.git
 
 You should now have a directory called "meltPT". To install the package, enter
 this directory and run the setup script. Using the -e flag means that the code
@@ -59,15 +59,15 @@ incorporated without the need for a fresh install.
 
 .. code-block:: console
 
-  $ cd meltPT
-  $
-  $ # Standard install
-  $ pip install -e .
-  $
-  $ # Including extra dependencies - 
-  $ # required for those who wish to compile documentation locally.
-  $ pip install .[docs]
-  $ pip install -e .[docs] # (editable)
+  (meltpt) $ cd meltPT
+  (meltpt) $
+  (meltpt) $ # Standard install
+  (meltpt) $ pip install -e .
+  (meltpt) $
+  (meltpt) $ # Including extra dependencies - 
+  (meltpt) $ # required for those who wish to compile documentation locally.
+  (meltpt) $ pip install .[docs]
+  (meltpt) $ pip install -e .[docs] # (editable)
 
 As above, this will take a minute or two and print lots of stuff. If it
 completes successfully, you should now be ready to go.
