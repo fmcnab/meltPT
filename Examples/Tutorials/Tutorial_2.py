@@ -43,6 +43,9 @@ s = Suite("./Data/ridge_in.csv", src_FeIII_totFe=0.14, Ce_to_H2O=200., min_MgO=8
 
 # ---- Backtrack Compositions and Calculate PT
 # See Tutorial 1 for complete explanation
+# The min_SiO2 flag rejects all samples with SiO2 < 40 wt%. 
+# This value is chosen since the Plank and Forsyth thermobarometer is only 
+# calibrated for samples with SiO2 > 40 wt%.
 s.backtrack_compositions()
 s.compute_pressure_temperature(min_SiO2=40.)
 

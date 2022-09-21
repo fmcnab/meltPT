@@ -116,17 +116,17 @@ ax1.invert_yaxis()
 # ---- Plot Pressure vs. La/Sm in 
 
 # Plot Data
-ax2.scatter(s.data['Sm'][s.data['Stage']=="Shield"]/
-            s.data['Yb'][s.data['Stage']=="Shield"], 
-            s.PT['P'][s.data['Stage']=="Shield"], 
+ax2.scatter(s.data.loc[(s.data['Sm']>0.) & (s.data['Yb']>0.) & (s.data['Stage']=="Shield"), 'Sm']/
+            s.data.loc[(s.data['Sm']>0.) & (s.data['Yb']>0.) & (s.data['Stage']=="Shield"), 'Yb'], 
+            s.PT.loc[(s.data['Sm']>0.) & (s.data['Yb']>0.) & (s.data['Stage']=="Shield"), 'P'], 
             marker="^", facecolors="orange", edgecolor="k")
-ax2.scatter(s.data['Sm'][s.data['Stage']=="Post-Shield"]/
-            s.data['Yb'][s.data['Stage']=="Post-Shield"],
-            s.PT['P'][s.data['Stage']=="Post-Shield"],
+ax2.scatter(s.data.loc[(s.data['Sm']>0.) & (s.data['Yb']>0.) & (s.data['Stage']=="Post-Shield"), 'Sm']/
+            s.data.loc[(s.data['Sm']>0.) & (s.data['Yb']>0.) & (s.data['Stage']=="Post-Shield"), 'Yb'], 
+            s.PT.loc[(s.data['Sm']>0.) & (s.data['Yb']>0.) & (s.data['Stage']=="Post-Shield"), 'P'],
             marker="s", facecolors="deeppink", edgecolor="k", zorder=2)
-ax2.scatter(s.data['Sm'][s.data['Stage']=="Rejuvenated"]/
-            s.data['Yb'][s.data['Stage']=="Rejuvenated"],
-            s.PT['P'][s.data['Stage']=="Rejuvenated"],
+ax2.scatter(s.data.loc[(s.data['Sm']>0.) & (s.data['Yb']>0.) & (s.data['Stage']=="Rejuvenated"), 'Sm']/
+            s.data.loc[(s.data['Sm']>0.) & (s.data['Yb']>0.) & (s.data['Stage']=="Rejuvenated"), 'Yb'], 
+            s.PT.loc[(s.data['Sm']>0.) & (s.data['Yb']>0.) & (s.data['Stage']=="Rejuvenated"), 'P'],
             marker="o", facecolors="dodgerblue", edgecolor="k")
 
 # Organise axes

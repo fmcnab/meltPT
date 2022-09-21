@@ -9,7 +9,8 @@ import matplotlib.pyplot as plt
 # ---- Reading data and initialising the Suite object
 # Start by importing data from your csv. In this case our data are stored in
 # a file called "PF16_UT09DV04.csv". To keep this example simple, the input infile
-# contains a single sample, UT09DV04, from Plank & Forsyth (2016).
+# contains a single sample, UT09DV04, from Plank & Forsyth (2016). If necessary, 
+# please edit the path within Suite so that the csv file can be found.
 s = Suite("./Data/PF16_UT09DV04.csv", src_FeIII_totFe=0.17)
 
 # You have now created an instance of meltPT's Suite class, containing the

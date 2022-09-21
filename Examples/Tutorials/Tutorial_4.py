@@ -132,6 +132,8 @@ print("-----------------------------------------------------------")
 # Plank and Forsyth, 2016
 # Comparing to result in Supplementary S7 in Plank & Forsyth, (2016)
 # Also provides an opportunity to test backtracking method.
+# Note that we do not include a method flag in compute_pressure_temperature()
+# since this thermobarometer is the default choice.
 s11 = Suite("./Data/PF16_S7.csv", src_FeIII_totFe=0.19, Ce_to_H2O=200.)
 s11.backtrack_compositions(Kd=0.3, verbose=False)
 s11.compute_pressure_temperature()
