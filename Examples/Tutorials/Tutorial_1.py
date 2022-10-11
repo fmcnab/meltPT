@@ -100,7 +100,7 @@ s_varKd.find_individual_potential_temperatures(mantle)
 fig, axs = plt.subplots(1, 2, sharex=True, sharey=True, figsize=(14,5))
 
 # Set up pressure array.
-P = np.arange(1., 3.5, 0.01)
+P = np.arange(1., 4.5, 0.01)
 
 # Plot the solidus.
 axs[0].plot(lz.TSolidus(P), P, c="0.75", label="Solidus")
@@ -149,3 +149,47 @@ axs[0].set_ylabel(r"Pressure [GPa]")
 plt.show()
 
 
+# ---- Testing different thermobarometric schemes
+# meltPT includes several different thermobarometric schemes, which are simple
+# to interchange. Here we will quickly show you how to do this. In Tutorial 4,
+# we test out the different schemes more systematically, and in Tutorial 6, you
+# can see how to implement your own scheme.
+
+# To see a list of the available options, we can look at the
+# compute_presssure_temperature method's doc string. Type the following into
+# the prompt:
+# s.compute_pressure_temperature?
+
+s = Suite("./Data/PF16_UT09DV04.csv", src_FeIII_totFe=0.17, param_co2=True)
+s.backtrack_compositions(Kd=0.3, verbose=True, target_Fo=0.9)
+
+# First let's define a list of the schemes we would like to use. We will take
+# a subset for now.
+schemes =  ["PF16", "L09", "P08", "BK21", "SD20"]
+schemesT = ["B93", "P07_2", "P07_4", "HA15"]
+
+# Loop over the schemes saving the result in a separate list.
+PT = {}
+T = {}
+for scheme in schemes:
+    s.compute_pressure_temperature(method=scheme)
+    PT[scheme] = s.PT.copy()
+for scheme in schemesT:
+    s.compute_temperature(method=scheme, P=PT['PF16']['P'])
+    T[scheme] = s.PT.copy()
+    
+# Plot
+plt.plot(lz.TSolidus(P), P, c="0.75", label="Solidus")
+for scheme in schemes:
+    plt.errorbar(PT[scheme]['T'], PT[scheme]['P'], xerr=PT[scheme]['T_err'], yerr=PT[scheme]['P_err'], label=scheme, marker="o")
+for scheme in schemesT:
+    plt.errorbar(T[scheme]['T'], T[scheme]['P'], xerr=T[scheme]['T_err'], label=scheme, marker="^")
+
+plt.legend()
+plt.xlim(1300., 1550.)
+plt.ylim(1., 4.5)
+plt.xlabel(r"Temperature [$^{\circ}$C]")
+plt.ylabel(r"Pressure [GPa]")
+plt.gca().invert_yaxis()
+plt.show()
+    
