@@ -70,44 +70,82 @@ s.find_individual_potential_temperatures(mantle)
 print(s.individual_potential_temperatures)
 
 
+# ---- Variable Kd
+# In the above example we used a fixed value for the partition coefficient
+# that describes partitioning between olivine and melt, Kd. There is also an
+# option to allow this value to vary as a function of melt Mg#, after Tamura
+# et al. (2020, JoP). Let's repeat the steps above with this option.
+
+# Read the csv, create a new Suite object.
+s_varKd = Suite("./Data/PF16_UT09DV04.csv", src_FeIII_totFe=0.17)
+
+# Backtrack. Variable Kd is the default option, so we can simply miss out that
+# flag. Notice that in this case, we need to add more olivine, about 17%, to
+# reach our target forsterite content.
+s_varKd.backtrack_compositions(verbose=True, target_Fo=0.9)
+
+# Compute pressure and temperature. The result is hotter and deeper than the
+# fixed Kd case.
+s_varKd.compute_pressure_temperature(method="PF16")
+print(s.PT)
+
+# Find the best fitting potential temperature.
+s_varKd.find_individual_potential_temperatures(mantle)
+
+
 # ---- Plot
 # Now let's make a nice plot of our result!
 
-# Initialise
-plt.figure(figsize=(8,6))
+# Initialise seperate plots for the fixed and variable Kd axes.
+fig, axs = plt.subplots(1, 2, sharex=True, sharey=True, figsize=(14,5))
 
 # Set up pressure array.
-P = np.arange(1., 3., 0.01)
+P = np.arange(1., 3.5, 0.01)
 
 # Plot the solidus.
-plt.plot(lz.TSolidus(P), P, c="0.75", label="Solidus")
+axs[0].plot(lz.TSolidus(P), P, c="0.75", label="Solidus")
+axs[1].plot(lz.TSolidus(P), P, c="0.75", label="Solidus")
 
 # Plot an adiabat corresponding to the best-fitting potential temperature
 adiabat_label = r"Adiabat: $T_p$ = %i $^{\circ}$C" % s.individual_potential_temperatures.iloc[0]['Tp']
-plt.plot(
+axs[0].plot(
     mantle.adiabat(
         P, 
         s.individual_potential_temperatures.iloc[0]['Tp']), 
     P, ":", label=adiabat_label)
+adiabat_label = r"Adiabat: $T_p$ = %i $^{\circ}$C" % s_varKd.individual_potential_temperatures.iloc[0]['Tp']
+axs[1].plot(
+    mantle.adiabat(
+        P, 
+        s_varKd.individual_potential_temperatures.iloc[0]['Tp']), 
+    P, ":", label=adiabat_label)
     
 # Plot melt path corresponding to best-fitting potential temperature
 melt_label = r"Melting path: $T_p$ = %i $^{\circ}$C" % s.individual_potential_temperatures.iloc[0]['Tp']
-plt.plot(
+axs[0].plot(
     s.individual_potential_temperatures.iloc[0].path.T, 
     s.individual_potential_temperatures.iloc[0].path.P,
+    label=melt_label)
+melt_label = r"Melting path: $T_p$ = %i $^{\circ}$C" % s_varKd.individual_potential_temperatures.iloc[0]['Tp']
+axs[1].plot(
+    s_varKd.individual_potential_temperatures.iloc[0].path.T, 
+    s_varKd.individual_potential_temperatures.iloc[0].path.P,
     label=melt_label)
     
 # Plot our sample!
 sample_label = r"UT09DV04, $F$ = %.2f%%" % (s.individual_potential_temperatures.iloc[0]['F']*100.)
-plt.plot(s.PT['T'], s.PT['P'], "o", label=sample_label)
+axs[0].plot(s.PT['T'], s.PT['P'], "o", label=sample_label)
+sample_label = r"UT09DV04, $F$ = %.2f%%" % (s_varKd.individual_potential_temperatures.iloc[0]['F']*100.)
+axs[1].plot(s_varKd.PT['T'], s_varKd.PT['P'], "o", label=sample_label)
 
 # Do some formatting and reveal
-plt.xlabel(r"Temperature [$^{\circ}$C]")
-plt.ylabel(r"Pressure [GPa]")
-plt.xlim(1300., 1440.)
-plt.ylim(1., 3.)
-plt.legend()
-plt.gca().invert_yaxis()
+for ax in axs:
+    ax.set_xlabel(r"Temperature [$^{\circ}$C]")
+    ax.set_xlim(1300., 1500.)
+    ax.set_ylim(1., 3.5)
+    ax.legend()
+    ax.invert_yaxis()
+axs[0].set_ylabel(r"Pressure [GPa]")
 plt.show()
 
 
