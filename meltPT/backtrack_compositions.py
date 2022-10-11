@@ -342,6 +342,8 @@ def backtrack_sample_composition(
                 cation = oxide_wt_to_cation_mole(oxide_wt_hydrous)
                 if not Kd:
                     Kd_i = compute_partition_coefficient(cation)
+                else:
+                    Kd_i = Kd
                 print(
                     "    - %.2f%% olivine added, melt Fo = %.4f, Kd = %.4f." %
                     (dm_tot/(1.+dm_tot)*100., Fo, Kd_i)

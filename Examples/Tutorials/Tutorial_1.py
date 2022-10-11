@@ -26,7 +26,7 @@ print(s.data)
 # equilibrated with the mantle. To do so, use the Suite's backtrack_compositions
 # method. Here we have set the verbose flag to True, so program will print
 # updates at each interation.
-s.backtrack_compositions(verbose=True, target_Fo=0.9)
+s.backtrack_compositions(Kd=0.3, verbose=True, target_Fo=0.9)
 
 # As you can see, the sample started with a Forsterite number of c. 0.85. The
 # program then added olivine in equilibrium with the melt, until, after adding
