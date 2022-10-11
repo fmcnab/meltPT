@@ -16,6 +16,49 @@ import shapely.geometry as shp
 
 import pyMelt as m
 
+def find_max_potential_temperature(mantle):
+    """
+    Find the maximum valid potential temperature for a given pyMelt mantle
+    object.
+    
+    Solidi described by a parabolic function, as in Katz et al. (2003, 
+    G-cubed), have turning points at high temperatures/pressures. As a result,
+    adiabatic geotherms above some potential temperature no longer intersect
+    the solidus, which is a problem for the fitting functions in meltPT. This
+    function finds the maximum potential temperature that can be safely used
+    with a given mantle object. 
+    
+    Parameters
+    ----------
+    mantle : instance of pyMelt.mantle_class.mantle
+        The mantle object to be used to calculate the melting path.
+    """
+    
+    # Loop over lithologies, find potential temperature corresponing to solidus
+    # turning point.
+    Tp = []
+    for lith in mantle.lithologies:
+        
+        # Turning point pressure & temperature.
+        # Obtained by differentiating solidus and setting gradient to zero.
+        P_tp = -lith.parameters['A2'] / (2.*lith.parameters['A3'])
+        T_tp = lith.TSolidus(P_tp)
+        
+        # Corresponding potential temperature.
+        Tp.append( 
+            (T_tp+273.) / 
+            (np.exp(P_tp * lith.alphas / (lith.rhos*lith.CP)))-273.
+            )
+
+    # True maximum will be a bit higher.
+    # Increment Tp by one degree at a time until intersection can no longer
+    # be found.
+    Tp = np.ceil( min(Tp) )
+    while ~np.isnan(mantle.solidusIntersection(Tp)):
+        Tp += 1.
+    
+    return Tp
+
 
 def melt_fraction_to_pressure_temperature(F, path):
     """
@@ -214,11 +257,12 @@ def find_sample_potential_temperature(df, mantle):
         out = {
             'F': np.nan, 'P': np.nan, 'T': np.nan, 
             'misfit': np.nan, 'Tp': np.nan, 'path': np.nan}
-    else:    
+    else:
+        max_Tp = find_max_potential_temperature(mantle)
         Tp_fit = minimize_scalar(
             compute_sample_potential_temperature_misfit, 
-            bracket=(min([lith.TSolidus(0.) for lith in mantle.lithologies]),1600.), 
-            bounds=(min([lith.TSolidus(0.) for lith in mantle.lithologies]),1600.), 
+            bracket=(min([lith.TSolidus(0.) for lith in mantle.lithologies]),max_Tp), 
+            bounds=(min([lith.TSolidus(0.) for lith in mantle.lithologies]),max_Tp), 
             args=(df,mantle), 
             method="bounded")
         path = mantle.adiabaticMelt(
@@ -323,6 +367,9 @@ def find_bounding_potential_temperature(points, starting_temperature, mantle, lo
         Pstart=max(max(mantle.solidusIntersection(starting_temperature))+0.01, max_P),
         dP=-0.01)
 
+    # Maximum potential temperature for given mantle object
+    max_Tp = find_max_potential_temperature(mantle)
+
     # Start incrementally expanding bounds.
     while True:
              
@@ -347,7 +394,7 @@ def find_bounding_potential_temperature(points, starting_temperature, mantle, lo
         # Stop if we have reached threshold, otherwise increment and continue.
         if sum(inside) / len(points) > threshold:
             break
-        elif bounding_temperature > 1600.:
+        elif bounding_temperature > max_Tp:
             bounding_temperature = np.nan
             bounding_path = None
             break

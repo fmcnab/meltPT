@@ -403,10 +403,11 @@ class Suite:
             The lower bounding melting path.
         """
         self.check_samples_for_fitting(mantle, filters, filter_args)
+        max_Tp = find_max_potential_temperature(mantle)
         Tp_fit = minimize_scalar(
             compute_suite_potential_temperature_misfit, 
-            bracket=(min([lith.TSolidus(0.) for lith in mantle.lithologies]),1600.), 
-            bounds=(min([lith.TSolidus(0.) for lith in mantle.lithologies]),1600.),
+            bracket=(min([lith.TSolidus(0.) for lith in mantle.lithologies]),max_Tp), 
+            bounds=(min([lith.TSolidus(0.) for lith in mantle.lithologies]),max_Tp),
             args=(self.PT, mantle),
             method="bounded")
         self.path = mantle.adiabaticMelt(Tp_fit.x, Pstart=max(mantle.solidusIntersection(Tp_fit.x))+0.01, dP=-0.01)
