@@ -16,6 +16,7 @@ Welcome to meltPT's documentation!
    tutorials
    codedoc
    contributing
+   changelog
    license
 
 Indices and tables
