@@ -373,9 +373,7 @@ def find_bounding_potential_temperature(points, starting_temperature, mantle, lo
     
     # Start incrementally expanding bounds.
     while True:
-        
-        print(bounding_temperature, max_Tp)
-        
+                
         # Compute melting bath corresponding to bounding potential temperature.
         bounding_path = mantle.adiabaticMelt(
             bounding_temperature,
@@ -402,7 +400,6 @@ def find_bounding_potential_temperature(points, starting_temperature, mantle, lo
             if bounding_temperature >= max_Tp or bounding_temperature <= min_Tp:
                 bounding_temperature = np.nan
                 bounding_path = None
-                print("giving up")
                 break
             
     return bounding_temperature, bounding_path
