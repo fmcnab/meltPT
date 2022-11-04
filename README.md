@@ -76,8 +76,48 @@ successfully, you are now ready to use **meltPT**!
 
 ### Windows
 
-Unfortunately, we don't know much about using Python on a Windows system.
-But we plan to find out!
+We do not have much experience running Python on a Windows system, but outline
+here some basic steps that we have tested and believe should be accessible
+to most users.
+
+First, you need to install a Python package manager, if you don't have one
+already. We tested the Miniforge3 installer from 
+[Miniforge](https://github.com/conda-forge/miniforge>), which is free to
+anyone regardless of affiliation. If you are already running a different Conda 
+distribution, don't worry, the following steps should still work.
+
+Once you have a package manager installed, open the program. You should see
+a command prompt. Create a new environment in which to install **meltPT**,
+called, for example, 'meltpt':
+
+```
+(base) > conda create meltpt
+```
+
+Next, activate the environment:
+
+```
+(base) > conda activate meltpt
+(meltpt) >
+```
+  
+If you want to install an Interactive Development Environment (IDE), allowing
+you to edit scripts, use a Python interface etc., now is the time to install
+it. For example, [Spyder](https://www.spyder-ide.org/>):
+
+```
+(meltpt) > conda install spyder
+```
+  
+Finally, install **meltPT** using pip:
+
+```
+(meltpt) > pip install meltPT
+```
+
+If you wish to edit the source code, see the Linux/Mac instructions above for 
+alternative pip commands; these should also work in Conda. You should now be 
+ready to use **meltPT**!
 
 ## Using meltPT
 
