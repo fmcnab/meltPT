@@ -90,11 +90,11 @@ print("-----------------------------------------------------------")
 # fixed, or use the output primary composition from the spreadsheet, 
 # we can replicate their results.
 
-s4 = Suite("./Data/L09_s190.csv", src_FeIII_totFe=0.05, Ce_to_H2O=200.)
-s4.backtrack_compositions(target_Fo=0.9, dm=0.005, Kd=0.32166722315513757, verbose=False)
+s4 = Suite("./Data/L09_s190.csv", src_FeIII_totFe=0.05, src_Fo=0.9, Ce_to_H2O=200.)
+s4.backtrack_compositions(dm=0.005, Kd=0.32166722315513757, verbose=False)
 s4.compute_pressure_temperature(method="L09")
-s4a = Suite("./Data/L09_s190.csv", src_FeIII_totFe=0.05, Ce_to_H2O=200.)
-s4a.backtrack_compositions(target_Fo=0.9, dm=0.005, verbose=False)
+s4a = Suite("./Data/L09_s190.csv", src_FeIII_totFe=0.05, src_Fo=0.9, Ce_to_H2O=200.)
+s4a.backtrack_compositions(dm=0.005, verbose=False)
 s4a.compute_pressure_temperature(method="L09")
 print("L09 Documented Result             P = 2.39 GPa, T = 1503 oC.")
 print("Our result (Kd=0.32167):          P = %.2f GPa, T = %i oC." %

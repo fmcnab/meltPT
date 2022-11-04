@@ -36,10 +36,13 @@ df.to_csv("./Data/ridge_in.csv", sep=',')
 # min_SiO2 = 40 wt% ensures suitable samples for use with the Plank & 
 # Forsyth (2016) thermobarometer. src_FeIII_totFe set the Fe3+/Fe_sum ratio
 # of the melt and we take the value of 0.14 from Zhang et al., (2018),
-# Chemical Geology, 479. Ce_to_H2O sets how we estimate H2O from Ce 
+# Chemical Geology, 479. src_Fo sets the target Fo# for composition 
+# backtracking. Ce_to_H2O sets how we estimate H2O from Ce 
 # concentrations and we use the value of 200 from Yang et al., (2021),
 # Nature Communications, 12.
-s = Suite("./Data/ridge_in.csv", src_FeIII_totFe=0.14, Ce_to_H2O=200., min_MgO=8.5)
+s = Suite(
+    "./Data/ridge_in.csv", src_FeIII_totFe=0.14, src_Fo=0.9, Ce_to_H2O=200., 
+    min_MgO=8.5)
 
 # ---- Backtrack Compositions and Calculate PT
 # See Tutorial 1 for complete explanation

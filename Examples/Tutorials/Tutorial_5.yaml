@@ -40,7 +40,7 @@ backtrack:
   min_MgO: 8.
 
   # Target Forsterite number for samples during backtracking.
-  target_Fo: 0.9
+  src_Fo: 0.9
   
   # Partition coefficient for Mg and Fe exchange between olivine and melt.
   # Can be a float (e.g. ~0.3) or if False will be calculated as a function
