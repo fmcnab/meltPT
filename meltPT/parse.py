@@ -12,7 +12,9 @@ import warnings
 import numpy as np
 import pandas as pd
 
-def parse_csv(infile, Ce_to_H2O=0., src_FeIII_totFe=0., min_MgO=0., param_co2=False):
+def parse_csv(
+        infile, Ce_to_H2O=0., src_FeIII_totFe=0., src_Fo=0.9, min_MgO=0., 
+        param_co2=False):
     """
     Read a csv and return a dataframe after some processing.
     
@@ -109,6 +111,11 @@ def parse_csv(infile, Ce_to_H2O=0., src_FeIII_totFe=0., min_MgO=0., param_co2=Fa
     # Only applicable if FeO and Fe2O3 not already stated.
     df.loc[(df['FeO']==0.) | (df['Fe2O3']==0.), 'FeO'] = df['FeO_tot'] * (1. - df['src_FeIII_totFe'])
     df.loc[(df['FeO']==0.) | (df['Fe2O3']==0.), 'Fe2O3'] = df['FeO_tot'] * df['src_FeIII_totFe'] * 159.69 / 71.84 / 2.      
+
+    # Add chosen Fo# if none are given
+    if 'src_Fo' not in df.columns:
+        df['src_Fo'] = src_Fo
+    df.loc[df['src_Fo'] == 0, 'src_Fo'] = src_Fo
 
     # Calculate CO2 value if desired and CO2 value is zero
     # parameterize CO2 using Equation 8 of Sun & Dasgupta, 2020    

@@ -26,7 +26,7 @@ print(s.data)
 # equilibrated with the mantle. To do so, use the Suite's backtrack_compositions
 # method. Here we have set the verbose flag to True, so program will print
 # updates at each interation.
-s.backtrack_compositions(Kd=0.3, verbose=True, target_Fo=0.9)
+s.backtrack_compositions(Kd=0.3, verbose=True)
 
 # As you can see, the sample started with a Forsterite number of c. 0.85. The
 # program then added olivine in equilibrium with the melt, until, after adding
@@ -82,12 +82,12 @@ s_varKd = Suite("./Data/PF16_UT09DV04.csv", src_FeIII_totFe=0.17)
 # Backtrack. Variable Kd is the default option, so we can simply miss out that
 # flag. Notice that in this case, we need to add more olivine, about 17%, to
 # reach our target forsterite content.
-s_varKd.backtrack_compositions(verbose=True, target_Fo=0.9)
+s_varKd.backtrack_compositions(verbose=True)
 
 # Compute pressure and temperature. The result is hotter and deeper than the
 # fixed Kd case.
 s_varKd.compute_pressure_temperature(method="PF16")
-print(s.PT)
+print(s_varKd.PT)
 
 # Find the best fitting potential temperature.
 s_varKd.find_individual_potential_temperatures(mantle)
@@ -161,7 +161,7 @@ plt.show()
 # s.compute_pressure_temperature?
 
 s = Suite("./Data/PF16_UT09DV04.csv", src_FeIII_totFe=0.17, param_co2=True)
-s.backtrack_compositions(Kd=0.3, verbose=True, target_Fo=0.9)
+s.backtrack_compositions(Kd=0.3, verbose=True)
 
 # First let's define a list of the schemes we would like to use. We will take
 # a subset for now.

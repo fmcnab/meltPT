@@ -264,7 +264,7 @@ def fill_dict_with_nans(in_dict):
     return out_dict
 
 def backtrack_sample_composition(
-    df, target_Fo=0.9, Kd=None, dm=0.0005, verbose=False, 
+    df, Kd=None, dm=0.0005, verbose=False, 
     max_olivine_addition=0.3, return_all=False):
     """
     Backtrack composition to desired mantle forsterite number.
@@ -275,13 +275,9 @@ def backtrack_sample_composition(
     Parameters
     ----------
     df : pandas dataframe
-        Dataframe containing the initial composition to be backtracked.
-        Should contain only one row. To use with a multi-row dataframe use
-        df.apply().
-    target_Fo : float, optional
-        The forsterite number of the mantle source.
-        We add iteratively add olivine to the sample composition until this
-        value is reached.
+        Dataframe containing the initial composition to be backtracked and the
+        target forsterite number. Should contain only one row. To use with a 
+        multi-row dataframe use df.apply().
     Kd : float or NoneType, optional
         Partition coefficient to be used.
         If None, calculated from the sample composition provided.
@@ -317,7 +313,7 @@ def backtrack_sample_composition(
 
     # Check Fo is below mantle Fo
     Fo = compute_forsterite_number(oxide_wt_hydrous)
-    if target_Fo-Fo < 0.001:
+    if df['src_Fo']-Fo < 0.001:
         oxide_wt_hydrous = fill_dict_with_nans(oxide_wt_hydrous)
         dm_tot = np.nan
         message = df.Sample + ": backtracking failed! Starting Fo above mantle Fo."
@@ -331,8 +327,7 @@ def backtrack_sample_composition(
 
         dm_tot = 0.
         composition_through_addition = []
-        # while abs(target_Fo - Fo) > 1.e-15:
-        while target_Fo - Fo > 0.0002:
+        while df['src_Fo'] - Fo > 0.0002:
             
             oxide_wt_hydrous = add_olivine(oxide_wt_hydrous, Kd=Kd, dm=dm)
             composition_through_addition.append(oxide_wt_hydrous)

@@ -92,11 +92,14 @@ class Suite:
         will be the lower-bounding melting path.
     """
 
-    def __init__(self, input_csv, Ce_to_H2O=0., src_FeIII_totFe=0., min_MgO=0., read_as_primary=False, param_co2=False, read_PT=False):
+    def __init__(
+            self, input_csv, Ce_to_H2O=0., src_FeIII_totFe=0., src_Fo=0.9,
+            min_MgO=0., read_as_primary=False, param_co2=False, read_PT=False):
         self.data = parse_csv(
             input_csv,
             Ce_to_H2O=Ce_to_H2O,
             src_FeIII_totFe=src_FeIII_totFe,
+            src_Fo=src_Fo,
             min_MgO=min_MgO,
             param_co2=param_co2)
         self.PT_to_fit = None
@@ -124,7 +127,7 @@ class Suite:
             self.PT = None
             self.data = self.data.drop(labels=['P', 'T'], axis=1, errors='ignore')
 
-    def backtrack_compositions(self, target_Fo=0.9, Kd=False, dm=0.0005, verbose=False, max_olivine_addition=0.3):
+    def backtrack_compositions(self, Kd=False, dm=0.0005, verbose=False, max_olivine_addition=0.3):
         """
         Backtrack compositions for entire suite.
         
@@ -133,10 +136,6 @@ class Suite:
         
         Parameters
         ----------
-        target_Fo : float, optional
-            The forsterite number of the mantle source.
-            We add iteratively add olivine to the sample composition until this
-            value is reached.
         Kd : float or NoneType, optional
             Partition coefficient to be used.
             If None, calculated from the sample composition provided.
@@ -152,7 +151,7 @@ class Suite:
             backtrack_sample_composition,
             axis=1,
             result_type="expand",
-            args=(target_Fo,Kd,dm,verbose)
+            args=(Kd,dm,verbose)
             )
 
     def compute_pressure_temperature(self, method="PF16", min_SiO2=0.):
