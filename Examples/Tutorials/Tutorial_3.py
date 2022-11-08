@@ -58,7 +58,8 @@ s = Suite("./Data/province.csv", min_MgO=8.5)
 
 # ---- Backtrack and Estimate pressure and temperature
 # See Tutorial 1 for comprehensive explanation
-s.backtrack_compositions()
+b = BacktrackOlivineFractionation()
+s.backtrack_compositions(backtracker=b)
 s.compute_pressure_temperature(min_SiO2=40.)
 
 # ---- Fit Tp to Oahu Data

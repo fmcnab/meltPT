@@ -91,10 +91,12 @@ print("-----------------------------------------------------------")
 # we can replicate their results.
 
 s4 = Suite("./Data/L09_s190.csv", src_FeIII_totFe=0.05, src_Fo=0.9, Ce_to_H2O=200.)
-s4.backtrack_compositions(dm=0.005, Kd=0.32166722315513757, verbose=False)
+b4 = BacktrackOlivineFractionation(dm=0.005, Kd=0.32166722315513757)
+s4.backtrack_compositions(backtracker=b4)
 s4.compute_pressure_temperature(method="L09")
 s4a = Suite("./Data/L09_s190.csv", src_FeIII_totFe=0.05, src_Fo=0.9, Ce_to_H2O=200.)
-s4a.backtrack_compositions(dm=0.005, verbose=False)
+b4a = BacktrackOlivineFractionation(dm=0.005)
+s4a.backtrack_compositions(backtracker=b4a)
 s4a.compute_pressure_temperature(method="L09")
 print("L09 Documented Result             P = 2.39 GPa, T = 1503 oC.")
 print("Our result (Kd=0.32167):          P = %.2f GPa, T = %i oC." %
@@ -135,7 +137,8 @@ print("-----------------------------------------------------------")
 # Note that we do not include a method flag in compute_pressure_temperature()
 # since this thermobarometer is the default choice.
 s11 = Suite("./Data/PF16_S7.csv", src_FeIII_totFe=0.19, Ce_to_H2O=200.)
-s11.backtrack_compositions(Kd=0.3, verbose=False)
+b11 = BacktrackOlivineFractionation(Kd=0.3)
+s11.backtrack_compositions(backtracker=b11)
 s11.compute_pressure_temperature()
 print("PF16 Documented Result:           P = 2.09 GPa, T = 1347 oC.")
 print("Our result:                       P = %.2f GPa, T = %i oC." % 

@@ -29,11 +29,12 @@ s = Suite(
 if params['backtrack']['apply']:
     print()
     print("Backtracking sample compositions.")
-    s.backtrack_compositions(
+    b = BacktrackOlivineFractionation(
         Kd=params['backtrack']['Kd'],
         dm=params['backtrack']['dm'],
         max_olivine_addition=params['backtrack']['max_olivine_addition']
     )
+    s.backtrack_compositions(backtracker=b)
 if params['PT']['apply']:
     print()
     print("Computing sample equilibration pressures and temperatures.")

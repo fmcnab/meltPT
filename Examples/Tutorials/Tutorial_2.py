@@ -49,7 +49,8 @@ s = Suite(
 # The min_SiO2 flag rejects all samples with SiO2 < 40 wt%. 
 # This value is chosen since the Plank and Forsyth thermobarometer is only 
 # calibrated for samples with SiO2 > 40 wt%.
-s.backtrack_compositions()
+b = BacktrackOlivineFractionation()
+s.backtrack_compositions(backtracker=b)
 s.compute_pressure_temperature(min_SiO2=40.)
 
 # ---- 
@@ -121,7 +122,8 @@ for i in range(0, (len(ridges) - 1), 1):
     if len(s2.data['Province']) > 5:
 
         # Find pressure and temperature of each sample
-        s2.backtrack_compositions()
+        b = BacktrackOlivineFractionation()
+        s2.backtrack_compositions(backtracker=b)
         s2.compute_pressure_temperature(min_SiO2=40.)  
 
         # make sure ridge has >5 Tp estimates

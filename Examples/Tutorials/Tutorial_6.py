@@ -44,7 +44,8 @@ class ExampleThermobarometer:
 
 # Now let's try it out on our sample from Plank & Forsyth (2016)
 s = Suite("./Data/PF16_UT09DV04.csv", src_FeIII_totFe=0.17, src_Fo=0.9)
-s.backtrack_compositions()
+b = BacktrackOlivineFractionation()
+s.backtrack_compositions(backtracker=b)
 
 # Call the compute_pressure_temperature method and feed it our custom
 # thermobarometer.

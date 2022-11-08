@@ -23,10 +23,16 @@ print(s.data)
 # The next step is backtracking the sample's composition. The aim here is to 
 # account for the effects of fractional crystallisation of olivine and estimate
 # the sample's "primary" composition: i.e., its composition when it last
-# equilibrated with the mantle. To do so, use the Suite's backtrack_compositions
-# method. Here we have set the verbose flag to True, so program will print
-# updates at each interation.
-s.backtrack_compositions(Kd=0.3, verbose=True)
+# equilibrated with the mantle. To do so, we first set up a backtracker class
+# instance. Here we correct for olivine fractionation, follwing the method of
+# Lee et al. (2009, EPSL); the only option currently implemented in meltPT.
+# We specify a fixed value for the partition coefficient, Kd, and set "verbose"
+# to True, so that the program prints updates during the process.
+b = BacktrackOlivineFractionation(Kd=0.3, verbose=True)
+
+# We then pass this class to the backtrack_compositions method of the suite
+# class, to be applied to our data.
+s.backtrack_compositions(backtracker=b)
 
 # As you can see, the sample started with a Forsterite number of c. 0.85. The
 # program then added olivine in equilibrium with the melt, until, after adding
@@ -49,7 +55,6 @@ print(s.PT)
 
 # The calculated pressure of 2.07 GPa and temperature of 1370 oC are the same 
 # as those from Plank & Forsyth (2016, their Table S8), which is good!
-
 
 # ---- Fit a melting path
 # Next we would like to link our estimate equilibration pressure and temperature
@@ -82,7 +87,8 @@ s_varKd = Suite("./Data/PF16_UT09DV04.csv", src_FeIII_totFe=0.17)
 # Backtrack. Variable Kd is the default option, so we can simply miss out that
 # flag. Notice that in this case, we need to add more olivine, about 17%, to
 # reach our target forsterite content.
-s_varKd.backtrack_compositions(verbose=True)
+b = BacktrackOlivineFractionation(verbose=True)
+s_varKd.backtrack_compositions(backtracker=b)
 
 # Compute pressure and temperature. The result is hotter and deeper than the
 # fixed Kd case.
@@ -160,8 +166,11 @@ plt.show()
 # the prompt:
 # s.compute_pressure_temperature?
 
+# This time, we will estimate melt CO2, for use with the Sun & Dasgupta (2020)
+# thermometer. We will also miss out the verbose flag in backtracking.
 s = Suite("./Data/PF16_UT09DV04.csv", src_FeIII_totFe=0.17, param_co2=True)
-s.backtrack_compositions(Kd=0.3, verbose=True)
+b = BacktrackOlivineFractionation(Kd=0.3)
+s.backtrack_compositions(backtracker=b)
 
 # First let's define a list of the schemes we would like to use. We will take
 # a subset for now.
