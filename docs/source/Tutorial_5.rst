@@ -123,7 +123,7 @@ Windows
 
 The command-line tool is not so easily accessible if you are running **meltPT**
 on a Windows system. If you installed **meltPT** using the instructions 
-provided :doc:`here <installation>` , or something similar, you can access the same 
+provided :doc:`here <installation>`, or something similar, you can access the same 
 functionality by downloading 
 `the script <https://github.com/fmcnab/meltPT/blob/master/meltPT/meltPT>`_, 
 saving it in the same directory as your parameter file, and typing at the conda
