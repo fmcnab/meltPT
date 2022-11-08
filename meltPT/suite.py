@@ -127,7 +127,7 @@ class Suite:
             self.PT = None
             self.data = self.data.drop(labels=['P', 'T'], axis=1, errors='ignore')
 
-    def backtrack_compositions(self, Kd=False, dm=0.0005, verbose=False, max_olivine_addition=0.3):
+    def backtrack_compositions(self, backtracker):
         """
         Backtrack compositions for entire suite.
         
@@ -148,10 +148,9 @@ class Suite:
             abandoned.
         """
         self.primary = self.data.apply(
-            backtrack_sample_composition,
+            backtracker.backtrack_sample_composition,
             axis=1,
-            result_type="expand",
-            args=(Kd,dm,verbose)
+            result_type="expand"
             )
 
     def compute_pressure_temperature(self, method="PF16", min_SiO2=0.):
