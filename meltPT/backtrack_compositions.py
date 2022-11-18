@@ -12,6 +12,8 @@ import warnings
 import numpy as np
 import pandas as pd
 
+import copy
+
 MAJOR_OXIDES = [
     'SiO2','Al2O3','FeO','Fe2O3','MgO','CaO','Na2O','K2O','TiO2','MnO',
     'Cr2O3', 'P2O5', 'NiO', 'CoO', 'H2O', 'CO2']
@@ -180,7 +182,6 @@ class BacktrackOlivineFractionation:
 
         return normalise(out_comp)
 
-
     def backtrack_sample_composition(self, df, return_all=False):
         """
         Backtrack composition to desired mantle forsterite number.
@@ -211,7 +212,6 @@ class BacktrackOlivineFractionation:
         for ox in MAJOR_OXIDES:
             self.oxide_wt_hydrous[ox] = df[ox]
         self.oxide_wt_hydrous = normalise(self.oxide_wt_hydrous)
-        # Fo = self.compute_forsterite_number()
 
         # Check Fo is below mantle Fo
         if df['src_Fo']-self.Fo < 0.001:
@@ -231,7 +231,9 @@ class BacktrackOlivineFractionation:
             while df['src_Fo'] - self.Fo > 0.0002:
                 
                 self.oxide_wt_hydrous = self.add_olivine()
-                composition_through_addition.append(self.oxide_wt_hydrous)
+                comp = copy.copy(self.oxide_wt_hydrous)
+                comp['Fo'] = self.Fo
+                composition_through_addition.append(comp)
                 dm_tot += self.dm
                 if self.verbose:
                     print(
