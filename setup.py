@@ -15,7 +15,7 @@ setup(
     packages=['meltPT'],
     install_requires=[
         'pandas~=1.4',
-        'numpy~=1.23',
+        'numpy~=1.21',
         'matplotlib~=3.5',
         'scipy~=1.8',
         'shapely~=1.8',
