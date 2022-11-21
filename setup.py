@@ -17,7 +17,7 @@ setup(
         'pandas~=1.4',
         'numpy~=1.21',
         'matplotlib~=3.5',
-        'scipy~=1.8',
+        'scipy~=1.7',
         'shapely~=1.8',
         'pyMelt~=1.96',
         'pyyaml~=6.0',
