@@ -14,7 +14,7 @@ setup(
     description=("Calculate pressures and temperatures of melting for basaltic rocks and fit with melting models."),
     packages=['meltPT'],
     install_requires=[
-        'pandas~=1.4',
+        'pandas~=1.3',
         'numpy~=1.21',
         'matplotlib~=3.5',
         'scipy~=1.7',
