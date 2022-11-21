@@ -26,6 +26,7 @@ setup(
     extras_require={'docs': [
             'sphinx~=5.1',
             'nbsphinx~=0.8',
+            'nbsphinx_link~=1.3',
             'sphinx-rtd-theme~=1.0',
             'ipykernel~=6.15'
         ]
