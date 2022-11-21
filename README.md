@@ -1,13 +1,25 @@
 [![DOI](https://zenodo.org/badge/430704582.svg)](https://zenodo.org/badge/latestdoi/430704582)
+[![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/fmcnab/meltPT/master)
 
 # meltPT
 
-**meltPT** is a Python package for whole-rock major-element themormobarometric analyses of basaltic (mafic) rocks. It contains modules for:
+**meltPT** is a Python package for whole-rock major-element themormobarometric 
+analyses of basaltic (mafic) rocks. It contains modules for:
 - Correcting sample compositions for effects of olivine crystallisation
-- Estimating pressures and temperatures at which samples were last in equilibrium with the mantle
-- Estimating melt fractions and potential temperatures on an individual basis or for a suite of samples
+- Estimating pressures and temperatures at which samples were last in 
+  equilibrium with the mantle
+- Estimating melt fractions and potential temperatures on an individual basis
+  or for a suite of samples
+  
+Full documentation can be found [here](https://meltpt.readthedocs.io/en/latest/).
 
 ## Installation
+
+### Quickstart
+
+To try out **meltPT** without having to install anything, you can run our
+in your browser via our [Binder](https://mybinder.org/v2/gh/fmcnab/meltPT/master)
+page.
 
 ### Linux/Mac
 
