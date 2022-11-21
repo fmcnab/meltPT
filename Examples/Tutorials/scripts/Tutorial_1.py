@@ -11,7 +11,7 @@ import matplotlib.pyplot as plt
 # a file called "PF16_UT09DV04.csv". To keep this example simple, the input infile
 # contains a single sample, UT09DV04, from Plank & Forsyth (2016). If necessary, 
 # please edit the path within Suite so that the csv file can be found.
-s = Suite("./Data/PF16_UT09DV04.csv", src_FeIII_totFe=0.17)
+s = Suite("../Data/PF16_UT09DV04.csv", src_FeIII_totFe=0.17)
 
 # You have now created an instance of meltPT's Suite class, containing the
 # sample data. Data are stored in a pandas dataframe, which you can preview by
@@ -82,7 +82,7 @@ print(s.individual_potential_temperatures)
 # et al. (2020, JoP). Let's repeat the steps above with this option.
 
 # Read the csv, create a new Suite object.
-s_varKd = Suite("./Data/PF16_UT09DV04.csv", src_FeIII_totFe=0.17)
+s_varKd = Suite("../Data/PF16_UT09DV04.csv", src_FeIII_totFe=0.17)
 
 # Backtrack. Variable Kd is the default option, so we can simply miss out that
 # flag. Notice that in this case, we need to add more olivine, about 17%, to
@@ -160,7 +160,7 @@ plt.show()
 # to interchange. Here we will quickly show you how to do this. In Tutorial 4,
 # we test out the different schemes more systematically, and in Tutorial 6, you
 # can see how to implement your own scheme.
-
+# 
 # To see a list of the available options, we can look at the
 # compute_presssure_temperature method's doc string. Type the following into
 # the prompt:
@@ -168,7 +168,7 @@ plt.show()
 
 # This time, we will estimate melt CO2, for use with the Sun & Dasgupta (2020)
 # thermometer. We will also miss out the verbose flag in backtracking.
-s = Suite("./Data/PF16_UT09DV04.csv", src_FeIII_totFe=0.17, param_co2=True)
+s = Suite("../Data/PF16_UT09DV04.csv", src_FeIII_totFe=0.17, param_co2=True)
 b = BacktrackOlivineFractionation(Kd=0.3)
 s.backtrack_compositions(backtracker=b)
 

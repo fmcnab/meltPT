@@ -12,7 +12,7 @@ import matplotlib.pyplot as plt
 
 # ---- Isolate Island Data
 # Read in compilation dataset of Hawaiian samples from McNab & Ball, (2022)
-df = pd.read_csv("./Data/Hawaii.csv", sep=',')
+df = pd.read_csv("../Data/Hawaii.csv", sep=',')
 
 # We want take only samples from our Hawaii database that correspond to
 # the island of Oahu. The other islands are shown below for users to try
@@ -51,10 +51,10 @@ df1.loc[(df1['Stage']=="Rejuvenated"), 'src_FeIII_totFe'] = 0.17
 df = df1.loc[(df1['Ce']>0)]
 
 # Save to a csv
-df.to_csv("./Data/province.csv", sep=',')
+df.to_csv("../Data/province.csv", sep=',')
 
 # ---- Reading data and initialising the Suite object
-s = Suite("./Data/province.csv", min_MgO=8.5)
+s = Suite("../Data/province.csv", min_MgO=8.5)
 
 # ---- Backtrack and Estimate pressure and temperature
 # See Tutorial 1 for comprehensive explanation

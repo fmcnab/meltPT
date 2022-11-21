@@ -5,11 +5,11 @@ from meltPT import *
 # There are a few key features that these classes much contain to work properly.
 # On top of these necessary features, you can include any other methods/
 # properties you need to get the thermobarometer working.
-
+# 
 # The key features are:
 # - accepts a single-row pandas dataframe on instantiation
 # - includes one or more of the methods: compute_pressure_temperature,
-#   compute_pressure, compute_temperature
+#   # compute_pressure, compute_temperature
 # - these methods should return a dictionary containing calculated pressures
 #   and temperatures and their uncertainties
 
@@ -43,7 +43,7 @@ class ExampleThermobarometer:
         
 
 # Now let's try it out on our sample from Plank & Forsyth (2016)
-s = Suite("./Data/PF16_UT09DV04.csv", src_FeIII_totFe=0.17, src_Fo=0.9)
+s = Suite("../Data/PF16_UT09DV04.csv", src_FeIII_totFe=0.17, src_Fo=0.9)
 b = BacktrackOlivineFractionation()
 s.backtrack_compositions(backtracker=b)
 

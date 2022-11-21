@@ -61,7 +61,7 @@ class ExampleBacktracker:
 
 
 # Now let's try it out on our sample from Plank & Forsyth (2016)
-s = Suite("./Data/PF16_UT09DV04.csv", src_FeIII_totFe=0.17, src_Fo=0.9)
+s = Suite("../Data/PF16_UT09DV04.csv", src_FeIII_totFe=0.17, src_Fo=0.9)
 
 # We will set up our backtracking class, with a target SiO2 content of 60% and
 # an incremement of 0.1 wt%. Then we pass it to the Suite.backtrack_compositions

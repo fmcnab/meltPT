@@ -15,7 +15,7 @@ import matplotlib.pyplot as plt
 # First, we will read in a geochemical mid ocean ridge basalt
 # (MORB) database from Gale et al., (2013), G3 14:3 
 # (Gale_2013_MOR_Sample_Data.csv).
-df = pd.read_csv("./Data/Gale_2013_MOR_Sample_Data.csv", sep=',')
+df = pd.read_csv("../Data/Gale_2013_MOR_Sample_Data.csv", sep=',')
 
 # This database does not include H2O estimates and some samples have
 # incomplete major element compositional records. We therefore only
@@ -26,7 +26,7 @@ df = df.loc[df['Ce']>0.]
 df = df.loc[(df['Latitude']>70.) | (df['Latitude']<60.)]
 
 # We then save this filtered database as ridge_in.csv
-df.to_csv("./Data/ridge_in.csv", sep=',')
+df.to_csv("../Data/ridge_in.csv", sep=',')
 
 # ---- Initialising the Suite object
 # Read in ridge_in.csv. Here we also choose important variables for
@@ -35,13 +35,13 @@ df.to_csv("./Data/ridge_in.csv", sep=',')
 # ensures that samples have predominantly experienced olivine fractionation.
 # min_SiO2 = 40 wt% ensures suitable samples for use with the Plank & 
 # Forsyth (2016) thermobarometer. src_FeIII_totFe set the Fe3+/Fe_sum ratio
-# of the melt and we take the value of 0.14 from Zhang et al., (2018),
-# Chemical Geology, 479. src_Fo sets the target Fo# for composition 
+# of the melt and we take the value of 0.14 from Zhang et al., (2018,
+# Chemical Geology, 479). src_Fo sets the target Fo# for composition 
 # backtracking. Ce_to_H2O sets how we estimate H2O from Ce 
 # concentrations and we use the value of 200 from Yang et al., (2021),
 # Nature Communications, 12.
 s = Suite(
-    "./Data/ridge_in.csv", src_FeIII_totFe=0.14, src_Fo=0.9, Ce_to_H2O=200., 
+    "../Data/ridge_in.csv", src_FeIII_totFe=0.14, src_Fo=0.9, Ce_to_H2O=200., 
     min_MgO=8.5)
 
 # ---- Backtrack Compositions and Calculate PT
@@ -54,7 +54,7 @@ s.backtrack_compositions(backtracker=b)
 s.compute_pressure_temperature(min_SiO2=40.)
 
 # ---- 
-s.write_to_csv("./Data/Ridge_output.csv")
+s.write_to_csv("../Data/Ridge_output.csv")
 
 # ---- Create Figure 2a of McNab & Ball (2022)
 # Make a multi-panelled figure (2x2)
@@ -82,10 +82,10 @@ ax1.xaxis.set_label_position('top')
 # 55:6 1051-1082. The database includes each ridge segment location, an 
 # estimate of primary composition (e.g., Na90) and ridge depth
 # (Gale_2014_MOR_Segment_Data.csv)
-df = pd.read_csv("./Data/Gale_2013_MOR_Sample_Data.csv", sep=',')
+df = pd.read_csv("../Data/Gale_2013_MOR_Sample_Data.csv", sep=',')
 df = df.loc[df['Ce']>0.]
 df = df.loc[(df['Latitude']>70.) | (df['Latitude']<60.)]
-seg_data = pd.read_csv('./Data/Gale_2014_MOR_Segment_Data.csv', sep=',')
+seg_data = pd.read_csv('../Data/Gale_2014_MOR_Segment_Data.csv', sep=',')
 
 # ---- Set up output pandas dataframe for writing results
 df_out = pd.DataFrame(columns = ['Ridge', 'Longitude', 'Latitude', 'N_Samples',
@@ -113,10 +113,10 @@ for i in range(0, (len(ridges) - 1), 1):
   
     # print each ridge segment to own csv file
     ridge_df = df.loc[(df['Province'] == ridges[i])]
-    ridge_df.to_csv('./Data/ridge.csv', index=False)
+    ridge_df.to_csv('../Data/ridge.csv', index=False)
 
     # Parse ridge segment data to s and filter for key criteria
-    s2 = Suite("./Data/ridge.csv", Ce_to_H2O=200., src_FeIII_totFe=0.14, min_MgO=8.5)
+    s2 = Suite("../Data/ridge.csv", Ce_to_H2O=200., src_FeIII_totFe=0.14, min_MgO=8.5)
     
     # Make sure ridge segment >5 data points
     if len(s2.data['Province']) > 5:
@@ -220,5 +220,5 @@ plt.show()
 # ---------------------
 # Print df_out to output file
 # ---------------------
-df_out.to_csv('./Data/ridges_Tp.csv')
+df_out.to_csv('../Data/ridges_Tp.csv')
 
