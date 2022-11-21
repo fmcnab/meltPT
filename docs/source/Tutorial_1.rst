@@ -1,1 +1,0 @@
-.. include:: ../../Examples/Tutorials/jupyter/Tutorial_1.ipynb
