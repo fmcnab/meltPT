@@ -18,8 +18,19 @@ Full documentation can be found [here](https://meltpt.readthedocs.io/en/latest/)
 ### Quickstart
 
 To try out **meltPT** without having to install anything, you can run our
-in your browser via our [Binder](https://mybinder.org/v2/gh/fmcnab/meltPT/master)
-page.
+Tutorials in your browser via our 
+[Binder](https://mybinder.org/v2/gh/fmcnab/meltPT/master) page. You will find 
+our jupyter notebook tutorials under "./Examples/Tutorials/jupyter".
+Alternatively, you can use the terminal function to run the tutorial scripts.
+For example:
+
+```
+$ # Navigate to script directory.
+$ cd Examples/Tutorials/scripts
+
+$ # Run the first tutorial.
+$ python3 Tutorial_1.py
+```
 
 ### Linux/Mac
 
