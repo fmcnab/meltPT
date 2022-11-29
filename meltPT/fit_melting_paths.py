@@ -4,7 +4,6 @@ fit_melting_paths
 =================
 
 Find best-fitting melting paths.
-
 """
 
 import warnings
@@ -222,9 +221,9 @@ def find_sample_potential_temperature(df, mantle):
     corresponding  melt path. Options used are:
         method: "bounded"
         bounds:  min --> intersection of solidus with surface
-                 max --> 1600 oC
+                 max --> max Tp for melting model
         bracket: min --> intersection of solidus with surface
-                 max --> 1600 oC
+                 max --> max Tp for melting model
                  
     Parameters
     ----------

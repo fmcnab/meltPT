@@ -1,11 +1,9 @@
-
 """
 ===============
 The Suite class
 ===============
 
 Process suites of samples.
-
 """
 
 from .parse import *
@@ -131,21 +129,15 @@ class Suite:
         """
         Backtrack compositions for entire suite.
         
-        Applies backtrack_sample_composition to the "data" property. Result is
-        saved in the "primary" property.
+        Applies backtracker.backtrack_sample_composition to the "data" property.
+        Result is saved in the "primary" property.
         
         Parameters
         ----------
-        Kd : float or NoneType, optional
-            Partition coefficient to be used.
-            If None, calculated from the sample composition provided.
-        dm : float, optional
-            The fraction of olivine to be added at each iteration.
-        verbose : bool, optional
-            If True, will print messages with information at each iteration.
-        max_olivine_addition : float, optional
-            Maximum fraction of olivine to add before backtracking is
-            abandoned.
+        backtracker : class instance
+            Instance of a backtracker class. Must have a
+            backtrack_sample_composition method that returns a dict containing
+            backtracked major element compositions.        
         """
         self.primary = self.data.apply(
             backtracker.backtrack_sample_composition,
@@ -358,9 +350,9 @@ class Suite:
         pressure-temperature estimates to melting path. Options used are:
             method: "bounded"
             bounds:  min --> intersection of solidus with surface
-                     max --> 1600 oC
+                     max --> max Tp for melting model
             bracket: min --> intersection of solidus with surface
-                     max --> 1600 oC
+                     max --> max Tp for melting model
         
         Parameters
         ----------

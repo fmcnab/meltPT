@@ -4,7 +4,6 @@ thermobarometry
 ===============
 
 Perform thermobarometric calculations.
-
 """
 
 

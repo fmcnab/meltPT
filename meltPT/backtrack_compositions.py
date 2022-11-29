@@ -4,7 +4,6 @@ backtrack_compositions
 ======================
 
 Backtrack sample compositions to 'primary' compositions.
-
 """
 
 import warnings
@@ -57,6 +56,34 @@ def fill_dict_with_nans(in_dict):
     return out_dict
 
 class BacktrackOlivineFractionation:
+    """
+    Correct sample compositions for fractional olivine crystallisation.
+    
+    Follows the scheme of Lee et al. (2009, EPSL) to correct major-element
+    compositions of erupted basalts for the effects of fractional olivine
+    crystallisation. Silicon, iron and magnesium in proportions corresponding
+    to olvine in equilibrium with the sample are added iteratively until the
+    composition reaches some forsterite number representative of the mantle
+    source.
+    
+    The partition coefficient, Kd, can be set to a constant value or be allowed
+    to vary as a function of melt magnesium number, according to the scheme of
+    Tamura et al. (2000, J. Pet).
+    
+    Parameters
+    ----------
+    Kd : float or None
+        If float, sets the value of the partition coefficient. If None, the
+        partition coefficient is allowed to vary as a function of melt
+        magnesium number.
+    dm : float
+        The mass increment to use during iterative olivine addition.
+    verbose : bool
+        If True, progress messages are printed during iterative addition of
+        olivine.
+    max_olivine_addition : float
+        The maximum proportion of olivine to add before abandoning.    
+    """
     
     def __init__(
         self, Kd=None, dm=0.0005, verbose=False, 
@@ -176,7 +203,11 @@ class BacktrackOlivineFractionation:
         out_comp = {}
         for phase in self.oxide_wt_hydrous:
             if phase == 'SiO2' or phase == 'FeO' or phase == 'MgO':
-                out_comp[phase] = (self.oxide_wt_hydrous[phase] + self.dm*oxide_wt_olivine[phase]) / (1. + self.dm)
+                out_comp[phase] = (
+                    (self.oxide_wt_hydrous[phase] + 
+                    self.dm*oxide_wt_olivine[phase]) / 
+                    (1. + self.dm)
+                    )
             else:
                 out_comp[phase] = self.oxide_wt_hydrous[phase] / (1. + self.dm)
 
@@ -186,15 +217,15 @@ class BacktrackOlivineFractionation:
         """
         Backtrack composition to desired mantle forsterite number.
     
-        Iteratively adds olivine in equilibrium with melt until desired composition
-        is reached.
+        Iteratively adds olivine in equilibrium with melt until desired
+        composition is reached.
     
         Parameters
         ----------
         df : pandas dataframe
-            Dataframe containing the initial composition to be backtracked and the
-            target forsterite number. Should contain only one row. To use with a 
-            multi-row dataframe use df.apply().
+            Dataframe containing the initial composition to be backtracked and
+            the target forsterite number. Should contain only one row. To use
+            with a multi-row dataframe use df.apply().
         return_all : bool
             Return intermediate backtracking compositions.
     

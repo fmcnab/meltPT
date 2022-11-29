@@ -4,7 +4,6 @@ parse
 =====
 
 Read data from a csv file.
-
 """
 
 import warnings
@@ -23,6 +22,7 @@ def parse_csv(
     - check other major elements are specified; if not will be set to zero
     - try to set some values via trace elements
     - redistribute Fe according to src_FeIII_totFe
+    - add source forsterite numbers if not already specified
     - if desired, estimate CO2 from SiO2
     - normalise major elements to 100%
     - reject samples with MgO less than some threshold.
@@ -35,6 +35,8 @@ def parse_csv(
         Ratio of Ce to H2O in mantle source.
     src_FeIII_totFe : float
         Ratio of Fe3+ to total Fe in the mantle source.
+    src_Fo : float
+        Forsterite number in the mantle source.
     min_MgO : float, optional
         Minimum amount of MgO in sample to be accepted.
     read_as_primary : bool
