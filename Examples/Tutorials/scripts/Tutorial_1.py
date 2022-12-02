@@ -18,6 +18,12 @@ s = Suite("../Data/PF16_UT09DV04.csv", src_FeIII_totFe=0.17)
 # typing:
 print(s.data)
 
+# Note that the Suite class includes various other options that we don't need
+# for this example. To see all these options, and some more information about
+# exactly what Suite does, you can access the docstring by typing:
+# Suite?
+# in the terminal. All of meltPT's classes and functions have detailed
+# docstrings that you can access in this way.
 
 # ---- Backtrack compositions
 # The next step is backtracking the sample's composition. The aim here is to 
