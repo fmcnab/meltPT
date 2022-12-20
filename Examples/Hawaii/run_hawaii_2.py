@@ -13,6 +13,7 @@ import matplotlib.pyplot as plt
 # ---- Isolate Island Data
 # Read in compilation dataset of Hawaiian samples from McNab & Ball, (2022)
 df = pd.read_csv("Dataset_S1.csv", sep=',')
+#df = df.loc[~df['Stage'].isnull()]
 
 # We want take only samples from our Hawaii database that correspond to
 # the Mauna Kea Trend: Moloka`i, Maui and the Hawai`ian volcanoes Kohala, 
@@ -91,11 +92,11 @@ ax1.scatter(s.PT['T'][s.data['Stage']=="Shield"], s.PT['P'][s.data['Stage']=="Sh
             marker="^", facecolors="orange", edgecolor="k", zorder=2)
 
 # Organise axes
-#ax1.text(0.95, 0.95, "$T_p$ = $%i^{+%i}_{-%i}$ $^\circ$C" % (
-#    s.potential_temperature, 
-#    s.upper_potential_temperature - s.potential_temperature,
- #   s.potential_temperature - s.lower_potential_temperature), verticalalignment='top', 
- #         horizontalalignment='right', transform=ax1.transAxes, fontsize=12)
+# ax1.text(0.95, 0.95, "$T_p$ = $%i^{+%i}_{-%i}$ $^\circ$C" % (
+#     s.potential_temperature, 
+#     s.upper_potential_temperature - s.potential_temperature,
+#     s.potential_temperature - s.lower_potential_temperature), verticalalignment='top', 
+#           horizontalalignment='right', transform=ax1.transAxes, fontsize=12)
 ax1.text(0.05, 0.05, 'a', verticalalignment='bottom', 
           horizontalalignment='left', transform=ax1.transAxes, fontsize=12)
 ax1.set_xlabel("Temperature [$^\circ$C]")

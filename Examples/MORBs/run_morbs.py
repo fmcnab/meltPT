@@ -120,7 +120,7 @@ for i in range(0, (len(ridges) - 1), 1):
         s2.compute_pressure_temperature(min_SiO2=40.)  
 
         # make sure ridge has >5 Tp estimates
-        if len(s2.PT['T']) > 5:
+        if len(s2.PT['T'].loc[s2.PT['T']>0]) > 5:
 
             # Fit Tp to suite
             s2.find_suite_potential_temperature(mantle, find_bounds=True)

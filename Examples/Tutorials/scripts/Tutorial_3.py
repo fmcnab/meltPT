@@ -14,6 +14,9 @@ import matplotlib.pyplot as plt
 # Read in compilation dataset of Hawaiian samples from McNab & Ball, (2022)
 df = pd.read_csv("../Data/Hawaii.csv", sep=',')
 
+# Only want to include samples that have the appropriate meta data
+df = df.loc[~df['Stage'].isnull()]
+
 # We want take only samples from our Hawaii database that correspond to
 # the island of Oahu. The other islands are shown below for users to try
 # Island options: Niihau / Kaula / Kauai / Oahu / Molokai / Maui

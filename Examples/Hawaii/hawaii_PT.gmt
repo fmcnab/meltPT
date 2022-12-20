@@ -101,7 +101,8 @@ awk 'BEGIN { FS = "," }{if (NR>1 && $2=="Kaula" && $6=="Post-Shield" && $95>0) p
 awk 'BEGIN { FS = "," }{if (NR>1 && $2=="Kaula" && $6=="Rejuvenated" && $95>0) print $97, $95}' $infile | gmt psxy $proj $R2 -Sc0.1 -W -G86/180/233 -O -K -N >> $outfile
 awk 'BEGIN { FS = "," }{if (NR>1 && $2=="Kaula" && $6=="Post-Erosional" && $95>0) print $97, $95}' $infile | gmt psxy $proj $R2 -Sc0.1 -W -G86/180/233 -O -K -N >> $outfile
 echo "3.2 2.7 a" | gmt pstext -R0/4.5/0/4.5 -JX4.5/4.5 -F+f10p,Helvetica,black+jRT -C25%/25% -W0.8 -Gwhite -K -O -N >> $outfile
-gmt psbasemap $proj $R2 -Ba200f50:"Temperature (@+o@+C)":/a1f0.5:"Pressure (GPa)":WN -K -O >> $outfile
+echo 1620,1,39,0.24 | gmt psxy $proj $R2 -Sc0.1 -W -Gblack -E0.1/0.7p -K -O >> $outfile
+gmt psbasemap $proj $R2 -Ba200f20:"Temperature (@+o@+C)":/a1f0.5:"Pressure (GPa)":WN -K -O >> $outfile
 
 Plot_Box_2
 awk 'BEGIN {FS=","}{if (NR>1 && $2=="Kaula" && $6=="Shield" && $49>0 && $57>0 && $95>0) print $49/$57, $95}' $infile | gmt psxy $proj $R3 -St0.15 -W -G230/159/0 -K -O >> $outfile
@@ -125,6 +126,14 @@ awk '{FS = ","}{if (NR>1 && $2=="Kaula" && $6=="Post-Shield" && $66>0 && $95>0) 
 awk '{FS = ","}{if (NR>1 && $2=="Kaula" && $6=="Rejuvenated" && $66>0 && $95>0) print $66, $95}' $infile | gmt psxy $proj $R5 -Sc0.1 -W -G86/180/233 -K -O >> $outfile
 awk '{FS = ","}{if (NR>1 && $2=="Kaula" && $6=="Post-Erosion" && $66>0 && $95>0) print $66, $95}' $infile | gmt psxy $proj $R5 -Sc0.1 -W -G86/180/233 -K -O >> $outfile
 echo "3.2 2.7 s" | gmt pstext -R0/4.5/0/4.5 -JX4.5/4.5 -F+f10p,Helvetica,black+jRT -C25%/25% -W0.8 -Gwhite -K -O -N >> $outfile
+echo "0.45 0.3 Rejuvenated
+0.45 0.6 Post-Shield
+0.45 0.9 Shield Stage" | gmt pstext -R0/4.5/0/4.5 -JX4.5/4.5 -F+f8p,Helvetica,black+jLM -K -O -N >> $outfile
+
+echo "0.25 0.3" | gmt psxy -R0/4.5/0/4.5 -JX4.5/4.5 -Sc0.15 -W0.4 -G86/180/233 -K -O >> $outfile
+echo "0.25 0.6" | gmt psxy -R0/4.5/0/4.5 -JX4.5/4.5 -Ss0.2 -W0.4 -G220/38/127 -K -O >> $outfile
+echo "0.25 0.9" | gmt psxy -R0/4.5/0/4.5 -JX4.5/4.5 -St0.2 -W0.4 -G230/159/0 -K -O >> $outfile
+
 gmt psbasemap $proj $R6 -Ba0.0002f0.0001:"@+143@+Nd/@+144@+Nd":/a50f10:"Depth (km)":EN -K -O >> $outfile
 
 #########
@@ -149,8 +158,8 @@ gmt psbasemap $proj $R6 -Ba0.0004f0.0002:"@+143@+Nd/@+144@+Nd":/a50f10:"Depth (k
 
 province="Oahu"
 province_written="O\140ahu"
-Tp=1533
-Tp_max=40
+Tp=1531
+Tp_max=35
 Tp_min=31
 
 Plot_Box_1
@@ -246,8 +255,8 @@ gmt psbasemap $proj $R6 -Ba0.0004f0.0002:"@+143@+Nd/@+144@+Nd":/a50f10:"Depth (k
 
 province="Hawaii"
 province_written="Hawai\140i"
-Tp=1559
-Tp_max=26
+Tp=1558
+Tp_max=22
 Tp_min=22
 
 Plot_Box_1

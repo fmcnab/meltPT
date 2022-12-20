@@ -15,6 +15,7 @@ Island = "Kahoolawe"
 Island2 = "Lanai"
 
 df = pd.read_csv("Dataset_S1.csv", sep=',')
+df = df.loc[~df['Stage'].isnull()]
 if Island2 is None:
     df1 = df.loc[(df['Province']==Island)]
 else:
