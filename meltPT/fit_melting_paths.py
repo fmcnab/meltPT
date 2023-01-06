@@ -369,10 +369,16 @@ def find_bounding_potential_temperature(points, starting_temperature, mantle, lo
     # Bounding potential temperatures for given mantle object
     max_Tp = find_max_potential_temperature(mantle)
     min_Tp = min([lith.TSolidus(0.) for lith in mantle.lithologies])
-    
+        
     # Start incrementally expanding bounds.
     while True:
-                
+        
+        # Check bounds have not been exceeded
+        if bounding_temperature >= max_Tp or bounding_temperature <= min_Tp:
+            bounding_temperature = np.nan
+            bounding_path = None
+            break
+        
         # Compute melting bath corresponding to bounding potential temperature.
         bounding_path = mantle.adiabaticMelt(
             bounding_temperature,
@@ -396,9 +402,5 @@ def find_bounding_potential_temperature(points, starting_temperature, mantle, lo
             break
         else:
             bounding_temperature += adjustment
-            if bounding_temperature >= max_Tp or bounding_temperature <= min_Tp:
-                bounding_temperature = np.nan
-                bounding_path = None
-                break
             
     return bounding_temperature, bounding_path
