@@ -160,7 +160,7 @@ and our [liscence](https://meltpt.readthedocs.io/en/latest/license.html).
 If you use our code, please cite us. Currently each **meltPT** release is
 archived in our Zenodo repository:
 
-*  M<sup>c</sup>Nab, F. and Ball, P. W. (2022), meltPT, version 1.0.1,
+*  M<sup>c</sup>Nab, F. and Ball, P. W. (2022), meltPT, version 1.1.0,
    *Zenodo*, [doi: 10.5281/zenodo.6948030](https://doi.org/10.5281/zenodo.6948030).
 
 Please be sure to include the version number of the code you used, so that
