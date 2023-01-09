@@ -4,6 +4,7 @@
 # Recreate elements of Figure 5 from McNab & Ball (2023).
 # See also Tutorial 3 for more details and a version that works with the
 # current version of meltPT.
+# Edit lines 23 and 28 to edit different islands/combinations of islands.
 # This will only work with v1.1.0!
 #-----------------------------------------------------------------------------
 
