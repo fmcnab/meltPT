@@ -31,20 +31,20 @@ df = pd.read_csv("Dataset_S1.csv", sep=',')
 # different H2O/Ce and src_FeIII_totFe values. So here we add H2O and 
 # src_FeIII_totFe columns to the input pandas dataframe.
 
-# # Calculate water based on different H2O/Ce values in main text
-# df.loc[(df['Stage']=="Shield"), 'H2O'] = 144. * df.loc[(df['Stage']=="Shield"), 'Ce'] / 10000
-# df.loc[(df['Stage']=="Post-Shield"), 'H2O'] = 136. * df.loc[(df['Stage']=="Post-Shield"), 'Ce'] / 10000
-# df.loc[(df['Stage']=="Rejuvenated"), 'H2O'] = 211. * df.loc[(df['Stage']=="Rejuvenated"), 'Ce'] / 10000
-# 
-# # Assign src_FeIII_totFe values in main text
-# df.loc[(df['Stage']=="Shield"), 'src_FeIII_totFe'] = 0.15
-# df.loc[(df['Stage']=="Post-Shield"), 'src_FeIII_totFe'] = 0.15
-# df.loc[(df['Stage']=="Rejuvenated"), 'src_FeIII_totFe'] = 0.17
+# Calculate water based on different H2O/Ce values in main text
+df.loc[(df['Stage']=="Shield"), 'H2O'] = 144. * df.loc[(df['Stage']=="Shield"), 'Ce'] / 10000
+df.loc[(df['Stage']=="Post-Shield"), 'H2O'] = 136. * df.loc[(df['Stage']=="Post-Shield"), 'Ce'] / 10000
+df.loc[(df['Stage']=="Rejuvenated"), 'H2O'] = 211. * df.loc[(df['Stage']=="Rejuvenated"), 'Ce'] / 10000
 
-# Extrema parameter values
-df['H2O'] = 300. * df['Ce'] / 10000
-df['src_FeIII_totFe'] = 0.2
-df['src_Fo'] = 0.89
+# Assign src_FeIII_totFe values in main text
+df.loc[(df['Stage']=="Shield"), 'src_FeIII_totFe'] = 0.15
+df.loc[(df['Stage']=="Post-Shield"), 'src_FeIII_totFe'] = 0.15
+df.loc[(df['Stage']=="Rejuvenated"), 'src_FeIII_totFe'] = 0.17
+
+# # Extrema parameter values
+# df['H2O'] = 300. * df['Ce'] / 10000
+# df['src_FeIII_totFe'] = 0.2
+# df['src_Fo'] = 0.89
 
 # Only include samples that have Ce
 df = df.loc[(df['Ce']>0)]
@@ -55,7 +55,7 @@ df = df.loc[~df['Stage'].isnull()]
 # Select specific phase
 # df = df.loc[(df['Stage']=="Shield")]
 # df = df.loc[(df['Stage']=="Post-Shield")]
-# df = df.loc[(df['Stage']=="Rejuvenated")]
+df = df.loc[(df['Stage']=="Rejuvenated")]
 
 # Save to a csv
 df.to_csv("province.csv", sep=',')
