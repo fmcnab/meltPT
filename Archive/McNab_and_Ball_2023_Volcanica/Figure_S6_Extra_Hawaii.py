@@ -55,7 +55,7 @@ df = df.loc[~df['Stage'].isnull()]
 # Select specific phase
 # df = df.loc[(df['Stage']=="Shield")]
 # df = df.loc[(df['Stage']=="Post-Shield")]
-df = df.loc[(df['Stage']=="Rejuvenated")]
+# df = df.loc[(df['Stage']=="Rejuvenated")]
 
 # Save to a csv
 df.to_csv("province.csv", sep=',')
