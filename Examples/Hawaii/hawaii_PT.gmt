@@ -1,0 +1,266 @@
+#!/bin/bash
+
+gmt gmtset PS_MEDIA a2
+gmt gmtset FONT_ANNOT_PRIMARY 8p
+gmt gmtset MAP_ANNOT_OFFSET_PRIMARY 3p
+gmt gmtset MAP_LABEL_OFFSET 5p
+gmt gmtset FONT_LABEL 10p
+gmt gmtset MAP_FRAME_TYPE plain
+gmt gmtset PS_LINE_JOIN round
+
+infile="Hawaii_output.csv"
+outfile="hawaii_PT.ps"
+
+proj="-JX3.4/-2.9"
+R1="-R1250/1750/15.7/172.7"
+R2="-R1250/1750/0.5/5.5"
+R3="-R1.5/9/0.5/5.5"
+R4="-R0.025/0.36/0.5/5.5"
+R5="-R0.51265/0.51315/0.5/5.5"
+R6="-R0.51265/0.51315/15.7/172.7"
+
+Plot_Box_1() {
+
+python3 melt_path_gmt.py $Tp $Tp_max $Tp_min
+	
+#Plot box 1
+gmt psbasemap $proj $R2 -Ba100f20:"Temperature (@+o@+C)":/a1f0.5:"Pressure (GPa)":Wns -Y-3.4 -X-11.7 -K -O >> $outfile	
+
+##Plot Katz Melt Curves
+awk 'BEGIN {FS=" "} ; {print $2,$1}' Tp_ar_max.temp | gmt psxy $R2 $proj -W0.8,dimgrey,- -K -O >> $outfile
+awk 'BEGIN {FS=" "} ; {print $2,$1}' Tp_ar.temp | gmt psxy $R2 $proj -W0.8,dimgrey -K -O >> $outfile
+awk 'BEGIN {FS=" "} ; {print $2,$1}' Tp_ar_min.temp | gmt psxy $R2 $proj -W0.8,dimgrey,- -K -O >> $outfile
+
+#plot solidi
+awk 'BEGIN {FS=" "} ; {print $2,$1}' sol.temp | gmt psxy $proj $R2 -W1,black -K -O >> $outfile
+	
+#Plot Samples
+
+awk 'BEGIN { FS = "," }{if (NR>1 && $2=="'$province'" && $6=="Shield" && $95>0) print $97, $95}' $infile | gmt psxy $proj $R2 -St0.15 -G230/159/0 -W -O -K -N >> $outfile
+awk 'BEGIN { FS = "," }{if (NR>1 && $2=="'$province'" && $6=="Post-Shield" && $95>0) print $97, $95}' $infile | gmt psxy $proj $R2 -Ss0.15 -W -G220/38/127 -O -K -N >> $outfile
+awk 'BEGIN { FS = "," }{if (NR>1 && $2=="'$province'" && $6=="Rejuvenated" && $95>0) print $97, $95}' $infile | gmt psxy $proj $R2 -Sc0.1 -W -G86/180/233 -O -K -N >> $outfile
+awk 'BEGIN { FS = "," }{if (NR>1 && $2=="'$province'" && $6=="Post-Erosion" && $95>0) print $97, $95}' $infile | gmt psxy $proj $R2 -Sc0.1 -W -G86/180/233 -O -K -N >> $outfile
+	
+gmt pstext -JX4.5/4.5 -R0/4.5/0/4.5 -Gwhite -N -O -K << EOF >> $outfile
+0.2 0.65 8 0 0 LB $province_written
+0.2 0.25 8 0 0 LB T@-p@- = $Tp@++$Tp_max@+@--$Tp_min@- @+o@+C
+EOF
+	
+gmt psbasemap $proj $R6 -Ba100f20:"":/a50f10:"Depth (km)":e -K -O >> $outfile
+	
+}
+
+Plot_Box_2() {
+	
+gmt psbasemap $proj $R3 -Ba1f0.5:"Sm/Yb":/a1f0.5:"Pressure (GPa)":wns -X3.9 -K -O >> $outfile
+#awk 'BEGIN {FS=","}{if (NR>1 && $2=="'$province'" && $6==0 && $49>0 && $57>0 && $95>0) print $49/$57, $95}' $infile | gmt psxy $proj $R3 -Sd0.15 -W -Ggray -K -O >> $outfile
+awk 'BEGIN {FS=","}{if (NR>1 && $2=="'$province'" && $6=="Shield" && $49>0 && $57>0 && $95>0) print $49/$57, $95}' $infile | gmt psxy $proj $R3 -St0.15 -W -G230/159/0 -K -O >> $outfile
+awk 'BEGIN {FS=","}{if (NR>1 && $2=="'$province'" && $6=="Post-Shield" && $49>0 && $57>0 && $95>0) print $49/$57, $95}' $infile | gmt psxy $proj $R3 -Ss0.15 -W -G220/38/127 -K -O >> $outfile
+awk 'BEGIN {FS=","}{if (NR>1 && $2=="'$province'" && $6=="Rejuvenated" && $49>0 && $57>0 && $95>0) print $49/$57, $95}' $infile | gmt psxy $proj $R3 -Sc0.1 -W -G86/180/233 -K -O >> $outfile
+awk 'BEGIN {FS=","}{if (NR>1 && $2=="'$province'" && $6=="Post-Erosion" && $49>0 && $57>0 && $95>0) print $49/$57, $95}' $infile | gmt psxy $proj $R3 -Sc0.1 -W -G86/180/233 -K -O >> $outfile
+gmt psbasemap $proj $R6 -Ba100f20:"":/a50f10:"Depth (km)":e -K -O >> $outfile
+}
+
+Plot_Box_3() {
+	
+gmt psbasemap $proj $R4 -Ba0.1f0.05:"Nb/Zr":/a1f0.5:"Pressure (GPa)":wns -X3.9 -K -O >> $outfile
+#awk '{FS = ","}{if (NR>1 && $2=="'$province'" && $6==0 && $41>0 && $40>0 && $95>0) print ($41/$40), $95}' $infile | gmt psxy $proj $R4 -Sd0.15 -W -Ggray -K -O >> $outfile
+awk '{FS = ","}{if (NR>1 && $2=="'$province'" && $6=="Shield" && $41>0 && $40>0 && $95>0) print ($41/$40), $95}' $infile | gmt psxy $proj $R4 -St0.15 -W -G230/159/0 -K -O >> $outfile
+awk '{FS = ","}{if (NR>1 && $2=="'$province'" && $6=="Post-Shield" && $41>0 && $40>0 && $95>0) print ($41/$40), $95}' $infile | gmt psxy $proj $R4 -Ss0.15 -W -G220/38/127 -K -O >> $outfile
+awk '{FS = ","}{if (NR>1 && $2=="'$province'" && $6=="Rejuvenated" && $41>0 && $40>0 && $95>0) print ($41/$40), $95}' $infile | gmt psxy $proj $R4 -Sc0.1 -W -G86/180/233 -K -O >> $outfile
+awk '{FS = ","}{if (NR>1 && $2=="'$province'" && $6=="Post-Erosion" && $41>0 && $40>0 && $95>0) print ($41/$40), $95}' $infile | gmt psxy $proj $R4 -Sc0.1 -W -G86/180/233 -K -O >> $outfile
+gmt psbasemap $proj $R6 -Ba100f20:"":/a50f10:"Depth (km)":e -K -O >> $outfile
+}
+
+Plot_Box_4() {
+
+gmt psbasemap $proj $R5 -Ba0.0002f0.0001:"@+143@+Nd/@+144@+Nd":/a1f0.5:"Pressure (GPa)":wns -X3.9 -K -O >> $outfile
+#awk '{FS = ","}{if (NR>1 && $2=="'$province'" && $6==0 && $66>0 && $95>0) print $66, $95}' $infile | gmt psxy $proj $R5 -Sd0.15 -W -Ggray -K -O >> $outfile
+awk '{FS = ","}{if (NR>1 && $2=="'$province'" && $6=="Shield" && $66>0 && $95>0) print $66, $95}' $infile | gmt psxy $proj $R5 -St0.15 -W -G230/159/0 -K -O >> $outfile
+awk '{FS = ","}{if (NR>1 && $2=="'$province'" && $6=="Post-Shield" && $66>0 && $95>0) print $66, $95}' $infile | gmt psxy $proj $R5 -Ss0.15 -W -G220/38/127 -K -O >> $outfile
+awk '{FS = ","}{if (NR>1 && $2=="'$province'" && $6=="Rejuvenated" && $66>0 && $95>0) print $66, $95}' $infile | gmt psxy $proj $R5 -Sc0.1 -W -G86/180/233 -K -O >> $outfile
+awk '{FS = ","}{if (NR>1 && $2=="'$province'" && $6=="Post-Erosion" && $66>0 && $95>0) print $66, $95}' $infile | gmt psxy $proj $R5 -Sc0.1 -W -G86/180/233 -K -O >> $outfile
+gmt psbasemap $proj $R6 -Ba100f20:"":/a50f10:"Depth (km)":e -K -O >> $outfile
+}
+
+#########################
+# Make Plots
+#########################
+
+echo "0 0" | gmt psxy $proj $R1 -Y30 -X20 -K > $outfile
+province="Niihau"
+province_written="Ni\140ihau+Ka\140ula"
+Tp=1475
+Tp_max=45
+Tp_min=50
+
+Plot_Box_1
+#awk 'BEGIN { FS = "," }{if (NR>1 && $2=="Kaula" && $6==0 && $95>0) print $97, $95}' $infile | gmt psxy $proj $R2 -Sd0.15 -Ggrey -W -O -K -N >> $outfile
+awk 'BEGIN { FS = "," }{if (NR>1 && $2=="Kaula" && $6=="Shield" && $95>0) print $97, $95}' $infile | gmt psxy $proj $R2 -St0.15 -G230/159/0 -W -O -K -N >> $outfile
+awk 'BEGIN { FS = "," }{if (NR>1 && $2=="Kaula" && $6=="Post-Shield" && $95>0) print $97, $95}' $infile | gmt psxy $proj $R2 -Ss0.15 -W -G220/38/127 -O -K -N >> $outfile
+awk 'BEGIN { FS = "," }{if (NR>1 && $2=="Kaula" && $6=="Rejuvenated" && $95>0) print $97, $95}' $infile | gmt psxy $proj $R2 -Sc0.1 -W -G86/180/233 -O -K -N >> $outfile
+awk 'BEGIN { FS = "," }{if (NR>1 && $2=="Kaula" && $6=="Post-Erosional" && $95>0) print $97, $95}' $infile | gmt psxy $proj $R2 -Sc0.1 -W -G86/180/233 -O -K -N >> $outfile
+echo "3.2 2.7 a" | gmt pstext -R0/4.5/0/4.5 -JX4.5/4.5 -F+f10p,Helvetica,black+jRT -C25%/25% -W0.8 -Gwhite -K -O -N >> $outfile
+gmt psbasemap $proj $R2 -Ba200f50:"Temperature (@+o@+C)":/a1f0.5:"Pressure (GPa)":WN -K -O >> $outfile
+
+Plot_Box_2
+awk 'BEGIN {FS=","}{if (NR>1 && $2=="Kaula" && $6=="Shield" && $49>0 && $57>0 && $95>0) print $49/$57, $95}' $infile | gmt psxy $proj $R3 -St0.15 -W -G230/159/0 -K -O >> $outfile
+awk 'BEGIN {FS=","}{if (NR>1 && $2=="Kaula" && $6=="Post-Shield" && $49>0 && $57>0 && $95>0) print $49/$57, $95}' $infile | gmt psxy $proj $R3 -Ss0.15 -W -G220/38/127 -K -O >> $outfile
+awk 'BEGIN {FS=","}{if (NR>1 && $2=="Kaula" && $6=="Rejuvenated" && $49>0 && $57>0 && $95>0) print $49/$57, $95}' $infile | gmt psxy $proj $R3 -Sc0.1 -W -G86/180/233 -K -O >> $outfile
+awk 'BEGIN {FS=","}{if (NR>1 && $2=="Kaula" && $6=="Post-Erosion" && $49>0 && $57>0 && $95>0) print $49/$57, $95}' $infile | gmt psxy $proj $R3 -Sc0.1 -W -G86/180/233 -K -O >> $outfile
+echo "3.2 2.7 g" | gmt pstext -R0/4.5/0/4.5 -JX4.5/4.5 -F+f10p,Helvetica,black+jRT -C25%/25% -W0.8 -Gwhite -K -O -N >> $outfile
+gmt psbasemap $proj $R3 -Ba2f1:"Sm/Yb":/a1f0.5:"Pressure (GPa)":N -K -O >> $outfile
+Plot_Box_3
+#awk '{FS = ","}{if (NR>1 && $2=="Kaula" && $6==0 && $41>0 && $40>0 && $95>0) print ($41/$40), $95}' $infile | gmt psxy $proj $R4 -Sd0.15 -W -Ggray -K -O >> $outfile
+awk '{FS = ","}{if (NR>1 && $2=="Kaula" && $6=="Shield" && $41>0 && $40>0 && $95>0) print ($41/$40), $95}' $infile | gmt psxy $proj $R4 -St0.15 -W -G230/159/0 -K -O >> $outfile
+awk '{FS = ","}{if (NR>1 && $2=="Kaula" && $6=="Post-Shield" && $41>0 && $40>0 && $95>0) print ($41/$40), $95}' $infile | gmt psxy $proj $R4 -Ss0.15 -W -G220/38/127 -K -O >> $outfile
+awk '{FS = ","}{if (NR>1 && $2=="Kaula" && $6=="Rejuvenated" && $41>0 && $40>0 && $95>0) print ($41/$40), $95}' $infile | gmt psxy $proj $R4 -Sc0.1 -W -G86/180/233 -K -O >> $outfile
+awk '{FS = ","}{if (NR>1 && $2=="Kaula" && $6=="Post-Erosion" && $41>0 && $40>0 && $95>0) print ($41/$40), $95}' $infile | gmt psxy $proj $R4 -Sc0.1 -W -G86/180/233 -K -O >> $outfile
+echo "3.2 2.7 m" | gmt pstext -R0/4.5/0/4.5 -JX4.5/4.5 -F+f10p,Helvetica,black+jRT -C25%/25% -W0.8 -Gwhite -K -O -N >> $outfile
+gmt psbasemap $proj $R4 -Ba0.1f0.05:"Nb/Zr":/a1f0.5:"Pressure (GPa)":N -K -O >> $outfile
+Plot_Box_4
+#awk '{FS = ","}{if (NR>1 && $2=="Kaula" && $6==0 && $66>0 && $95>0) print $66, $95}' $infile | gmt psxy $proj $R5 -Sd0.15 -W -Ggray -K -O >> $outfile
+awk '{FS = ","}{if (NR>1 && $2=="Kaula" && $6=="Shield" && $66>0 && $95>0) print $66, $95}' $infile | gmt psxy $proj $R5 -St0.15 -W -G230/159/0 -K -O >> $outfile
+awk '{FS = ","}{if (NR>1 && $2=="Kaula" && $6=="Post-Shield" && $66>0 && $95>0) print $66, $95}' $infile | gmt psxy $proj $R5 -Ss0.15 -W -G220/38/127 -K -O >> $outfile
+awk '{FS = ","}{if (NR>1 && $2=="Kaula" && $6=="Rejuvenated" && $66>0 && $95>0) print $66, $95}' $infile | gmt psxy $proj $R5 -Sc0.1 -W -G86/180/233 -K -O >> $outfile
+awk '{FS = ","}{if (NR>1 && $2=="Kaula" && $6=="Post-Erosion" && $66>0 && $95>0) print $66, $95}' $infile | gmt psxy $proj $R5 -Sc0.1 -W -G86/180/233 -K -O >> $outfile
+echo "3.2 2.7 s" | gmt pstext -R0/4.5/0/4.5 -JX4.5/4.5 -F+f10p,Helvetica,black+jRT -C25%/25% -W0.8 -Gwhite -K -O -N >> $outfile
+gmt psbasemap $proj $R6 -Ba0.0002f0.0001:"@+143@+Nd/@+144@+Nd":/a50f10:"Depth (km)":EN -K -O >> $outfile
+
+#########
+
+province="Kauai"
+province_written="Kaua\140i"
+Tp=1551
+Tp_max=47
+Tp_min=72
+
+Plot_Box_1
+echo "3.2 2.7 b" | gmt pstext -R0/4.5/0/4.5 -JX4.5/4.5 -F+f10p,Helvetica,black+jRT -C25%/25% -W0.8 -Gwhite -K -O -N >> $outfile
+Plot_Box_2
+echo "3.2 2.7 h" | gmt pstext -R0/4.5/0/4.5 -JX4.5/4.5 -F+f10p,Helvetica,black+jRT -C25%/25% -W0.8 -Gwhite -K -O -N >> $outfile
+Plot_Box_3
+echo "3.2 2.7 n" | gmt pstext -R0/4.5/0/4.5 -JX4.5/4.5 -F+f10p,Helvetica,black+jRT -C25%/25% -W0.8 -Gwhite -K -O -N >> $outfile
+Plot_Box_4
+echo "3.2 2.7 t" | gmt pstext -R0/4.5/0/4.5 -JX4.5/4.5 -F+f10p,Helvetica,black+jRT -C25%/25% -W0.8 -Gwhite -K -O -N >> $outfile
+gmt psbasemap $proj $R6 -Ba0.0004f0.0002:"@+143@+Nd/@+144@+Nd":/a50f10:"Depth (km)":E -K -O >> $outfile
+
+#########
+
+province="Oahu"
+province_written="O\140ahu"
+Tp=1533
+Tp_max=40
+Tp_min=31
+
+Plot_Box_1
+echo "3.2 2.7 c" | gmt pstext -R0/4.5/0/4.5 -JX4.5/4.5 -F+f10p,Helvetica,black+jRT -C25%/25% -W0.8 -Gwhite -K -O -N >> $outfile
+Plot_Box_2
+echo "3.2 2.7 i" | gmt pstext -R0/4.5/0/4.5 -JX4.5/4.5 -F+f10p,Helvetica,black+jRT -C25%/25% -W0.8 -Gwhite -K -O -N >> $outfile
+Plot_Box_3
+echo "3.2 2.7 o" | gmt pstext -R0/4.5/0/4.5 -JX4.5/4.5 -F+f10p,Helvetica,black+jRT -C25%/25% -W0.8 -Gwhite -K -O -N >> $outfile
+Plot_Box_4
+echo "3.2 2.7 u" | gmt pstext -R0/4.5/0/4.5 -JX4.5/4.5 -F+f10p,Helvetica,black+jRT -C25%/25% -W0.8 -Gwhite -K -O -N >> $outfile
+gmt psbasemap $proj $R6 -Ba0.0004f0.0002:"@+143@+Nd/@+144@+Nd":/a50f10:"Depth (km)":E -K -O >> $outfile
+
+#########
+
+province="Molokai"
+province_written="Moloka\140i + Maui"
+Tp=1557
+Tp_max=43
+Tp_min=25
+
+Plot_Box_1
+#awk 'BEGIN { FS = "," }{if (NR>1 && $2=="Maui" && $6==0 && $95>0) print $97, $95}' $infile | gmt psxy $proj $R2 -Sd0.15 -Ggrey -W -O -K -N >> $outfile
+awk 'BEGIN { FS = "," }{if (NR>1 && $2=="Maui" && $6=="Shield" && $95>0) print $97, $95}' $infile | gmt psxy $proj $R2 -St0.15 -G230/159/0 -W -O -K -N >> $outfile
+awk 'BEGIN { FS = "," }{if (NR>1 && $2=="Maui" && $6=="Post-Shield" && $95>0) print $97, $95}' $infile | gmt psxy $proj $R2 -Ss0.15 -W -G220/38/127 -O -K -N >> $outfile
+awk 'BEGIN { FS = "," }{if (NR>1 && $2=="Maui" && $6=="Rejuvenated" && $95>0) print $97, $95}' $infile | gmt psxy $proj $R2 -Sc0.1 -W -G86/180/233 -O -K -N >> $outfile
+awk 'BEGIN { FS = "," }{if (NR>1 && $2=="Maui" && $6=="Post-Erosion" && $95>0) print $97, $95}' $infile | gmt psxy $proj $R2 -Sc0.1 -W -G86/180/233 -O -K -N >> $outfile
+echo "3.2 2.7 d" | gmt pstext -R0/4.5/0/4.5 -JX4.5/4.5 -F+f10p,Helvetica,black+jRT -C25%/25% -W0.8 -Gwhite -K -O -N >> $outfile
+
+Plot_Box_2
+awk 'BEGIN {FS=","}{if (NR>1 && $2=="Maui" && $6=="Shield" && $49>0 && $57>0 && $95>0) print $49/$57, $95}' $infile | gmt psxy $proj $R3 -St0.15 -W -G230/159/0 -K -O >> $outfile
+awk 'BEGIN {FS=","}{if (NR>1 && $2=="Maui" && $6=="Post-Shield" && $49>0 && $57>0 && $95>0) print $49/$57, $95}' $infile | gmt psxy $proj $R3 -Ss0.15 -W -G220/38/127 -K -O >> $outfile
+awk 'BEGIN {FS=","}{if (NR>1 && $2=="Maui" && $6=="Rejuvenated" && $49>0 && $57>0 && $95>0) print $49/$57, $95}' $infile | gmt psxy $proj $R3 -Sc0.1 -W -G86/180/233 -K -O >> $outfile
+awk 'BEGIN {FS=","}{if (NR>1 && $2=="Maui" && $6=="Post-Erosion" && $49>0 && $57>0 && $95>0) print $49/$57, $95}' $infile | gmt psxy $proj $R3 -Sc0.1 -W -G86/180/233 -K -O >> $outfile
+echo "3.2 2.7 j" | gmt pstext -R0/4.5/0/4.5 -JX4.5/4.5 -F+f10p,Helvetica,black+jRT -C25%/25% -W0.8 -Gwhite -K -O -N >> $outfile
+
+Plot_Box_3
+#awk '{FS = ","}{if (NR>1 && $2=="Maui" && $6==0 && $41>0 && $40>0 && $95>0) print ($41/$40), $95}' $infile | gmt psxy $proj $R4 -Sd0.15 -W -Ggray -K -O >> $outfile
+awk '{FS = ","}{if (NR>1 && $2=="Maui" && $6=="Shield" && $41>0 && $40>0 && $95>0) print ($41/$40), $95}' $infile | gmt psxy $proj $R4 -St0.15 -W -G230/159/0 -K -O >> $outfile
+awk '{FS = ","}{if (NR>1 && $2=="Maui" && $6=="Post-Shield" && $41>0 && $40>0 && $95>0) print ($41/$40), $95}' $infile | gmt psxy $proj $R4 -Ss0.15 -W -G220/38/127 -K -O >> $outfile
+awk '{FS = ","}{if (NR>1 && $2=="Maui" && $6=="Rejuvenated" && $41>0 && $40>0 && $95>0) print ($41/$40), $95}' $infile | gmt psxy $proj $R4 -Sc0.1 -W -G86/180/233 -K -O >> $outfile
+awk '{FS = ","}{if (NR>1 && $2=="Maui" && $6=="Post-Erosion" && $41>0 && $40>0 && $95>0) print ($41/$40), $95}' $infile | gmt psxy $proj $R4 -Sc0.1 -W -G86/180/233 -K -O >> $outfile
+echo "3.2 2.7 p" | gmt pstext -R0/4.5/0/4.5 -JX4.5/4.5 -F+f10p,Helvetica,black+jRT -C25%/25% -W0.8 -Gwhite -K -O -N >> $outfile
+
+Plot_Box_4
+#awk '{FS = ","}{if (NR>1 && $2=="Maui" && $6==0 && $66>0 && $95>0) print $66, $95}' $infile | gmt psxy $proj $R5 -Sd0.15 -W -Ggray -K -O >> $outfile
+awk '{FS = ","}{if (NR>1 && $2=="Maui" && $6=="Shield" && $66>0 && $95>0) print $66, $95}' $infile | gmt psxy $proj $R5 -St0.15 -W -G230/159/0 -K -O >> $outfile
+awk '{FS = ","}{if (NR>1 && $2=="Maui" && $6=="Post-Shield" && $66>0 && $95>0) print $66, $95}' $infile | gmt psxy $proj $R5 -Ss0.15 -W -G220/38/127 -K -O >> $outfile
+awk '{FS = ","}{if (NR>1 && $2=="Maui" && $6=="Rejuvenated" && $66>0 && $95>0) print $66, $95}' $infile | gmt psxy $proj $R5 -Sc0.1 -W -G86/180/233 -K -O >> $outfile
+awk '{FS = ","}{if (NR>1 && $2=="Maui" && $6=="Post-Erosion" && $66>0 && $95>0) print $66, $95}' $infile | gmt psxy $proj $R5 -Sc0.1 -W -G86/180/233 -K -O >> $outfile
+echo "3.2 2.7 v" | gmt pstext -R0/4.5/0/4.5 -JX4.5/4.5 -F+f10p,Helvetica,black+jRT -C25%/25% -W0.8 -Gwhite -K -O -N >> $outfile
+gmt psbasemap $proj $R6 -Ba0.0004f0.0002:"@+143@+Nd/@+144@+Nd":/a50f10:"Depth (km)":E -K -O >> $outfile
+
+#########
+
+province="Kahoolawe"
+province_written="Kaho\140olawe+Lana\140i"
+Tp=1554
+Tp_max=37
+Tp_min=13
+
+Plot_Box_1
+#awk 'BEGIN { FS = "," }{if (NR>1 && $2=="Lanai" && $6==0 && $95>0) print $97, $95}' $infile | gmt psxy $proj $R2 -Sd0.15 -Ggrey -W -O -K -N >> $outfile
+awk 'BEGIN { FS = "," }{if (NR>1 && $2=="Lanai" && $6=="Shield" && $95>0) print $97, $95}' $infile | gmt psxy $proj $R2 -St0.15 -G230/159/0 -W -O -K -N >> $outfile
+awk 'BEGIN { FS = "," }{if (NR>1 && $2=="Lanai" && $6=="Post-Shield" && $95>0) print $97, $95}' $infile | gmt psxy $proj $R2 -Ss0.15 -W -G220/38/127 -O -K -N >> $outfile
+awk 'BEGIN { FS = "," }{if (NR>1 && $2=="Lanai" && $6=="Rejuvenated" && $95>0) print $97, $95}' $infile | gmt psxy $proj $R2 -Sc0.1 -W -G86/180/233 -O -K -N >> $outfile
+awk 'BEGIN { FS = "," }{if (NR>1 && $2=="Lanai" && $6=="Post-Erosion" && $95>0) print $97, $95}' $infile | gmt psxy $proj $R2 -Sc0.1 -W -G86/180/233 -O -K -N >> $outfile
+echo "3.2 2.7 e" | gmt pstext -R0/4.5/0/4.5 -JX4.5/4.5 -F+f10p,Helvetica,black+jRT -C25%/25% -W0.8 -Gwhite -K -O -N >> $outfile
+Plot_Box_2
+awk 'BEGIN {FS=","}{if (NR>1 && $2=="Lanai" && $6=="Shield" && $49>0 && $57>0 && $95>0) print $49/$57, $95}' $infile | gmt psxy $proj $R3 -St0.15 -W -G230/159/0 -K -O >> $outfile
+awk 'BEGIN {FS=","}{if (NR>1 && $2=="Lanai" && $6=="Post-Shield" && $49>0 && $57>0 && $95>0) print $49/$57, $95}' $infile | gmt psxy $proj $R3 -Ss0.15 -W -G220/38/127 -K -O >> $outfile
+awk 'BEGIN {FS=","}{if (NR>1 && $2=="Lanai" && $6=="Rejuvenated" && $49>0 && $57>0 && $95>0) print $49/$57, $95}' $infile | gmt psxy $proj $R3 -Sc0.1 -W -G86/180/233 -K -O >> $outfile
+awk 'BEGIN {FS=","}{if (NR>1 && $2=="Lanai" && $6=="Post-Erosion" && $49>0 && $57>0 && $95>0) print $49/$57, $95}' $infile | gmt psxy $proj $R3 -Sc0.1 -W -G86/180/233 -K -O >> $outfile
+echo "3.2 2.7 k" | gmt pstext -R0/4.5/0/4.5 -JX4.5/4.5 -F+f10p,Helvetica,black+jRT -C25%/25% -W0.8 -Gwhite -K -O -N >> $outfile
+
+Plot_Box_3
+#awk '{FS = ","}{if (NR>1 && $2=="Lanai" && $6==0 && $41>0 && $40>0 && $95>0) print ($41/$40), $95}' $infile | gmt psxy $proj $R4 -Sd0.15 -W -Ggray -K -O >> $outfile
+awk '{FS = ","}{if (NR>1 && $2=="Lanai" && $6=="Shield" && $41>0 && $40>0 && $95>0) print ($41/$40), $95}' $infile | gmt psxy $proj $R4 -St0.15 -W -G230/159/0 -K -O >> $outfile
+awk '{FS = ","}{if (NR>1 && $2=="Lanai" && $6=="Post-Shield" && $41>0 && $40>0 && $95>0) print ($41/$40), $95}' $infile | gmt psxy $proj $R4 -Ss0.15 -W -G220/38/127 -K -O >> $outfile
+awk '{FS = ","}{if (NR>1 && $2=="Lanai" && $6=="Rejuvenated" && $41>0 && $40>0 && $95>0) print ($41/$40), $95}' $infile | gmt psxy $proj $R4 -Sc0.1 -W -G86/180/233 -K -O >> $outfile
+awk '{FS = ","}{if (NR>1 && $2=="Lanai" && $6=="Post-Erosion" && $41>0 && $40>0 && $95>0) print ($41/$40), $95}' $infile | gmt psxy $proj $R4 -Sc0.1 -W -G86/180/233 -K -O >> $outfile
+echo "3.2 2.7 q" | gmt pstext -R0/4.5/0/4.5 -JX4.5/4.5 -F+f10p,Helvetica,black+jRT -C25%/25% -W0.8 -Gwhite -K -O -N >> $outfile
+
+Plot_Box_4
+#awk '{FS = ","}{if (NR>1 && $2=="Lanai" && $6==0 && $66>0 && $95>0) print $66, $95}' $infile | gmt psxy $proj $R5 -Sd0.15 -W -Ggray -K -O >> $outfile
+awk '{FS = ","}{if (NR>1 && $2=="Lanai" && $6=="Shield" && $66>0 && $95>0) print $66, $95}' $infile | gmt psxy $proj $R5 -St0.15 -W -G230/159/0 -K -O >> $outfile
+awk '{FS = ","}{if (NR>1 && $2=="Lanai" && $6=="Post-Shield" && $66>0 && $95>0) print $66, $95}' $infile | gmt psxy $proj $R5 -Ss0.15 -W -G220/38/127 -K -O >> $outfile
+awk '{FS = ","}{if (NR>1 && $2=="Lanai" && $6=="Rejuvenated" && $66>0 && $95>0) print $66, $95}' $infile | gmt psxy $proj $R5 -Sc0.1 -W -G86/180/233 -K -O >> $outfile
+awk '{FS = ","}{if (NR>1 && $2=="Lanai" && $6=="Post-Erosion" && $66>0 && $95>0) print $66, $95}' $infile | gmt psxy $proj $R5 -Sc0.1 -W -G86/180/233 -K -O >> $outfile
+echo "3.2 2.7 w" | gmt pstext -R0/4.5/0/4.5 -JX4.5/4.5 -F+f10p,Helvetica,black+jRT -C25%/25% -W0.8 -Gwhite -K -O -N >> $outfile
+gmt psbasemap $proj $R6 -Ba0.0004f0.0002:"@+143@+Nd/@+144@+Nd":/a50f10:"Depth (km)":E -K -O >> $outfile
+
+#########
+
+province="Hawaii"
+province_written="Hawai\140i"
+Tp=1559
+Tp_max=26
+Tp_min=22
+
+Plot_Box_1
+echo "3.2 2.7 f" | gmt pstext -R0/4.5/0/4.5 -JX4.5/4.5 -F+f10p,Helvetica,black+jRT -C25%/25% -W0.8 -Gwhite -K -O -N >> $outfile
+Plot_Box_2
+echo "3.2 2.7 l" | gmt pstext -R0/4.5/0/4.5 -JX4.5/4.5 -F+f10p,Helvetica,black+jRT -C25%/25% -W0.8 -Gwhite -K -O -N >> $outfile
+Plot_Box_3
+echo "3.2 2.7 r" | gmt pstext -R0/4.5/0/4.5 -JX4.5/4.5 -F+f10p,Helvetica,black+jRT -C25%/25% -W0.8 -Gwhite -K -O -N >> $outfile
+Plot_Box_4
+echo "3.2 2.7 x" | gmt pstext -R0/4.5/0/4.5 -JX4.5/4.5 -F+f10p,Helvetica,black+jRT -C25%/25% -W0.8 -Gwhite -K -O -N >> $outfile
+gmt psbasemap $proj $R6 -Ba0.0004f0.0002:"@+143@+Nd/@+144@+Nd":/a50f10:"Depth (km)":E -O >> $outfile
+
+#########
+rm *.temp
+gmt psconvert $outfile -A -P -E500 -Tj
+rm $outfile
