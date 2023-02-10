@@ -94,10 +94,10 @@ Tp_max=52
 Tp_min=18
 
 Plot_Box_1
-echo "3.2 2.7 a" | gmt pstext -R0/4.5/0/4.5 -JX4.5/4.5 -F+f10p,Helvetica,black+jRT -C25%/25% -W0.8 -Gwhite -K -O -N >> $outfile
+echo "3.2 2.7 A" | gmt pstext -R0/4.5/0/4.5 -JX4.5/4.5 -F+f10p,Helvetica,black+jRT -C25%/25% -W0.8 -Gwhite -K -O -N >> $outfile
 gmt psbasemap $proj $R2 -Ba200f50:"Temperature (@+o@+C)":/a1f0.5:"Pressure (GPa)":WN -K -O >> $outfile
 Plot_Box_4
-echo "3.2 2.7 b" | gmt pstext -R0/4.5/0/4.5 -JX4.5/4.5 -F+f10p,Helvetica,black+jRT -C25%/25% -W0.8 -Gwhite -K -O -N >> $outfile
+echo "3.2 2.7 B" | gmt pstext -R0/4.5/0/4.5 -JX4.5/4.5 -F+f10p,Helvetica,black+jRT -C25%/25% -W0.8 -Gwhite -K -O -N >> $outfile
 gmt psbasemap $proj $R5 -Ba0.0002f0.0001:"@+143@+Nd/@+144@+Nd":/a0.1f0.05:"Nb/Zr":EN -K -O >> $outfile
 
 #########
@@ -109,13 +109,13 @@ Tp_max=22
 Tp_min=24
 
 Plot_Box_1
-echo "3.2 2.7 c" | gmt pstext -R0/4.5/0/4.5 -JX4.5/4.5 -F+f10p,Helvetica,black+jRT -C25%/25% -W0.8 -Gwhite -K -O -N >> $outfile
+echo "3.2 2.7 C" | gmt pstext -R0/4.5/0/4.5 -JX4.5/4.5 -F+f10p,Helvetica,black+jRT -C25%/25% -W0.8 -Gwhite -K -O -N >> $outfile
 Plot_Box_4
-echo "3.2 2.7 d" | gmt pstext -R0/4.5/0/4.5 -JX4.5/4.5 -F+f10p,Helvetica,black+jRT -C25%/25% -W0.8 -Gwhite -K -O -N >> $outfile
+echo "3.2 2.7 D" | gmt pstext -R0/4.5/0/4.5 -JX4.5/4.5 -F+f10p,Helvetica,black+jRT -C25%/25% -W0.8 -Gwhite -K -O -N >> $outfile
 gmt psbasemap $proj $R5 -Ba0.0004f0.0002:"@+143@+Nd/@+144@+Nd":/a0.1f0.05:"Nb/Zr":E -O >> $outfile
 
 #########
 #########
 rm *.temp
-gmt psconvert $outfile -A -P -E500 -Tj
+gmt psconvert $outfile -A -E400 -P -Te
 rm $outfile

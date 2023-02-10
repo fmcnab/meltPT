@@ -57,7 +57,7 @@ awk 'BEGIN { FS = "," }{if (NR>1 && $6=="Rejuvenated" && $95>0) print $97, $95}'
 awk 'BEGIN { FS = "," }{if (NR>1 && $6=="Post-Erosional" && $95>0) print $97, $95}' $infile | gmt psxy $proj $R2 -Sc0.1 -W -G86/180/233 -O -K -N >> $outfile
 awk 'BEGIN { FS = "," }{if (NR>1 && $6=="Post-Shield" && $95>0) print $97, $95}' $infile | gmt psxy $proj $R2 -Ss0.15 -W -G220/38/127 -O -K -N >> $outfile
 awk 'BEGIN { FS = "," }{if (NR>1 && $6=="Shield" && $95>0) print $97, $95}' $infile | gmt psxy $proj $R2 -St0.15 -G230/159/0 -W -O -K -N >> $outfile
-echo "3.2 2.7 a" | gmt pstext -R0/4.5/0/4.5 -JX4.5/4.5 -F+f10p,Helvetica,black+jRT -C25%/25% -W0.8 -Gwhite -K -O -N >> $outfile
+echo "3.2 2.7 A" | gmt pstext -R0/4.5/0/4.5 -JX4.5/4.5 -F+f10p,Helvetica,black+jRT -C25%/25% -W0.8 -Gwhite -K -O -N >> $outfile
 
 #########
 
@@ -71,7 +71,7 @@ Plot_Box_1
 awk 'BEGIN { FS = "," }{if (NR>1 && $6=="Rejuvenated" && $95<3) print $97, $95}' $infile | gmt psxy $proj $R2 -Sc0.1 -W -G86/180/233 -O -K -N >> $outfile
 awk 'BEGIN { FS = "," }{if (NR>1 && $6=="Shield" && $95>0 && $95<3) print $97, $95}' $infile | gmt psxy $proj $R2 -St0.15 -G230/159/0 -W -O -K -N >> $outfile
 awk 'BEGIN { FS = "," }{if (NR>1 && $6=="Post-Shield" && $95>0 && $95<3) print $97, $95}' $infile | gmt psxy $proj $R2 -Ss0.15 -W -G220/38/127 -O -K -N >> $outfile
-echo "3.2 2.7 b" | gmt pstext -R0/4.5/0/4.5 -JX4.5/4.5 -F+f10p,Helvetica,black+jRT -C25%/25% -W0.8 -Gwhite -K -O -N >> $outfile
+echo "3.2 2.7 B" | gmt pstext -R0/4.5/0/4.5 -JX4.5/4.5 -F+f10p,Helvetica,black+jRT -C25%/25% -W0.8 -Gwhite -K -O -N >> $outfile
 
 #########
 
@@ -85,7 +85,7 @@ Plot_Box_1
 awk 'BEGIN { FS = "," }{if (NR>1 && $6=="Rejuvenated" && $95>0) print $97, $95}' $infile | gmt psxy $proj $R2 -Sc0.1 -W -G86/180/233 -O -K -N >> $outfile
 awk 'BEGIN { FS = "," }{if (NR>1 && $6=="Post-Shield" && $95>0) print $97, $95}' $infile | gmt psxy $proj $R2 -Ss0.15 -W -G220/38/127 -O -K -N >> $outfile
 awk 'BEGIN { FS = "," }{if (NR>1 && $6=="Shield" && $95>0) print $97, $95}' $infile | gmt psxy $proj $R2 -St0.15 -G230/159/0 -W -O -K -N >> $outfile
-echo "3.2 2.7 c" | gmt pstext -R0/4.5/0/4.5 -JX4.5/4.5 -F+f10p,Helvetica,black+jRT -C25%/25% -W0.8 -Gwhite -K -O -N >> $outfile
+echo "3.2 2.7 C" | gmt pstext -R0/4.5/0/4.5 -JX4.5/4.5 -F+f10p,Helvetica,black+jRT -C25%/25% -W0.8 -Gwhite -K -O -N >> $outfile
 
 gmt pstext -JX4.5/4.5 -R0/4.5/0/4.5 -Gwhite -N -O -K << EOF >> $outfile
 3.3 2 6 0 0 RT Fe@++3@+/@~\123@~Fe = 0.2
@@ -106,7 +106,7 @@ infile="Hawaii_All_Data.csv"
 gmt psbasemap $proj $R2 -Ba100f20:"Temperature (@+o@+C)":/a1f0.5:"Pressure (GPa)":Wns -X-7.8 -Y-3.4 -K -O >> $outfile
 Plot_Box_1
 awk 'BEGIN { FS = "," }{if (NR>1 && $6=="Shield" && $95>0) print $97, $95}' $infile | gmt psxy $proj $R2 -St0.15 -G230/159/0 -W -O -K -N >> $outfile
-echo "3.2 2.7 d" | gmt pstext -R0/4.5/0/4.5 -JX4.5/4.5 -F+f10p,Helvetica,black+jRT -C25%/25% -W0.8 -Gwhite -K -O -N >> $outfile
+echo "3.2 2.7 D" | gmt pstext -R0/4.5/0/4.5 -JX4.5/4.5 -F+f10p,Helvetica,black+jRT -C25%/25% -W0.8 -Gwhite -K -O -N >> $outfile
 gmt psbasemap $proj $R1 -Ba100f20:"Temperature (@+o@+C)":/a50f10:"Depth (km)":e -K -O >> $outfile
 
 
@@ -120,7 +120,7 @@ Tp_min=30
 gmt psbasemap $proj $R2 -Ba100f20:"Temperature (@+o@+C)":/a1f0.5:"Pressure (GPa)":wns -X3.9 -K -O >> $outfile
 Plot_Box_1
 awk 'BEGIN { FS = "," }{if (NR>1 && $6=="Post-Shield" && $95>0) print $97, $95}' $infile | gmt psxy $proj $R2 -Ss0.15 -W -G220/38/127 -O -K -N >> $outfile
-echo "3.2 2.7 e" | gmt pstext -R0/4.5/0/4.5 -JX4.5/4.5 -F+f10p,Helvetica,black+jRT -C25%/25% -W0.8 -Gwhite -K -O -N >> $outfile
+echo "3.2 2.7 E" | gmt pstext -R0/4.5/0/4.5 -JX4.5/4.5 -F+f10p,Helvetica,black+jRT -C25%/25% -W0.8 -Gwhite -K -O -N >> $outfile
 gmt psbasemap $proj $R1 -Ba100f20:"Temperature (@+o@+C)":/a50f10:"Depth (km)":e -K -O >> $outfile
 
 #########
@@ -134,10 +134,11 @@ gmt psbasemap $proj $R2 -Ba100f20:"Temperature (@+o@+C)":/a1f0.5:"Pressure (GPa)
 Plot_Box_1
 awk 'BEGIN { FS = "," }{if (NR>1 && $6=="Rejuvenated" && $95>0) print $97, $95}' $infile | gmt psxy $proj $R2 -Sc0.1 -W -G86/180/233 -O -K -N >> $outfile
 awk 'BEGIN { FS = "," }{if (NR>1 && $6=="Post-Erosional" && $95>0) print $97, $95}' $infile | gmt psxy $proj $R2 -Sc0.1 -W -G86/180/233 -O -K -N >> $outfile
-echo "3.2 2.7 f" | gmt pstext -R0/4.5/0/4.5 -JX4.5/4.5 -F+f10p,Helvetica,black+jRT -C25%/25% -W0.8 -Gwhite -K -O -N >> $outfile
+echo "3.2 2.7 F" | gmt pstext -R0/4.5/0/4.5 -JX4.5/4.5 -F+f10p,Helvetica,black+jRT -C25%/25% -W0.8 -Gwhite -K -O -N >> $outfile
 gmt psbasemap $proj $R1 -Ba100f20:"Temperature (@+o@+C)":/a50f10:"Depth (km)":E -O >> $outfile
 
 #########
 rm *.temp
-gmt psconvert $outfile -A -P -E500 -Tj
-rm $outfile
+gmt psconvert $outfile -A -P -E500 -Te
+
+rm $outfile 
