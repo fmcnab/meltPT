@@ -101,6 +101,7 @@ awk 'BEGIN { FS = "," }{if (NR>1 && $2=="Kaula" && $6=="Shield" && $95>0) print 
 awk 'BEGIN { FS = "," }{if (NR>1 && $2=="Kaula" && $6=="Post-Shield" && $95>0) print $97, $95}' $infile | gmt psxy $proj $R2 -Ss0.15 -W -G220/38/127 -O -K -N >> $outfile
 awk 'BEGIN { FS = "," }{if (NR>1 && $2=="Kaula" && $6=="Rejuvenated" && $95>0) print $97, $95}' $infile | gmt psxy $proj $R2 -Sc0.1 -W -G86/180/233 -O -K -N >> $outfile
 awk 'BEGIN { FS = "," }{if (NR>1 && $2=="Kaula" && $6=="Post-Erosional" && $95>0) print $97, $95}' $infile | gmt psxy $proj $R2 -Sc0.1 -W -G86/180/233 -O -K -N >> $outfile
+echo 1620,1,39,0.24 | gmt psxy $proj $R2 -Sc0.1 -W -Gblack -E0.1/1p -O -K -N >> $outfile
 echo "3.2 2.7 A" | gmt pstext -R0/4.5/0/4.5 -JX4.5/4.5 -F+f10p,Helvetica,black+jRT -C25%/25% -W0.8 -Gwhite -K -O -N >> $outfile
 gmt psbasemap $proj $R2 -Ba200f50:"Temperature (@+o@+C)":/a1f0.5:"Pressure (GPa)":WN -K -O >> $outfile
 
@@ -150,8 +151,8 @@ gmt psbasemap $proj $R6 -Ba0.0004f0.0002:"@+143@+Nd/@+144@+Nd":/a50f10:"Depth (k
 
 province="Oahu"
 province_written="O\140ahu"
-Tp=1533
-Tp_max=40
+Tp=1531
+Tp_max=35
 Tp_min=31
 
 Plot_Box_1
@@ -247,8 +248,8 @@ gmt psbasemap $proj $R6 -Ba0.0004f0.0002:"@+143@+Nd/@+144@+Nd":/a50f10:"Depth (k
 
 province="Hawaii"
 province_written="Hawai\140i"
-Tp=1559
-Tp_max=26
+Tp=1558
+Tp_max=22
 Tp_min=22
 
 Plot_Box_1

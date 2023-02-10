@@ -47,9 +47,9 @@ gmt psbasemap $proj $R6 -Ba100f20:"":/a50f10:"Depth (km)":e -K -O >> $outfile
 #########################
 
 province_written="All Data"
-Tp=1556
-Tp_max=31
-Tp_min=50
+Tp=1555
+Tp_max=28
+Tp_min=51
 
 gmt psbasemap $proj $R2 -Ba100f20:"Temperature (@+o@+C)":/a1f0.5:"Pressure (GPa)":WNs -X10 -Y20 -K > $outfile
 Plot_Box_1
@@ -63,8 +63,8 @@ echo "3.2 2.7 A" | gmt pstext -R0/4.5/0/4.5 -JX4.5/4.5 -F+f10p,Helvetica,black+j
 
 province_written="Data @~\074@~3 GPa"
 Tp=1555
-Tp_max=26
-Tp_min=42
+Tp_max=24
+Tp_min=43
 
 gmt psbasemap $proj $R2 -Ba100f20:"Temperature (@+o@+C)":/a1f0.5:"Pressure (GPa)":wNs -X3.9 -K -O >> $outfile
 Plot_Box_1
@@ -76,9 +76,9 @@ echo "3.2 2.7 B" | gmt pstext -R0/4.5/0/4.5 -JX4.5/4.5 -F+f10p,Helvetica,black+j
 #########
 
 province_written="All Data"
-Tp=1420
-Tp_max=45
-Tp_min=48
+Tp=1414
+Tp_max=36
+Tp_min=44
 infile="Hawaii_All_Data_Extrema.csv"
 gmt psbasemap $proj $R2 -Ba100f20:"Temperature (@+o@+C)":/a1f0.5:"Pressure (GPa)":wNs -X3.9 -K -O >> $outfile
 Plot_Box_1
@@ -101,7 +101,7 @@ province="Kauai"
 province_written="Shield"
 Tp=1556
 Tp_max=20
-Tp_min=24
+Tp_min=25
 infile="Hawaii_All_Data.csv"
 gmt psbasemap $proj $R2 -Ba100f20:"Temperature (@+o@+C)":/a1f0.5:"Pressure (GPa)":Wns -X-7.8 -Y-3.4 -K -O >> $outfile
 Plot_Box_1
@@ -115,7 +115,7 @@ gmt psbasemap $proj $R1 -Ba100f20:"Temperature (@+o@+C)":/a50f10:"Depth (km)":e 
 province_written="Post-Shield"
 Tp=1556
 Tp_max=42
-Tp_min=30
+Tp_min=29
 
 gmt psbasemap $proj $R2 -Ba100f20:"Temperature (@+o@+C)":/a1f0.5:"Pressure (GPa)":wns -X3.9 -K -O >> $outfile
 Plot_Box_1
@@ -127,7 +127,7 @@ gmt psbasemap $proj $R1 -Ba100f20:"Temperature (@+o@+C)":/a50f10:"Depth (km)":e 
 
 province_written="Rejuvenated"
 Tp=1517
-Tp_max=83
+Tp_max=95
 Tp_min=60
 
 gmt psbasemap $proj $R2 -Ba100f20:"Temperature (@+o@+C)":/a1f0.5:"Pressure (GPa)":wns -X3.9 -K -O >> $outfile

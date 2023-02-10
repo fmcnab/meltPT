@@ -89,9 +89,9 @@ awk '{FS = ","}{if (NR>1 && $6=="Post-Erosion" && $66>0 && $41>0 && $40>0) print
 echo "0 0" | gmt psxy $proj $R1 -Y30 -X20 -K > $outfile
 infile="Loa_Trend.csv"
 province_written="Loa Trend"
-Tp=1548
-Tp_max=52
-Tp_min=18
+Tp=1544
+Tp_max=29
+Tp_min=17
 
 Plot_Box_1
 echo "3.2 2.7 A" | gmt pstext -R0/4.5/0/4.5 -JX4.5/4.5 -F+f10p,Helvetica,black+jRT -C25%/25% -W0.8 -Gwhite -K -O -N >> $outfile
@@ -104,9 +104,9 @@ gmt psbasemap $proj $R5 -Ba0.0002f0.0001:"@+143@+Nd/@+144@+Nd":/a0.1f0.05:"Nb/Zr
 
 infile="Kea_Trend.csv"
 province_written="Kea Trend"
-Tp=1561
-Tp_max=22
-Tp_min=24
+Tp=1560
+Tp_max=24
+Tp_min=21
 
 Plot_Box_1
 echo "3.2 2.7 C" | gmt pstext -R0/4.5/0/4.5 -JX4.5/4.5 -F+f10p,Helvetica,black+jRT -C25%/25% -W0.8 -Gwhite -K -O -N >> $outfile
