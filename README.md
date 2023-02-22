@@ -13,6 +13,9 @@ analyses of basaltic (mafic) rocks. It contains modules for:
   
 Full documentation can be found [here](https://meltpt.readthedocs.io/en/latest/).
 
+You can find more background information and some example analyses in our paper
+in *Volcanica* [here](https://doi.org/10.30909/vol.06.01.6376).
+
 ## Installation
 
 ### Quickstart
@@ -20,13 +23,13 @@ Full documentation can be found [here](https://meltpt.readthedocs.io/en/latest/)
 To try out **meltPT** without having to install anything, you can run our
 Tutorials in your browser via our 
 [Binder](https://mybinder.org/v2/gh/fmcnab/meltPT/master) page. You will find 
-our jupyter notebook tutorials under "./Examples/Tutorials/jupyter".
+our jupyter notebook tutorials under "./Tutorials/jupyter".
 Alternatively, you can use the terminal function to run the tutorial scripts.
 For example:
 
 ```
 $ # Navigate to script directory.
-$ cd Examples/Tutorials/scripts
+$ cd Tutorials/scripts
 
 $ # Run the first tutorial.
 $ python3 Tutorial_1.py
@@ -144,7 +147,7 @@ ready to use **meltPT**!
 
 ## Using meltPT
 
-Under ./Examples/Tutorials, you will find some exaple scripts to help you get
+Under ./Tutorials, you will find some exaple scripts to help you get
 started.
 
 For more information, the **meltPT** [ReadtheDocs](https://meltpt.readthedocs.io)
@@ -157,10 +160,16 @@ and our [liscence](https://meltpt.readthedocs.io/en/latest/license.html).
 
 ## Citing meltPT
 
-If you use our code, please cite us. Currently each **meltPT** release is
-archived in our Zenodo repository:
+If you use our code, please cite us!
 
-*  M<sup>c</sup>Nab, F. and Ball, P. W. (2022), meltPT, version 1.1.0,
+* M<sup>c</sup>Nab, F. and Ball, P. W. (2023), ``meltPT``: A ``Python`` package
+  for basaltic whole-rock thermobarometric analysis with application to Hawai'i,
+  *Volcanica*, 6(1), p. 63&ndash76, [doi: 10.30909/vol.06.01.6376](https://doi.org/10.30909/vol.06.01.6376).
+
+You should also refer to the specific release of the code you used. For example,
+the most recent **meltPT** release is archived in our Zenodo repository:
+
+*  M<sup>c</sup>Nab, F. and Ball, P. W. (2023), meltPT, version 1.2.0,
    *Zenodo*, [doi: 10.5281/zenodo.6948030](https://doi.org/10.5281/zenodo.6948030).
 
 Please be sure to include the version number of the code you used, so that
@@ -177,6 +186,6 @@ section of our documentation.
 
 If you use our melt-path fitting routines you should also cite:
 
-*  pyMelt: [Matthews et al. (in rev., Volcanica)](https://doi.org/10.31223/X5JP7X)
+*  pyMelt: [Matthews et al. (2022, Volcanica)](https://doi.org/10.30909/vol.05.02.469475 )
 *  melting model for our examples:
    [Katz et al. (2003, G-cubed)](https://doi.org/10.1029/2002GC000433)
