@@ -12,7 +12,7 @@ specfic version, follow the installation instructions in the main README with
 the following adaption to the ``pip install`` command:
 
 ```
-(meltpt) > pip install meltPT==1.2.0
+$ pip install meltPT==1.2.0
 ```
 
 You can also find here copies of the paper, supplementary materials, and
