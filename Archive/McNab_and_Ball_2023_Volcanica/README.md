@@ -1,5 +1,13 @@
-# M<sup>c</sup>Nab and Ball (2023)
+# M<sup>c</sup>Nab and Ball (2023, *Volcanica*)
 
 The scripts and datasets contained here will allow you to recreate the analyses
-presented in M<sup>c</sup>Nab and Ball (2023), currently in review with
-Volcanica. To work, the code needs to be run with **meltPT** v1.1.0.
+presented in:
+
+* M<sup>c</sup>Nab, F. and Ball, P. W. (2023), ``meltPT``: A ``Python`` package
+  for basaltic whole-rock thermobarometric analysis with application to Hawai'i,
+  *Volcanica*, 6(1), p. 63&ndash;76, [doi: 10.30909/vol.06.01.6376](https://doi.org/10.30909/vol.06.01.6376).
+
+To work, the code needs to be run with **meltPT** v1.2.0.
+
+You can also find here copies of the paper, supplementary materials, and
+compiled datasets.
