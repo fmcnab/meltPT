@@ -2,6 +2,36 @@ Changelog
 ^^^^^^^^^
 
 ======
+v1.2.0
+======
+
+No major changes. Creating neat new release to coincide with appearance of
+M\ :sup:`c`\ Nab and Ball (2023, *Volcanica*, `doi: 10.30909/vol.06.01.6376
+<https://doi.org/10.30909/vol.06.01.6376>`_), with citation information, etc.
+
+======
+v1.1.0
+======
+
+Bug fixes; class implementation for backtracking; new tutorials/docs.
+
+* Lots of additions/updates to the Tutorials.
+
+* Some basic instructions for installing on Windows.
+
+* Some changes made to allow smooth running of the code with Binder.
+
+* Previously, correcting sample compositions for fractional crystallisation of
+  olivine was achieved using a series of stand-alone functions and was
+  hard-coded into the Suite class. Now, we have collected these functions into
+  a single class, "BacktrackOlivineFractionation", which is instantiated then
+  passed to Suite. This change will facilitate future incorporation of
+  alternative backtracking schemes.
+  
+* Some minor changes to the way bounding potential temperatures for a suite of
+  pressure/temperature data are found.
+
+======
 v1.0.1
 ======
 
