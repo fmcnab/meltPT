@@ -7,7 +7,13 @@ presented in:
   for basaltic whole-rock thermobarometric analysis with application to Hawai'i,
   *Volcanica*, 6(1), p. 63&ndash;76, [doi: 10.30909/vol.06.01.6376](https://doi.org/10.30909/vol.06.01.6376).
 
-To work, the code needs to be run with **meltPT** v1.2.0.
+To work, the code needs to be run with **meltPT** v1.2.0. To install this
+specfic version, follow the installation instructions in the main README with
+the following adaption to the ``pip install`` command:
+
+```
+(meltpt) > pip install meltPT==1.2.0
+```
 
 You can also find here copies of the paper, supplementary materials, and
 compiled datasets.
