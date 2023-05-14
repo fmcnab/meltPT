@@ -248,7 +248,7 @@ class BacktrackOlivineFractionation:
         if df['src_Fo']-self.Fo < 0.001:
             self.oxide_wt_hydrous = fill_dict_with_nans(self.oxide_wt_hydrous)
             dm_tot = np.nan
-            message = df.Sample + ": backtracking failed! Starting Fo above mantle Fo."
+            message = str(df.Sample) + ": backtracking failed! Starting Fo above mantle Fo."
             warnings.warn(message)
         # Otherwise add olvine until primary Fo is reached
         else:
