@@ -1,11 +1,9 @@
-
 """
 ===============
 The Suite class
 ===============
 
 Process suites of samples.
-
 """
 
 from .parse import *
@@ -92,11 +90,14 @@ class Suite:
         will be the lower-bounding melting path.
     """
 
-    def __init__(self, input_csv, Ce_to_H2O=0., src_FeIII_totFe=0., min_MgO=0., read_as_primary=False, param_co2=False, read_PT=False):
+    def __init__(
+            self, input_csv, Ce_to_H2O=0., src_FeIII_totFe=0., src_Fo=0.9,
+            min_MgO=0., read_as_primary=False, param_co2=False, read_PT=False):
         self.data = parse_csv(
             input_csv,
             Ce_to_H2O=Ce_to_H2O,
             src_FeIII_totFe=src_FeIII_totFe,
+            src_Fo=src_Fo,
             min_MgO=min_MgO,
             param_co2=param_co2)
         self.PT_to_fit = None
@@ -124,35 +125,24 @@ class Suite:
             self.PT = None
             self.data = self.data.drop(labels=['P', 'T'], axis=1, errors='ignore')
 
-    def backtrack_compositions(self, target_Fo=0.9, Kd=False, dm=0.0005, verbose=False, max_olivine_addition=0.3):
+    def backtrack_compositions(self, backtracker):
         """
         Backtrack compositions for entire suite.
         
-        Applies backtrack_sample_composition to the "data" property. Result is
-        saved in the "primary" property.
+        Applies backtracker.backtrack_sample_composition to the "data" property.
+        Result is saved in the "primary" property.
         
         Parameters
         ----------
-        target_Fo : float, optional
-            The forsterite number of the mantle source.
-            We add iteratively add olivine to the sample composition until this
-            value is reached.
-        Kd : float or NoneType, optional
-            Partition coefficient to be used.
-            If None, calculated from the sample composition provided.
-        dm : float, optional
-            The fraction of olivine to be added at each iteration.
-        verbose : bool, optional
-            If True, will print messages with information at each iteration.
-        max_olivine_addition : float, optional
-            Maximum fraction of olivine to add before backtracking is
-            abandoned.
+        backtracker : class instance
+            Instance of a backtracker class. Must have a
+            backtrack_sample_composition method that returns a dict containing
+            backtracked major element compositions.        
         """
         self.primary = self.data.apply(
-            backtrack_sample_composition,
+            backtracker.backtrack_sample_composition,
             axis=1,
-            result_type="expand",
-            args=(target_Fo,Kd,dm,verbose)
+            result_type="expand"
             )
 
     def compute_pressure_temperature(self, method="PF16", min_SiO2=0.):
@@ -360,9 +350,9 @@ class Suite:
         pressure-temperature estimates to melting path. Options used are:
             method: "bounded"
             bounds:  min --> intersection of solidus with surface
-                     max --> 1600 oC
+                     max --> max Tp for melting model
             bracket: min --> intersection of solidus with surface
-                     max --> 1600 oC
+                     max --> max Tp for melting model
         
         Parameters
         ----------
@@ -403,10 +393,11 @@ class Suite:
             The lower bounding melting path.
         """
         self.check_samples_for_fitting(mantle, filters, filter_args)
+        max_Tp = find_max_potential_temperature(mantle)
         Tp_fit = minimize_scalar(
             compute_suite_potential_temperature_misfit, 
-            bracket=(min([lith.TSolidus(0.) for lith in mantle.lithologies]),1600.), 
-            bounds=(min([lith.TSolidus(0.) for lith in mantle.lithologies]),1600.),
+            bracket=(min([lith.TSolidus(0.) for lith in mantle.lithologies]),max_Tp), 
+            bounds=(min([lith.TSolidus(0.) for lith in mantle.lithologies]),max_Tp),
             args=(self.PT, mantle),
             method="bounded")
         self.path = mantle.adiabaticMelt(Tp_fit.x, Pstart=max(mantle.solidusIntersection(Tp_fit.x))+0.01, dP=-0.01)

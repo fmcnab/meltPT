@@ -1,13 +1,39 @@
 [![DOI](https://zenodo.org/badge/430704582.svg)](https://zenodo.org/badge/latestdoi/430704582)
+[![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/fmcnab/meltPT/master)
 
 # meltPT
 
-**meltPT** is a Python package for whole-rock major-element themormobarometric analyses of basaltic (mafic) rocks. It contains modules for:
+**meltPT** is a Python package for whole-rock major-element themormobarometric 
+analyses of basaltic (mafic) rocks. It contains modules for:
 - Correcting sample compositions for effects of olivine crystallisation
-- Estimating pressures and temperatures at which samples were last in equilibrium with the mantle
-- Estimating melt fractions and potential temperatures on an individual basis or for a suite of samples
+- Estimating pressures and temperatures at which samples were last in 
+  equilibrium with the mantle
+- Estimating melt fractions and potential temperatures on an individual basis
+  or for a suite of samples
+  
+Full documentation can be found [here](https://meltpt.readthedocs.io/en/latest/).
+
+You can find more background information and some example analyses in our paper
+in *Volcanica* [here](https://doi.org/10.30909/vol.06.01.6376).
 
 ## Installation
+
+### Quickstart
+
+To try out **meltPT** without having to install anything, you can run our
+Tutorials in your browser via our 
+[Binder](https://mybinder.org/v2/gh/fmcnab/meltPT/master) page. You will find 
+our jupyter notebook tutorials under "./Tutorials/jupyter".
+Alternatively, you can use the terminal function to run the tutorial scripts.
+For example:
+
+```
+$ # Navigate to script directory.
+$ cd Tutorials/scripts
+
+$ # Run the first tutorial.
+$ python3 Tutorial_1.py
+```
 
 ### Linux/Mac
 
@@ -76,12 +102,52 @@ successfully, you are now ready to use **meltPT**!
 
 ### Windows
 
-Unfortunately, we don't know much about using Python on a Windows system.
-But we plan to find out!
+We do not have much experience running Python on a Windows system, but outline
+here some basic steps that we have tested and believe should be accessible
+to most users.
+
+First, you need to install a Python package manager, if you don't have one
+already. We tested the Miniforge3 installer from 
+[Miniforge](https://github.com/conda-forge/miniforge>), which is free to
+anyone regardless of affiliation. If you are already running a different Conda 
+distribution, don't worry, the following steps should still work.
+
+Once you have a package manager installed, open the program. You should see
+a command prompt. Create a new environment in which to install **meltPT**,
+called, for example, 'meltpt':
+
+```
+(base) > conda create meltpt
+```
+
+Next, activate the environment:
+
+```
+(base) > conda activate meltpt
+(meltpt) >
+```
+  
+If you want to install an Interactive Development Environment (IDE), allowing
+you to edit scripts, use a Python interface etc., now is the time to install
+it. For example, [Spyder](https://www.spyder-ide.org/>):
+
+```
+(meltpt) > conda install spyder
+```
+  
+Finally, install **meltPT** using pip:
+
+```
+(meltpt) > pip install meltPT
+```
+
+If you wish to edit the source code, see the Linux/Mac instructions above for 
+alternative pip commands; these should also work in Conda. You should now be 
+ready to use **meltPT**!
 
 ## Using meltPT
 
-Under ./Examples/Tutorials, you will find some exaple scripts to help you get
+Under ./Tutorials, you will find some exaple scripts to help you get
 started.
 
 For more information, the **meltPT** [ReadtheDocs](https://meltpt.readthedocs.io)
@@ -94,15 +160,17 @@ and our [liscence](https://meltpt.readthedocs.io/en/latest/license.html).
 
 ## Citing meltPT
 
-If you use our code, please cite us. Currently each **meltPT** release is
-archived in our Zenodo repository:
+If you use our code, please cite us!
 
-*  M<sup>c</sup>Nab, F. and Ball, P. W. (2022), meltPT, version 1.0.0,
+* M<sup>c</sup>Nab, F. and Ball, P. W. (2023), ``meltPT``: A ``Python`` package
+  for basaltic whole-rock thermobarometric analysis with application to Hawai'i,
+  *Volcanica*, 6(1), p. 63&ndash;76, [doi: 10.30909/vol.06.01.6376](https://doi.org/10.30909/vol.06.01.6376).
+
+You should also refer to the specific release of the code you used. For example,
+the most recent **meltPT** release is archived in our Zenodo repository:
+
+*  M<sup>c</sup>Nab, F. and Ball, P. W. (2023), meltPT, version 1.2.0,
    *Zenodo*, [doi: 10.5281/zenodo.6948030](https://doi.org/10.5281/zenodo.6948030).
-
-Please be sure to include the version number of the code you used, so that
-others can reproduce your results. We are working on an accompanying
-publication which we hope will be available soon.
 
 We also urge you to cite the original literature on which our code is based.
 The sample backtracking method is based on that of 
@@ -114,6 +182,6 @@ section of our documentation.
 
 If you use our melt-path fitting routines you should also cite:
 
-*  pyMelt: [Matthews et al. (in rev., Volcanica)](https://doi.org/10.31223/X5JP7X)
+*  pyMelt: [Matthews et al. (2022, Volcanica)](https://doi.org/10.30909/vol.05.02.469475)
 *  melting model for our examples:
    [Katz et al. (2003, G-cubed)](https://doi.org/10.1029/2002GC000433)

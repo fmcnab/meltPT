@@ -2,6 +2,11 @@
 Tutorial 5: The Command-Line Tool
 =================================
 
+.. warning::
+   The command-line tool will (currently) not work as described if you are 
+   running **meltPT** on a Windows system. See below for a workaround.
+
+
 We provide a command-line tool that will allow you start running the code
 without needing to write your own scripts. All you need to do is edit a
 parameter file that contains paths to your chosen input and output files, 
@@ -112,3 +117,18 @@ To perform your own analyses, simply edit the various parameters in the
 parameters.yaml file as you wish. The meltPT command should work from
 anywhere in your system. (If you install meltPT in a virtual environment, 
 just make sure the environment activated.)
+
+Windows
+^^^^^^^
+
+The command-line tool is not so easily accessible if you are running **meltPT**
+on a Windows system. If you installed **meltPT** using the instructions 
+provided :doc:`here <installation>`, or something similar, you can access the same 
+functionality by downloading 
+`the script <https://github.com/fmcnab/meltPT/blob/master/meltPT/meltPT>`_, 
+saving it in the same directory as your parameter file, and typing at the conda
+prompt:
+
+.. code-block:: console
+
+   (meltpt) > python meltPT Tutorial_5.yaml

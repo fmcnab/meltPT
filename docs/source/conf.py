@@ -22,7 +22,7 @@ copyright = '2022, F. McNab & P.W. Ball'
 author = 'F. McNab & P.W. Ball'
 
 # The full version, including alpha/beta/rc tags
-release = 'v1.0.0'
+release = 'v1.2.0'
 
 
 # -- General configuration ---------------------------------------------------
@@ -35,6 +35,7 @@ extensions = [
     "sphinx.ext.napoleon",
     "sphinx.ext.viewcode",
     "nbsphinx",
+    "nbsphinx_link"
 ]
 napoleon_google_docstring = False
 napoleon_use_param = False

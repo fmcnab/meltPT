@@ -20,7 +20,9 @@ context of **meltPT**.
 
 All scripts and data corresponding to these Tutorials can be found on our
 `GitHub page <https://github.com/fmcnab/meltPT/tree/master/Examples/Tutorials>`_
-or in the `Zenodo archive <https://doi.org/10.5281/zenodo.6948030>`_.
+or in the `Zenodo archive <https://doi.org/10.5281/zenodo.6948030>`_. Moreover, 
+the tutorials can also be downloaded as Jupiter Notebook files `here
+<https://github.com/fmcnab/meltPT/tree/master/docs/source>`_.
 
 Note that, if you installed **meltPT** in a virtual environment, you might have
 some problems displaying images created with matplotlib: the default matplotlib
@@ -40,3 +42,5 @@ on how to proceed.
    Tutorial_4
    Tutorial_5
    Tutorial_6
+   Tutorial_7
+   Tutorial_8
