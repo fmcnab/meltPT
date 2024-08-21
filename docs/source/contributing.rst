@@ -68,7 +68,7 @@ M\ :sup:`c`\ Nab (mcnab@gfz-potsdam.de) if you have any problems.
 
     Create a new virtual environment, try installing::
 
-        $ python3 -m venv test_env
+        $ python3 -m venv test
         $ source test/bin/activate
         (test) $ python3 -m pip install \
                     --index-url https://test.pypi.org/simple/ \
@@ -88,7 +88,7 @@ M\ :sup:`c`\ Nab (mcnab@gfz-potsdam.de) if you have any problems.
 
     As before::
 
-        $ python3 -m venv test_env
+        $ python3 -m venv test
         $ source test/bin/activate
         (test) $ python3 -m pip install meltPT
         
