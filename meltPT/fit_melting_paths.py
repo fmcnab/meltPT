@@ -33,30 +33,50 @@ def find_max_potential_temperature(mantle):
         The mantle object to be used to calculate the melting path.
     """
     
-    # Loop over lithologies, find potential temperature corresponing to solidus
-    # turning point.
-    Tp = []
+    # Loop over lithologies, find maximum potential temperature.
+    max_Tp = []
     for lith in mantle.lithologies:
         
-        # Turning point pressure & temperature.
-        # Obtained by differentiating solidus and setting gradient to zero.
-        P_tp = -lith.parameters['A2'] / (2.*lith.parameters['A3'])
-        T_tp = lith.TSolidus(P_tp)
+        # If the lithology has the property 'A3', we assume its solidus is
+        # quadratic and compute the potential temperature corresponding to
+        # the quadratic turning point.
+        if 'A3' in lith.parameters.keys():
         
-        # Corresponding potential temperature.
-        Tp.append( 
-            (T_tp+273.) / 
-            (np.exp(P_tp * lith.alphas / (lith.rhos*lith.CP)))-273.
-            )
+            # Turning point pressure & temperature.
+            # Obtained by differentiating solidus and setting gradient to zero.
+            P_tp = -lith.parameters['A2'] / (2.*lith.parameters['A3'])
+            T_tp = lith.TSolidus(P_tp)
+            
+            # Corresponding potential temperature.
+            bulk_props = mantle.bulkProperties()
+            alpha = bulk_props['alpha']
+            rho = bulk_props['rho']
+            CP = bulk_props['CP']
+            max_Tp.append((T_tp+273.) / (np.exp(P_tp * alpha / (rho*CP)))-273.)
+            
+        # Otherwise, we assume the solidus is valid for all temperatures.
+        else:
+            max_Tp.append(np.inf)
 
-    # True maximum will be a bit higher.
-    # Increment Tp by one degree at a time until intersection can no longer
-    # be found.
-    Tp = np.ceil( min(Tp) )
-    while ~np.isnan(mantle.solidusIntersection(Tp)):
-        Tp += 1.
+    # Find the minimum of the maximum potential temperatures.
+    max_Tp = np.ceil( min(max_Tp) )
     
-    return Tp
+    # If the minimum maximum potential temperature is infinite (i.e. none of
+    # lithologies have a turning point in the solidus), we return a large
+    # number. The functions that use the output from this function need a 
+    # finite number. For now setting to a value close to the
+    # core-mantle-boundary temperature to be safe.
+    if np.isinf(max_Tp):
+        return 3000.
+    
+    # Othersie, return the maximum temperature we found. The analytical value
+    # of the turning point we compute above is generally slightly smaller than
+    # the true maximum intersection value. So we incrememnt in steps of 1 oC
+    # until any of the lithologies no longer have a valid solidus crossing.
+    else:
+        while (~np.isnan(mantle.solidusIntersection(max_Tp))).all():
+            max_Tp += 1.
+        return max_Tp
 
 
 def melt_fraction_to_pressure_temperature(F, path):
