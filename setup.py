@@ -5,7 +5,7 @@ with open("README.md", "r") as fh:
 
 setup(
     name='meltPT',
-    version='v1.2.0',
+    version='v1.2.1',
     author = 'F. McNab, P. W. Ball',
     author_email="mcnab@gfz-potsdam.de",
     url="https://github.com/fmcnab/meltPT",

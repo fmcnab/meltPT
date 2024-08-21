@@ -169,7 +169,7 @@ If you use our code, please cite us!
 You should also refer to the specific release of the code you used. For example,
 the most recent **meltPT** release is archived in our Zenodo repository:
 
-*  M<sup>c</sup>Nab, F. and Ball, P. W. (2023), meltPT, version 1.2.0,
+*  M<sup>c</sup>Nab, F. and Ball, P. W. (2023), meltPT, version 1.2.1,
    *Zenodo*, [doi: 10.5281/zenodo.6948030](https://doi.org/10.5281/zenodo.6948030).
 
 We also urge you to cite the original literature on which our code is based.
